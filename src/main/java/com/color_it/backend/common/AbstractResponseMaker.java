@@ -1,5 +1,6 @@
 package  com.color_it.backend.common;
 
+import com.color_it.backend.services.UserService;
 import com.color_it.backend.services.UserServiceResponse;
 import com.color_it.backend.services.UserServiceStatusCode;
 import com.color_it.backend.views.ResponseView;
@@ -43,29 +44,45 @@ public class AbstractResponseMaker {
     );
 
     final protected Map<UserServiceStatusCode, HttpStatus> hashServiceStatusAndHttpStatus;
+    final protected Map<UserServiceStatusCode, String> hashServiceStatusAndMessage;
 
-    public AbstractResponseMaker(Map<UserServiceStatusCode, HttpStatus> hashServiceStatusAndHttpStatus) {
-        this.hashServiceStatusAndHttpStatus = hashServiceStatusAndHttpStatus;
+    public AbstractResponseMaker() {
+        this.hashServiceStatusAndHttpStatus = new HashMap<UserServiceStatusCode, HttpStatus>(){
+            {
+                put(UserServiceStatusCode.OK_STATE, HttpStatus.OK);
+                put(UserServiceStatusCode.CREATED_STATE, HttpStatus.CREATED);
+                put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, HttpStatus.CONFLICT);
+                put(UserServiceStatusCode.CONFLICT_NAME_STATE, HttpStatus.CONFLICT);
+                put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN);
+                put(UserServiceStatusCode.DB_ERROR_STATE, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        };
+
+        this.hashServiceStatusAndMessage = new HashMap<UserServiceStatusCode, String>() {
+            {
+                put(UserServiceStatusCode.OK_STATE, "ok");
+                put(UserServiceStatusCode.CREATED_STATE, "created");
+                put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, "email_conflict");
+                put(UserServiceStatusCode.CONFLICT_NAME_STATE, "nickname_conflict");
+//                put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, "forbidden");
+                put(UserServiceStatusCode.DB_ERROR_STATE, "server_error");
+            }
+        };
     }
 
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, MessageSource messageSource, Locale locale) {
-        return null;
+        final ResponseView responseView = new ResponseView();
+        if (userServiceResponse.isValid()) {
+            if (userServiceResponse.getUserEntity() != null) {
+                responseView.setData(new UserView(userServiceResponse.getUserEntity()));
+            }
+        } else {
+            responseView.addError("general", messageSource.getMessage(
+                    hashServiceStatusAndMessage.get(userServiceResponse.getStatusCode()), null, locale));
+        }
+        return new ResponseEntity(responseView, hashServiceStatusAndHttpStatus.get(userServiceResponse.getStatusCode()));
     }
 
-//    static public ResponseEntity<ResponseView> makeResponse(UserServiceResponse response, MessageSource messageSource, Locale locale) {
-//
-//        ResponseView responseView = new ResponseView();
-//        if (response.getUserEntity() != null) {
-//            UserView userView = new UserView(response.getUserEntity());
-//            responseView.setData(userView);
-//        }
-//
-//        return  new ResponseEntity<>(responseView, HttpStatus.OK);
-////        Res
-////        return response.toHttpResponse();
-//    }
-
-//    static Map<ViewStatus, >ViewStatus
 
     public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, MessageSource messageSource, Locale locale) {
         ResponseView responseView = new ResponseView();
@@ -74,6 +91,4 @@ public class AbstractResponseMaker {
         }
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
     }
-
-
 }

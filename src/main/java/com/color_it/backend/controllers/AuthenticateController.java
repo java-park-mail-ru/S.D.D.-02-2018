@@ -18,12 +18,9 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/api/user")
 public class AuthenticateController extends AbstractController {
-
-    final private UserService userService;
     public AuthenticateController(MessageSource messageSource, UserService userService) {
-        super(messageSource);
+        super(messageSource, userService);
         this.responseMaker = new AuthenticateResponseMaker();
-        this.userService = userService;
     }
 
     @GetMapping(path="test", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,6 +44,20 @@ public class AuthenticateController extends AbstractController {
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 
+    @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> signOut(HttpSession httpSession, Locale locale) {
+        final ResponseView responseView = new ResponseView();
+        String nickname = (String)httpSession.getAttribute(sessionKey);
+        if (nickname == null) {
+            responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
+        }
+        httpSession.invalidate();
+        return ResponseEntity.ok(responseView);
+    }
+
+    // checked
     @PostMapping(path="/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signUpUser(@RequestBody SignUpView signUpView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signUpView.checkValid();

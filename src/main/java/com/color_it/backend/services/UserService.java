@@ -52,7 +52,7 @@ public class UserService {
 
     private boolean checkPasswords(String internalPassword, String externalPassword) {
         String saultedPassword = passwordSault + externalPassword + passwordSault;
-        if (!passwordEncoder().matches(internalPassword, saultedPassword)) {
+        if (!passwordEncoder().matches(saultedPassword, internalPassword)) {
             return false;
         }
         return true;

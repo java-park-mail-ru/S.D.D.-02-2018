@@ -21,16 +21,12 @@ import java.util.Locale;
 @RestController
 @RequestMapping(path="/api/user/")
 public class UserController extends AbstractController {
-
-    private final UserService userService;
-
     public UserController(MessageSource messageSource, UserService userService) {
-        super(messageSource);
+        super(messageSource, userService);
         this.responseMaker = new UserResponseMaker();
-        this.userService = userService;
     }
 
-    @GetMapping(path="/user_info", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path="/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUser(HttpSession httpSession, Locale locale) {
         String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
@@ -84,12 +80,12 @@ public class UserController extends AbstractController {
             return responseMaker.makeResponse(viewStatus, messageSource, locale);
         }
 
-
-
         return null;
     }
 
-    @GetMapping(value = "/score", produces = MediaType.APPLICATION_JSON_VALUE)
+
+
+    @GetMapping(value = "/rating", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getRating() {
         return null;
     }
