@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+
 @Service
 public class UserService {
     private final Repository userRepository;
@@ -55,13 +57,13 @@ public class UserService {
         }
         return true;
     }
+
     // maybe entity
     public UserServiceResponse authenticateUser(UserEntity userEntity) {
         UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
             final UserEntity existingUserEntity = userRepository.getByNickname(userEntity.getNickname());
             if (existingUserEntity != null) {
-
                 if (!checkPasswords(existingUserEntity.getPasswordHash(), userEntity.getPasswordHash())) {
                     userServiceResponse.setStatusCode(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE);
                 }
@@ -81,14 +83,18 @@ public class UserService {
             String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
             this.userRepository.save(userEntity);
+            LOGGER.info("user created {}", userEntity.getNickname());
         } catch (DataIntegrityViolationException dIVEx) {
-            ConstraintViolationException cEx = (ConstraintViolationException)dIVEx.getCause();
-            if (cEx.getConstraintName().equals("nickname_constraint")) {
+            SQLException sqlEx = (SQLException)dIVEx.getCause().getCause();
+            LOGGER.error("Constraint error: {}", dIVEx.getLocalizedMessage());
+            if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
             } else {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_EMAIL_STATE);
             }
+            LOGGER.error("Constraint error: {}", sqlEx.getLocalizedMessage());
         } catch (DataAccessException dAEx) {
+            LOGGER.error("Error DataBase", dAEx);
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
         }
         return userServiceResponse;
@@ -108,9 +114,10 @@ public class UserService {
         try {
             if (!userRepository.existsByNickname(nickname)) {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
+                LOGGER.error("user not found {}", nickname);
             }
-        } catch (DataAccessException daEx) {
-            LOGGER.error("Error DataBase", daEx);
+        } catch (DataAccessException dAEx) {
+            LOGGER.error("Error DataBase", dAEx);
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
         }
         return userServiceResponse;

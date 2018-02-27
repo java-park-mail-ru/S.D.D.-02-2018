@@ -1,6 +1,7 @@
 package com.color_it.backend.controllers;
 
-import com.color_it.backend.common.ResponseMaker;
+import com.color_it.backend.common.AbstractResponseMaker;
+import com.color_it.backend.common.AuthenticateResponseMaker;
 import com.color_it.backend.entities.UserEntity;
 import com.color_it.backend.services.UserService;
 import com.color_it.backend.services.UserServiceResponse;
@@ -19,9 +20,9 @@ import java.util.Locale;
 public class AuthenticateController extends AbstractController {
 
     final private UserService userService;
-
     public AuthenticateController(MessageSource messageSource, UserService userService) {
         super(messageSource);
+        this.responseMaker = new AuthenticateResponseMaker();
         this.userService = userService;
     }
 
@@ -35,7 +36,7 @@ public class AuthenticateController extends AbstractController {
     public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signInView.checkValid();
         if (!check.isValid()) {
-            return ResponseMaker.makeResponse(check, messageSource, locale);
+            return responseMaker.makeResponse(check, messageSource, locale);
         }
 
         final UserEntity userEntity = signInView.toEntity();
@@ -43,14 +44,14 @@ public class AuthenticateController extends AbstractController {
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(sessionKey, userEntity.getNickname());
         }
-        return ResponseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 
     @PostMapping(path="/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signUpUser(@RequestBody SignUpView signUpView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signUpView.checkValid();
         if (!check.isValid()) {
-            return ResponseMaker.makeResponse(check, messageSource, locale);
+            return responseMaker.makeResponse(check, messageSource, locale);
         }
 
         final UserEntity userEntity = signUpView.toEntity();
@@ -58,6 +59,6 @@ public class AuthenticateController extends AbstractController {
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(sessionKey, userEntity.getNickname());
         }
-        return ResponseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 }

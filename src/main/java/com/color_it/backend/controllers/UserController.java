@@ -1,7 +1,6 @@
 package com.color_it.backend.controllers;
 
-import com.color_it.backend.common.ResponseMaker;
-import com.color_it.backend.entities.UserEntity;
+import com.color_it.backend.common.UserResponseMaker;
 import com.color_it.backend.services.UserService;
 import com.color_it.backend.services.UserServiceResponse;
 import com.color_it.backend.views.ResponseView;
@@ -27,6 +26,7 @@ public class UserController extends AbstractController {
 
     public UserController(MessageSource messageSource, UserService userService) {
         super(messageSource);
+        this.responseMaker = new UserResponseMaker();
         this.userService = userService;
     }
 
@@ -40,9 +40,11 @@ public class UserController extends AbstractController {
 
         UserServiceResponse userServiceResponse = userService.getUser(nickname);
 //        if (userServiceResponse.isValid()) {
+//
 //        }
 
-        return ResponseMaker.makeResponse(userServiceResponse, messageSource, locale);
+
+        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
 
 //        return new ResponseEntity<>(new ResponseView(), HttpStatus.OK);
     }
@@ -57,16 +59,16 @@ public class UserController extends AbstractController {
 
         final ViewStatus viewStatus = updateEmailView.checkValid();
         if (!viewStatus.isValid()) {
-            return ResponseMaker.makeResponse(viewStatus, messageSource, locale);
+            return responseMaker.makeResponse(viewStatus, messageSource, locale);
         }
 
         // if user not found what i would return
         final UserServiceResponse userServiceResponse = userService.userExists(nickname);
         if (userServiceResponse.isValid()) {
             final UserServiceResponse updateEmailResponse = userService.updateEmail(updateEmailView.getNewEmail());
-            return ResponseMaker.makeResponse(updateEmailResponse, messageSource, locale);
+            return responseMaker.makeResponse(updateEmailResponse, messageSource, locale);
         }
-        return ResponseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 
     @PostMapping(path="update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,7 +81,7 @@ public class UserController extends AbstractController {
 
         final ViewStatus viewStatus = updatePasswordView.checkValid();
         if (!viewStatus.isValid()) {
-            return ResponseMaker.makeResponse(viewStatus, messageSource, locale);
+            return responseMaker.makeResponse(viewStatus, messageSource, locale);
         }
 
 

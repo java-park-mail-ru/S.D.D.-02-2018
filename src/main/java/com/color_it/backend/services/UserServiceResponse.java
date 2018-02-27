@@ -1,6 +1,5 @@
 package com.color_it.backend.services;
 
-import com.color_it.backend.common.AbstractServiceresponse;
 import com.color_it.backend.entities.UserEntity;
 import org.springframework.http.ResponseEntity;
 
