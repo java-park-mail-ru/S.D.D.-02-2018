@@ -166,4 +166,9 @@ public class UserService {
         }
         return userServiceResponse;
     }
+
+    public UserServiceResponse getRating() {
+        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE)
+        return userServiceResponse;
+    }
 }

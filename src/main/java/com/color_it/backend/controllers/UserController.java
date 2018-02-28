@@ -25,7 +25,7 @@ public class UserController extends AbstractController {
     }
 
     @GetMapping(path="/info", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getUser(HttpSession httpSession, Locale locale) {
+    public ResponseEntity<ResponseView> getUserInfo(HttpSession httpSession, Locale locale) {
         final String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
             return UnauthorizedResponse(locale);
@@ -77,8 +77,3 @@ public class UserController extends AbstractController {
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 }
-//
-//        if (userServiceResponse.isValid()) {
-//final UserServiceResponse updateEmailResponse = userService.updateEmail(nickname, updateEmailView.getNewEmail());
-//        return responseMaker.makeResponse(updateEmailResponse, messageSource, locale);
-//        }

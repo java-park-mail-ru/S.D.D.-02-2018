@@ -4,7 +4,6 @@ import com.color_it.backend.entities.UserEntity;
 import org.springframework.http.ResponseEntity;
 
 public class UserServiceResponse extends AbstractServiceResponse {
-
     private UserServiceStatusCode statusCode;
 
     public UserServiceResponse() {
@@ -13,6 +12,7 @@ public class UserServiceResponse extends AbstractServiceResponse {
     }
 
     public UserServiceResponse(UserServiceStatusCode statusCode) {
+        super();
         this.statusCode = statusCode;
     }
 

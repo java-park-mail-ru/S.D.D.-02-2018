@@ -1,0 +1,366 @@
+swagger: '2.0'
+info:
+  description: |
+    This is a server, which proides api for signup, signin user and get information about user.
+    Developers LastUnion team.
+  version: 1.0.0
+  title: LastUnion server
+# schemes:
+# - https
+
+paths:
+  /api/user/signin:
+    post:
+      tags:
+      - uesr
+      summary: Sign in user into the server
+      description: Sign in user into the server
+      operationId: signInUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/signInUserModel'
+      responses:
+        200:
+          description: Successfull operation
+          schema:
+            $ref: '#/definitions/Ok'
+        400:
+          description: Contains invalid fields
+          schema:
+            $ref: '#/definitions/badRequest'
+        403:
+          description: Invalid login or password
+          schema: 
+            $ref: '#/definitions/forbidden'
+  /api/user/signup:
+    post:
+      tags:
+      - user
+      summary: Create user 
+      operationId: signUpUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/signUpUserModel'
+      responses:
+        201:
+          description: Successfull signup
+          schema:
+            $ref: '#/definitions/created'
+        400:
+          description: Contains invalid fields
+          schema:
+            $ref: '#/definitions/badRequest'
+        409:
+          description: Login or Email already registered
+          schema: 
+            $ref: '#/definitions/conflict'
+  /api/user/info:
+    get:
+      tags:
+      - user
+      summary: Get information about user
+      operationId: getUserInfo
+      produces: 
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: Successfull operation
+          schema:
+             $ref: '#/definitions/Ok1'
+        403:
+          description: Invalid login or password
+          schema: 
+            $ref: '#/definitions/forbidden'
+        404:
+          description: Invalid session
+          schema: 
+            $ref: '#/definitions/notFound'
+  /api/user/update_email:
+    post:
+      tags:
+      - user
+      summary: Changes user email
+      operationId: updateEmail
+      consumes:
+      - application/json
+      produces: 
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/changeUserEmailModel'
+      responses:
+        200:
+          description: Successfull operation
+          schema:
+             $ref: '#/definitions/Ok'
+        400:
+          description: Contains invalid fields
+          schema:
+            $ref: '#/definitions/badRequest'
+        404:
+          description: Invalid sesion
+          schema: 
+            $ref: '#/definitions/notFound'
+        409:
+          description: Login or Email already registered
+          schema: 
+            $ref: '#/definitions/conflict'
+            
+  /api/user/update_password:
+    post:
+      tags:
+      - user
+      summary: Changes user password
+      operationId: updatePassword
+      consumes:
+      - application/json
+      produces: 
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/changeUserPasswordModel'
+      responses:
+        200:
+          description: Successfull operation
+          schema:
+             $ref: '#/definitions/Ok'
+        400:
+          description: Contains invalid fields
+          schema:
+            $ref: '#/definitions/badRequest'
+        404:
+          description: Invalid session
+          schema: 
+            $ref: '#/definitions/notFound'
+        403:
+          description: Invalid login or password
+          schema: 
+            $ref: '#/definitions/forbidden'
+  /api/user/signout:
+    post:
+      tags:
+      - user
+      summary: logout user
+      operationId: signOut
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: Successfull operation
+          schema:
+             $ref: '#/definitions/Ok'
+        404:
+          description: Invalid session
+          schema: 
+            $ref: '#/definitions/notFound'
+            
+  /api/user/rating:
+    get:
+      tags:
+      - user
+      summary: get rating of user
+      operationId: getRating
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Successfull operation
+          schema:
+             $ref: '#/definitions/Ok2'
+        404:
+          description: Invalid session
+          schema: 
+            $ref: '#/definitions/notFound'
+      
+definitions:
+  signInUserModel:
+    type: object
+    properties:
+      nickname:
+        type: string
+        format: unique
+      password:
+        type: string
+        format: password
+  signUpUserModel:
+    type: object
+    properties:
+      nickname:
+        type: string
+        format: unique
+      email:
+        type: string
+        format: unique
+      password:
+        type: string
+        format: password
+      passwordCheck:
+        type: string
+        format: password
+  changeUserEmailModel:
+    type: object
+    properties:
+      email:
+        type: string
+        format: unique
+  changeUserPasswordModel:
+    type: object
+    properties:
+      oldPassword:
+        type: string
+        format: password
+      newPassword:
+        type: string
+        format: password
+      newPasswordCheck:
+        type: string
+        format: password
+  Ok:
+    type: object
+    properties:
+      # errors: 
+      responseMessage:
+        type: string
+        example: Ok! en
+      data: 
+        type: string
+        example: null
+    xml: 
+      name: Ok
+      
+  Ok1:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: true
+      responseMessage:
+        type: string
+        example: Ok! en
+      data: 
+        type: object
+        properties:
+          userName: 
+            type: string
+            example: "user"
+          userEmail: 
+            type: string
+            exmaple: "user@u.u"
+          userHighScore:
+            type: integer
+            example: 157
+    xml: 
+      name: Ok1
+      
+  Ok2:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: true
+      responseMessage:
+        type: string
+        example: Ok! en
+      data: 
+        type: string
+        example: 0
+    xml: 
+      name: Ok1
+      
+  created:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: true
+      responseMessage:
+        type: string
+        example: User created successfully! en
+      data: 
+        type: string
+        example: null
+  badRequest:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: false
+      responseMessage:
+        type: string
+        example: Json contains null fields! en
+      data: 
+        type: string
+        example: null
+  forbidden:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: false
+      responseMessage:
+        type: string
+        example: Invalid authentication data! en
+      data: 
+        type: string
+        example: null
+  notFound:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: false
+      responseMessage:
+        type: string
+        example: Invalid session! en
+      data: 
+        type: string
+        example: null
+  conflict:
+    type: object
+    properties:
+      result: 
+        type: boolean
+        example: false
+      responseMessage:
+        type: string
+        example: Login already occupied! en
+      data: 
+        type: string
+        example: null
+    
+      
+    
+    
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# basePath: /HustonMmmavr/server_api/1.0.0
+schemes:
+ - https
+ - http
+# Added by API Auto Mocking Plugin
+basePath: /HustonMmmavr/new/1.0.0

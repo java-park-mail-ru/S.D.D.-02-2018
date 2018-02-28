@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * Basic class responseMaker
  */
-
 public class AbstractResponseMaker {
     private final static Map<ViewStatusCode, String> hashViewErrorAndField = Map.ofEntries(
             Map.entry(ViewStatusCode.EMPTY_EMAIL, "email"),
@@ -61,7 +60,6 @@ public class AbstractResponseMaker {
                 put(UserServiceStatusCode.CREATED_STATE, "created");
                 put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, "email_conflict");
                 put(UserServiceStatusCode.CONFLICT_NAME_STATE, "nickname_conflict");
-//                put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, "forbidden");
                 put(UserServiceStatusCode.DB_ERROR_STATE, "server_error");
             }
         };
