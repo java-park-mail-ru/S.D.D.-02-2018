@@ -13,5 +13,7 @@ deploy:
   provider: heroku
   api_key:
     secure: ae3741f6-0e0e-466f-a835-b432aab04324
+  on: 
+    branches: all
   app: color-it-back
   run: mvn
