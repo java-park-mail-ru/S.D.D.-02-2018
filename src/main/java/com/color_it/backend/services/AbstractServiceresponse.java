@@ -5,7 +5,6 @@ import com.color_it.backend.entities.AbstractEntity;
 import java.util.List;
 
 public class AbstractServiceResponse<T> {
-    AbstractEntity entity;
-    List<AbstractEntity> entities;
-
+    public AbstractEntity entity;
+    public List<AbstractEntity> entities;
 }

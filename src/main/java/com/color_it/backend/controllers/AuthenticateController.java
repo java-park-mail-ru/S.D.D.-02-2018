@@ -1,13 +1,11 @@
 package com.color_it.backend.controllers;
 
-import com.color_it.backend.common.AbstractResponseMaker;
 import com.color_it.backend.common.AuthenticateResponseMaker;
 import com.color_it.backend.entities.UserEntity;
 import com.color_it.backend.services.UserService;
 import com.color_it.backend.services.UserServiceResponse;
 import com.color_it.backend.views.*;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,17 +40,14 @@ public class AuthenticateController extends AbstractController {
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signOut(HttpSession httpSession, Locale locale) {
-        final ResponseView responseView = new ResponseView();
         final String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
-            responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
+            return UnauthorizedResponse(locale);
         }
         httpSession.invalidate();
-        return ResponseEntity.ok(responseView);
+        return ResponseEntity.ok(new ResponseView());
     }
 
-    // checked
     @PostMapping(path="/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signUpUser(@RequestBody SignUpView signUpView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signUpView.checkValid();
@@ -62,9 +57,6 @@ public class AuthenticateController extends AbstractController {
 
         final UserEntity userEntity = signUpView.toEntity();
         final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
-        if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(sessionKey, userEntity.getNickname());
-        }
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 }

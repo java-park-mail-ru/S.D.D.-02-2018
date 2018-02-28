@@ -4,11 +4,11 @@ import com.color_it.backend.entities.UserEntity;
 import org.springframework.http.ResponseEntity;
 
 public class UserServiceResponse extends AbstractServiceResponse {
-    UserEntity entity;
-//    List<UserEntity>
-    UserServiceStatusCode statusCode;
+
+    private UserServiceStatusCode statusCode;
 
     public UserServiceResponse() {
+        super();
         statusCode = UserServiceStatusCode.OK_STATE;
     }
 
@@ -17,7 +17,7 @@ public class UserServiceResponse extends AbstractServiceResponse {
     }
 
     public UserEntity getUserEntity() {
-        return this.entity;
+        return (UserEntity)entity;
     }
 
     public void setEntity(UserEntity userEntity) {
