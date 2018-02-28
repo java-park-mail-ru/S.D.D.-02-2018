@@ -1,8 +1,5 @@
 package com.colorit.backend.entities;
 
-
-import javax.persistence.*;
-
 public class UserEntity extends AbstractEntity {
     private Integer id;
     private String nickname;
