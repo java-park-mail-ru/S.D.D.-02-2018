@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepositoryList {
-    final List<UserEntity> db;
+    private final List<UserEntity> db;
 
     public UserRepositoryList() {
         db = new ArrayList<>();
