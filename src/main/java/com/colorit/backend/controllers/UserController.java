@@ -2,6 +2,7 @@ package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
 import com.colorit.backend.services.UserService;
+import com.colorit.backend.services.UserServiceOnList;
 import com.colorit.backend.services.UserServiceResponse;
 import com.colorit.backend.views.ResponseView;
 import com.colorit.backend.views.UpdateEmailView;
@@ -19,7 +20,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
-    public UserController(MessageSource messageSource, UserService userService) {
+    public UserController(MessageSource messageSource, UserServiceOnList userService) {
         super(messageSource, userService);
         this.responseMaker = new UserResponseMaker();
     }

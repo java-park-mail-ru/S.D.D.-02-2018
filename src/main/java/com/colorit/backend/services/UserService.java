@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
     private final UserRepository userRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);

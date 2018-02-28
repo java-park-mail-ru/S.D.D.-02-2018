@@ -1,7 +1,9 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AbstractResponseMaker;
+import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.UserService;
+import com.colorit.backend.services.UserServiceOnList;
 import com.colorit.backend.views.ResponseView;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ public class AbstractController {
     protected final MessageSource messageSource;
     @SuppressWarnings("CheckStyle")
     @NotNull
-    protected final UserService userService;
+    protected final IUserService userService;
     @SuppressWarnings("CheckStyle")
     protected AbstractResponseMaker responseMaker;
     protected static final String SESSION_KEY = "nickname";
@@ -29,7 +31,7 @@ public class AbstractController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
     }
 
-    public AbstractController(@NotNull MessageSource messageSource, @NotNull UserService userService) {
+    public AbstractController(@NotNull MessageSource messageSource, @NotNull UserServiceOnList userService) {
         this.messageSource = messageSource;
         this.userService = userService;
     }

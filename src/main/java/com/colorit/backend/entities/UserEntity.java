@@ -3,27 +3,27 @@ package com.colorit.backend.entities;
 
 import javax.persistence.*;
 
-@SuppressWarnings("unused")
-@Entity
-@Table(name = "\"user\"", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
-        @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
-})
+//@SuppressWarnings("unused")
+//@Entity
+//@Table(name = "\"user\"", uniqueConstraints = {
+//        @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
+//        @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
+//})
 public class UserEntity extends AbstractEntity {
-    @Id
-    @GeneratedValue()
+    //@Id
+    //@GeneratedValue()
     private Integer id;
-    @Column(name = "nickname")
+    //@Column(name = "nickname")
     private String nickname;
-    @Column(name = "email")
+    //@Column(name = "email")
     private String email;
-    @Column(name = "passwordHash")
+    //@Column(name = "passwordHash")
     private String passwordHash;
-    @Column(name = "avatarPath")
+    //@Column(name = "avatarPath")
     private String avatarPath;
-    @Column(name = "countGames", columnDefinition = "INTEGER DEFAULT 0")
+    //@Column(name = "countGames", columnDefinition = "INTEGER DEFAULT 0")
     private Integer countGames;
-    @Column(name = "countWins", columnDefinition = "INTEGER DEFAULT 0")
+    //@Column(name = "countWins", columnDefinition = "INTEGER DEFAULT 0")
     private Integer countWins;
 
     public UserEntity() {
