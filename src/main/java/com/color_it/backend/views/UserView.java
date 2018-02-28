@@ -1,24 +1,28 @@
-package  com.color_it.backend.views;
+package com.color_it.backend.views;
 
 import com.color_it.backend.entities.UserEntity;
 
 /**
- * Output view
+ * An abstract class that represents output view.
+ *
+ * @author hustonMavr
+ * @version 1.0
  */
 public class UserView {
     private String nickname;
     private String email;
     private Double rating;
 
-    public UserView() {}
+    public UserView() {
+
+    }
 
     public UserView(UserEntity userEntity) {
         this.nickname = userEntity.getNickname();
         this.email = userEntity.getEmail();
         if (userEntity.getCountGames() != 0 && userEntity.getCountWins() != null && userEntity.getCountGames() != null) {
             this.rating = userEntity.getCountWins().doubleValue() / userEntity.getCountGames().doubleValue();
-        }
-        else {
+        } else {
             this.rating = 0.0;
         }
     }

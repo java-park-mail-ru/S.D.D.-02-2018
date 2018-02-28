@@ -9,6 +9,7 @@ public class UpdatePasswordView extends AbstractView {
     private final String newPassword;
     private final String newPasswordCheck;
 
+    @SuppressWarnings("unused")
     @JsonCreator
     public UpdatePasswordView(@JsonProperty("oldPassword") String oldPassword,
                               @JsonProperty("newPassword") String newPassword,
@@ -18,6 +19,7 @@ public class UpdatePasswordView extends AbstractView {
         this.newPassword = newPassword;
         this.newPasswordCheck = newPasswordCheck;
     }
+
     public String getOldPassword() {
         return oldPassword;
     }
@@ -29,16 +31,16 @@ public class UpdatePasswordView extends AbstractView {
     @Override
     public ViewStatus checkValid() {
         final ViewStatus viewStatus = new ViewStatus();
-        if (oldPassword == null || oldPassword.equals("")) {
+        if (oldPassword == null || oldPassword.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_OLD_PASSWORD);
         }
 
         boolean passwordFilled = true;
-        if (newPassword == null || newPassword.equals("")) {
+        if (newPassword == null || newPassword.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD);
             passwordFilled = false;
         }
-        if (newPasswordCheck == null || newPasswordCheck.equals("")) {
+        if (newPasswordCheck == null || newPasswordCheck.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD_CHECK);
             passwordFilled = false;
         }
@@ -49,6 +51,7 @@ public class UpdatePasswordView extends AbstractView {
         return viewStatus;
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     public UserEntity toEntity() {
         return null;
     }

@@ -25,14 +25,14 @@ public class AuthenticateController extends AbstractController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signInView.checkValid();
-        if (!check.isValid()) {
+        if (check.isValid()) {
             return responseMaker.makeResponse(check, messageSource, locale);
         }
 
         final UserEntity userEntity = signInView.toEntity();
         final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
         if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(sessionKey, userEntity.getNickname());
+            httpSession.setAttribute(SESSION_KEY, userEntity.getNickname());
         }
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
@@ -40,23 +40,26 @@ public class AuthenticateController extends AbstractController {
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signOut(HttpSession httpSession, Locale locale) {
-        final String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
         if (nickname == null) {
-            return UnauthorizedResponse(locale);
+            return unauthorizedResponse(locale);
         }
         httpSession.invalidate();
         return ResponseEntity.ok(new ResponseView());
     }
 
-    @PostMapping(path="/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signUpUser(@RequestBody SignUpView signUpView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signUpView.checkValid();
-        if (!check.isValid()) {
+        if (check.isValid()) {
             return responseMaker.makeResponse(check, messageSource, locale);
         }
 
         final UserEntity userEntity = signUpView.toEntity();
         final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
+        if (userServiceResponse.isValid()) {
+            httpSession.setAttribute(SESSION_KEY, userEntity.getNickname());
+        }
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 }

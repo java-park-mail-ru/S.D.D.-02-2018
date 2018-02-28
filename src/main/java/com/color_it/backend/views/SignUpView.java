@@ -1,4 +1,4 @@
-package  com.color_it.backend.views;
+package com.color_it.backend.views;
 
 import com.color_it.backend.entities.UserEntity;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,6 +10,7 @@ public class SignUpView extends AbstractView {
     private final String password;
     private final String passwordCheck;
 
+    @SuppressWarnings("unused")
     @JsonCreator
     SignUpView(@JsonProperty("nickname") String nickname,
                @JsonProperty("email") String email,
@@ -24,19 +25,19 @@ public class SignUpView extends AbstractView {
     @Override
     public ViewStatus checkValid() {
         final ViewStatus viewStatus = new ViewStatus();
-        if (nickname == null || nickname.equals("")) {
+        if (nickname == null || nickname.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_NICKNAME);
         }
 
         checkEmail(viewStatus, email);
 
         boolean passwordFilled = true;
-        if (password == null || password.equals("")) {
+        if (password == null || password.isEmpty()) {
             passwordFilled = false;
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD);
         }
 
-        if (passwordCheck == null || passwordCheck.equals(""))  {
+        if (passwordCheck == null || passwordCheck.isEmpty()) {
             passwordFilled = false;
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD_CHECK);
         }
@@ -49,7 +50,6 @@ public class SignUpView extends AbstractView {
     }
 
     public UserEntity toEntity() {
-        final UserEntity userEntity = new UserEntity(nickname, email, password);
-        return userEntity;
+        return new UserEntity(nickname, email, password);
     }
 }

@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class ResponseView<T> {
     private final Map<String, String> errors;
-    T data;
+    private T data;
 
     public ResponseView() {
         errors = new HashMap<>();
@@ -23,10 +23,12 @@ public class ResponseView<T> {
     }
 
     // Methdos used for json serializer
+    @SuppressWarnings("unused")
     public Map<String, String> getErrors() {
         return errors;
     }
 
+    @SuppressWarnings("unused")
     public T getData() {
         return data;
     }

@@ -13,18 +13,23 @@ import java.util.Locale;
 
 @RestController
 public class AbstractController {
+    @SuppressWarnings("CheckStyle")
     @NotNull
     protected final MessageSource messageSource;
+    @SuppressWarnings("CheckStyle")
     @NotNull
     protected final UserService userService;
+    @SuppressWarnings("CheckStyle")
     protected AbstractResponseMaker responseMaker;
-    protected static final String sessionKey = "nickname";
+    @SuppressWarnings("CheckStyle")
+    protected static final String SESSION_KEY = "nickname";
 
-    protected ResponseEntity<ResponseView> UnauthorizedResponse(Locale locale) {
-        ResponseView responseView = new ResponseView();
+    protected ResponseEntity<ResponseView> unauthorizedResponse(Locale locale) {
+        final ResponseView responseView = new ResponseView();
         responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
     }
+
     public AbstractController(@NotNull MessageSource messageSource, @NotNull UserService userService) {
         this.messageSource = messageSource;
         this.userService = userService;

@@ -3,14 +3,14 @@ package  com.color_it.backend.views;
 import java.util.ArrayList;
 
 public class ViewStatus {
-    final private ArrayList<ViewStatusCode> arrayOfErrors;
+    private final ArrayList<ViewStatusCode> arrayOfErrors;
 
     ViewStatus() {
         arrayOfErrors = new ArrayList<>();
     }
 
     public boolean isValid() {
-        return arrayOfErrors.size() == 0;
+        return arrayOfErrors.isEmpty();
     }
 
     public ArrayList<ViewStatusCode> getErrors() {

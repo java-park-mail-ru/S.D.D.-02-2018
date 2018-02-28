@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SignInView extends AbstractView {
-    private String nickname;
-    private String password;
+    private final String nickname;
+    private final String password;
 
+    @SuppressWarnings("unused")
     @JsonCreator
     SignInView(@JsonProperty("nickname") String nickname,
                @JsonProperty("password") String password) {
@@ -18,19 +19,18 @@ public class SignInView extends AbstractView {
     @Override
     public ViewStatus checkValid() {
         final ViewStatus viewStatus = new ViewStatus();
-        if (nickname == null || nickname.equals("")) {
+        if (nickname == null || nickname.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_NICKNAME);
         }
 
-        if (password == null || password.equals("")) {
+        if (password == null || password.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD);
         }
         return viewStatus;
     }
 
     public UserEntity toEntity() {
-        final UserEntity userEntity = new UserEntity(nickname, password);
-        return userEntity;
+        return new UserEntity(nickname, password);
     }
 
 }

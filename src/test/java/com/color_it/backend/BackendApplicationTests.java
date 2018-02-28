@@ -9,8 +9,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class BackendApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @SuppressWarnings("EmptyMethod")
+    @Test
+    public void contextLoads() {
+    }
 
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UpdateEmailView extends AbstractView {
     private final String newEmail;
 
+    @SuppressWarnings("unused")
     @JsonCreator
     public UpdateEmailView(@JsonProperty("newEmail") String newEmail) {
         this.newEmail = newEmail;
@@ -17,7 +18,7 @@ public class UpdateEmailView extends AbstractView {
 
     @Override
     public ViewStatus checkValid() {
-        ViewStatus viewStatus = new ViewStatus();
+        final ViewStatus viewStatus = new ViewStatus();
         checkEmail(viewStatus, newEmail);
         return viewStatus;
     }

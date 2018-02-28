@@ -2,7 +2,6 @@ package com.color_it.backend.services;
 
 import com.color_it.backend.entities.UserEntity;
 import com.color_it.backend.repositories.UserRepository;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-    private static final String passwordSault = "sault";
+    private static final String PASSWORD_SAULT = "sault";
 
     @Autowired
     public UserService(final UserRepository repository) {
@@ -32,17 +31,14 @@ public class UserService {
     }
 
     private boolean checkPasswords(String internalPassword, String externalPassword) {
-        String saultedPassword = passwordSault + externalPassword + passwordSault;
-        if (!passwordEncoder().matches(saultedPassword, internalPassword)) {
-            return false;
-        }
-        return true;
+        final String saultedPassword = PASSWORD_SAULT + externalPassword + PASSWORD_SAULT;
+        return passwordEncoder().matches(saultedPassword, internalPassword);
     }
 
     public UserServiceResponse getUser(String nickname) {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
-            UserEntity userEntity = userRepository.getByNickname(nickname);
+            final UserEntity userEntity = userRepository.getByNickname(nickname);
             if (userEntity != null) {
                 userServiceResponse.setEntity(userEntity);
                 LOGGER.info("User with nickname: {} found");
@@ -59,9 +55,9 @@ public class UserService {
     }
 
     public UserServiceResponse updateEmail(String nickname, String email) {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
-            UserEntity existingEntity = userRepository.getByNickname(nickname);
+            final UserEntity existingEntity = userRepository.getByNickname(nickname);
             if (existingEntity != null) {
                 existingEntity.setEmail(email);
                 userRepository.save(existingEntity);
@@ -69,7 +65,7 @@ public class UserService {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
             }
         } catch (DataIntegrityViolationException dIVex) {
-            SQLException sqlEx = (SQLException)dIVex.getCause().getCause();
+            final SQLException sqlEx = (SQLException) dIVex.getCause().getCause();
             if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
             } else {
@@ -84,23 +80,23 @@ public class UserService {
     }
 
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
-            UserEntity existingEntity = userRepository.getByNickname(nickname);
+            final UserEntity existingEntity = userRepository.getByNickname(nickname);
             if (existingEntity != null) {
-                existingEntity.setEmail(email);
-                userRepository.save(existingEntity);
+                if (checkPasswords(existingEntity.getPasswordHash(), oldPassword)) {
+                    existingEntity.setPasswordHash(
+                            passwordEncoder().encode(PASSWORD_SAULT + newPassword + PASSWORD_SAULT)
+                    );
+                    userRepository.save(existingEntity);
+                    LOGGER.info("User with nickname: {} changed password");
+                } else {
+                    userServiceResponse.setStatusCode(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE);
+                    LOGGER.info("User with nickname: {} input incorrect oldPassword");
+                }
             } else {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
             }
-        } catch (DataIntegrityViolationException dIVex) {
-            SQLException sqlEx = (SQLException)dIVex.getCause().getCause();
-            if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
-                userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
-            } else {
-                userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_EMAIL_STATE);
-            }
-            LOGGER.error("Constraint error: {}", sqlEx.getLocalizedMessage());
         } catch (DataAccessException dAEx) {
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
             LOGGER.error("Error DataBase {}", dAEx.getLocalizedMessage());
@@ -109,7 +105,7 @@ public class UserService {
     }
 
     public UserServiceResponse authenticateUser(UserEntity userEntity) {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
             final UserEntity existingUserEntity = userRepository.getByNickname(userEntity.getNickname());
             if (existingUserEntity != null) {
@@ -134,12 +130,12 @@ public class UserService {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.CREATED_STATE);
         try {
             // its password
-            String userPassword = userEntity.getPasswordHash();
-            userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
+            final String userPassword = userEntity.getPasswordHash();
+            userEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + userPassword + PASSWORD_SAULT));
             this.userRepository.save(userEntity);
             LOGGER.info("User with nickname: {} created", userEntity.getNickname());
         } catch (DataIntegrityViolationException dIVEx) {
-            SQLException sqlEx = (SQLException)dIVEx.getCause().getCause();
+            final SQLException sqlEx = (SQLException) dIVEx.getCause().getCause();
             if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
             } else {
@@ -153,6 +149,7 @@ public class UserService {
         return userServiceResponse;
     }
 
+    @SuppressWarnings("unused")
     public UserServiceResponse userExists(String nickname) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
@@ -167,8 +164,10 @@ public class UserService {
         return userServiceResponse;
     }
 
-    public UserServiceResponse getRating() {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE)
+    // think how to do it
+    public UserServiceResponse getRating(String nickname) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
+
         return userServiceResponse;
     }
 }

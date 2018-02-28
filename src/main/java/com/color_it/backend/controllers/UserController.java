@@ -17,33 +17,33 @@ import java.util.Locale;
 
 
 @RestController
-@RequestMapping(path="/api/user/")
+@RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
     public UserController(MessageSource messageSource, UserService userService) {
         super(messageSource, userService);
         this.responseMaker = new UserResponseMaker();
     }
 
-    @GetMapping(path="/info", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUserInfo(HttpSession httpSession, Locale locale) {
-        final String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
         if (nickname == null) {
-            return UnauthorizedResponse(locale);
+            return unauthorizedResponse(locale);
         }
 
-        UserServiceResponse userServiceResponse = userService.getUser(nickname);
+        final UserServiceResponse userServiceResponse = userService.getUser(nickname);
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 
-    @PostMapping(path="update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {
-        final String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
         if (nickname == null) {
-            return UnauthorizedResponse(locale);
+            return unauthorizedResponse(locale);
         }
 
         final ViewStatus viewStatus = updateEmailView.checkValid();
-        if (!viewStatus.isValid()) {
+        if (viewStatus.isValid()) {
             return responseMaker.makeResponse(viewStatus, messageSource, locale);
         }
 
@@ -51,26 +51,28 @@ public class UserController extends AbstractController {
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 
-    @PostMapping(path="update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updatePassword(@RequestBody UpdatePasswordView updatePasswordView, HttpSession httpSession, Locale locale) {
-        final String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
         if (nickname == null) {
-            return UnauthorizedResponse(locale);
+            return unauthorizedResponse(locale);
         }
 
         final ViewStatus viewStatus = updatePasswordView.checkValid();
-        if (!viewStatus.isValid()) {
+        if (viewStatus.isValid()) {
             return responseMaker.makeResponse(viewStatus, messageSource, locale);
         }
 
-        return null;
+        final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
+                updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
+        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
     }
 
     @GetMapping(value = "/rating", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getRating(HttpSession httpSession, Locale locale) {
-        final String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
         if (nickname == null) {
-            return UnauthorizedResponse(locale);
+            return unauthorizedResponse(locale);
         }
 
         final UserServiceResponse userServiceResponse = userService.getRating(nickname);

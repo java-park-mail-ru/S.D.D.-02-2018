@@ -1,4 +1,4 @@
-package  com.color_it.backend.common;
+package com.color_it.backend.common;
 
 import com.color_it.backend.services.UserServiceResponse;
 import com.color_it.backend.services.UserServiceStatusCode;
@@ -14,12 +14,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-
 /**
- * Basic class responseMaker
+ * An basic class that represents responsemaker.
+ *
+ * @author HaseProgram
+ * @version 1.0
  */
 public class AbstractResponseMaker {
-    private final static Map<ViewStatusCode, String> hashViewErrorAndField = Map.ofEntries(
+    private static final Map<ViewStatusCode, String> HASH_VIEW_ERROR_AND_FIELD = Map.ofEntries(
             Map.entry(ViewStatusCode.EMPTY_EMAIL, "email"),
             Map.entry(ViewStatusCode.EMPTY_NICKNAME, "nickname"),
             Map.entry(ViewStatusCode.EMPTY_OLD_PASSWORD, "oldPassword"),
@@ -29,7 +31,7 @@ public class AbstractResponseMaker {
             Map.entry(ViewStatusCode.PASSWORD_NOT_MATCH_STATE, "passwordCheck")
     );
 
-    private final static Map<ViewStatusCode, String> hashViewErrorAndMessage = Map.ofEntries(
+    private static final Map<ViewStatusCode, String> HASH_VIEW_ERROR_AND_MESSAGE = Map.ofEntries(
             Map.entry(ViewStatusCode.EMPTY_EMAIL, "email_empty"),
             Map.entry(ViewStatusCode.EMPTY_NICKNAME, "nickname_empty"),
             Map.entry(ViewStatusCode.EMPTY_PASSWORD, "password_empty"),
@@ -39,21 +41,14 @@ public class AbstractResponseMaker {
             Map.entry(ViewStatusCode.PASSWORD_NOT_MATCH_STATE, "passwordCheck_not_match")
     );
 
-    final protected Map<UserServiceStatusCode, HttpStatus> hashServiceStatusAndHttpStatus;
-    final protected Map<UserServiceStatusCode, String> hashServiceStatusAndMessage;
+    private final Map<UserServiceStatusCode, HttpStatus> hashServiceStatusAndHttpStatus;
+    private final Map<UserServiceStatusCode, String> hashServiceStatusAndMessage;
 
+    @SuppressWarnings("MapReplaceableByEnumMap")
     public AbstractResponseMaker() {
-        this.hashServiceStatusAndHttpStatus = new HashMap<UserServiceStatusCode, HttpStatus>(){
-            {
-                put(UserServiceStatusCode.OK_STATE, HttpStatus.OK);
-                put(UserServiceStatusCode.CREATED_STATE, HttpStatus.CREATED);
-                put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, HttpStatus.CONFLICT);
-                put(UserServiceStatusCode.CONFLICT_NAME_STATE, HttpStatus.CONFLICT);
-                put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN);
-                put(UserServiceStatusCode.DB_ERROR_STATE, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        };
+        this.hashServiceStatusAndHttpStatus = new UserServiceStatusCodeHttpStatusHashMap();
 
+        //noinspection AnonymousInnerClassMayBeStatic,Convert2Diamond
         this.hashServiceStatusAndMessage = new HashMap<UserServiceStatusCode, String>() {
             {
                 put(UserServiceStatusCode.OK_STATE, "ok");
@@ -65,8 +60,9 @@ public class AbstractResponseMaker {
         };
     }
 
+    @SuppressWarnings("unchecked")
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, MessageSource messageSource, Locale locale) {
-        final ResponseView responseView = new ResponseView();
+        final ResponseView<UserView> responseView = new ResponseView();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getUserEntity() != null) {
                 responseView.setData(new UserView(userServiceResponse.getUserEntity()));
@@ -80,10 +76,22 @@ public class AbstractResponseMaker {
 
 
     public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, MessageSource messageSource, Locale locale) {
-        ResponseView responseView = new ResponseView();
-        for (ViewStatusCode code: viewStatus.getErrors()) {
-            responseView.addError(hashViewErrorAndField.get(code), messageSource.getMessage(hashViewErrorAndMessage.get(code), null, locale));
+        final ResponseView responseView = new ResponseView();
+        for (ViewStatusCode code : viewStatus.getErrors()) {
+            responseView.addError(HASH_VIEW_ERROR_AND_FIELD.get(code), messageSource.getMessage(HASH_VIEW_ERROR_AND_MESSAGE.get(code), null, locale));
         }
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
+    }
+
+    private static class UserServiceStatusCodeHttpStatusHashMap extends HashMap<UserServiceStatusCode, HttpStatus> {
+        {
+            put(UserServiceStatusCode.OK_STATE, HttpStatus.OK);
+            put(UserServiceStatusCode.CREATED_STATE, HttpStatus.CREATED);
+            put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, HttpStatus.CONFLICT);
+            put(UserServiceStatusCode.CONFLICT_NAME_STATE, HttpStatus.CONFLICT);
+            put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN);
+            put(UserServiceStatusCode.DB_ERROR_STATE, HttpStatus.INTERNAL_SERVER_ERROR);
+            put(UserServiceStatusCode.NAME_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN); // ?
+        }
     }
 }

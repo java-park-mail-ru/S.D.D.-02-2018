@@ -1,5 +1,6 @@
 package  com.color_it.backend.views;
 
+@SuppressWarnings("ALL")
 public enum ViewStatusCode {
     OK_STATE,
     EMPTY_EMAIL,
