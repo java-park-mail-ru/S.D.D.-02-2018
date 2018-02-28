@@ -42,16 +42,26 @@ public class AbstractResponseMaker {
             Map.entry(ViewStatusCode.PASSWORD_NOT_MATCH_STATE, "passwordCheck_not_match")
     );
 
-    private final Map<UserServiceStatusCode, HttpStatus> hashServiceStatusAndHttpStatus;
-    @SuppressWarnings("CheckStyle")
+    protected static final Map<UserServicestatusCode, HttpStatus> HASH_SERVICE_STATUS_AND_HTTP_STATUS = Map.ofEntries(
+            Map.entry(UserServiceStatusCode.OK_STATE, HttpStatus.OK),
+            Map.entry(UserServiceStatusCode.CREATED_STATE, HttpStatus.CREATED),
+            Map.entry(UserServiceStatusCode.CONFLICT_EMAIL_STATE, HttpStatus.CONFLICT),
+            Map.entry(UserServiceStatusCode.CONFLICT_NAME_STATE, HttpStatus.CONFLICT),
+            Map.entry(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN),
+            Map.entry(UserServiceStatusCode.DB_ERROR_STATE, HttpStatus.INTERNAL_SERVER_ERROR),
+            Map.entry(UserServiceStatusCode.NAME_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN),
+    );
+
+//    private final Map<UserServiceStatusCode, HttpStatus> hashServiceStatusAndHttpStatus;
+//    @SuppressWarnings("CheckStyle")
     protected final Map<UserServiceStatusCode, String> hashServiceStatusAndMessage;
 
     @SuppressWarnings("MapReplaceableByEnumMap")
     public AbstractResponseMaker() {
-        this.hashServiceStatusAndHttpStatus = new UserServiceStatusCodeHttpStatusHashMap();
+//        this.hashServiceStatusAndHttpStatus = new UserServiceStatusCodeHttpStatusHashMap();
 
         //noinspection AnonymousInnerClassMayBeStatic,Convert2Diamond
-        this.hashServiceStatusAndMessage = new HashMap<UserServiceStatusCode, String>() {
+        this.hashServiceStatusAndMessage = new EnumMap<UserServiceStatusCode, String>() {
             {
                 put(UserServiceStatusCode.OK_STATE, "ok");
                 put(UserServiceStatusCode.CREATED_STATE, "created");
@@ -60,6 +70,10 @@ public class AbstractResponseMaker {
                 put(UserServiceStatusCode.DB_ERROR_STATE, "server_error");
             }
         };
+    }
+
+    public Map<UserServiceStatusCode, String> getHashServiceStatusAndMessage() {
+        return hashServiceStatusAndMessage;
     }
 
     @SuppressWarnings("unchecked")
@@ -86,15 +100,15 @@ public class AbstractResponseMaker {
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
     }
 
-    private static class UserServiceStatusCodeHttpStatusHashMap extends HashMap<UserServiceStatusCode, HttpStatus> {
-        {
-            put(UserServiceStatusCode.OK_STATE, HttpStatus.OK);
-            put(UserServiceStatusCode.CREATED_STATE, HttpStatus.CREATED);
-            put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, HttpStatus.CONFLICT);
-            put(UserServiceStatusCode.CONFLICT_NAME_STATE, HttpStatus.CONFLICT);
-            put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN);
-            put(UserServiceStatusCode.DB_ERROR_STATE, HttpStatus.INTERNAL_SERVER_ERROR);
-            put(UserServiceStatusCode.NAME_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN); // ?
-        }
-    }
+//    private static class UserServiceStatusCodeHttpStatusHashMap extends HashMap<UserServiceStatusCode, HttpStatus> {
+//        {
+//            put(UserServiceStatusCode.OK_STATE, HttpStatus.OK);
+//            put(UserServiceStatusCode.CREATED_STATE, HttpStatus.CREATED);
+//            put(UserServiceStatusCode.CONFLICT_EMAIL_STATE, HttpStatus.CONFLICT);
+//            put(UserServiceStatusCode.CONFLICT_NAME_STATE, HttpStatus.CONFLICT);
+//            put(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN);
+//            put(UserServiceStatusCode.DB_ERROR_STATE, HttpStatus.INTERNAL_SERVER_ERROR);
+//            put(UserServiceStatusCode.NAME_MATCH_ERROR_STATE, HttpStatus.FORBIDDEN); // ?
+//        }
+//    }
 }
