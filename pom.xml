@@ -43,8 +43,8 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <!--<version>42.0.0</version>-->
-            <!--<scope>runtime</scope>-->
+            <version>42.0.0</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -56,6 +56,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-starter-web</artifactId>
+            <version>1.0.0.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -105,5 +106,28 @@
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
