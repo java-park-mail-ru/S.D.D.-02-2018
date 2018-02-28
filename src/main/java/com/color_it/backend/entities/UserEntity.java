@@ -21,9 +21,9 @@ public class UserEntity extends AbstractEntity {
     @Column(name="avatarPath")
     private String avatarPath;
     @Column(name="countGames", columnDefinition = "INTEGER DEFAULT 0")
-    private Integer countGames = 0;
+    private Integer countGames;
     @Column(name="countWins", columnDefinition = "INTEGER DEFAULT 0")
-    private Integer countWins = 0;
+    private Integer countWins;
 
     public UserEntity() {
         countGames = 0;

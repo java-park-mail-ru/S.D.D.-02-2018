@@ -1,7 +1,11 @@
 package com.color_it.backend.services;
 
-import org.springframework.http.ResponseEntity;
+import com.color_it.backend.entities.AbstractEntity;
 
-public interface AbstractServiceresponse<T> {
-    ResponseEntity<T> toHttpResponse();
+import java.util.List;
+
+public class AbstractServiceResponse<T> {
+    AbstractEntity entity;
+    List<AbstractEntity> entities;
+
 }

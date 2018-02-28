@@ -23,11 +23,6 @@ public class AuthenticateController extends AbstractController {
         this.responseMaker = new AuthenticateResponseMaker();
     }
 
-    @GetMapping(path="test", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> test() {
-        return new ResponseEntity<>(new ResponseView(), HttpStatus.OK);
-    }
-
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
@@ -48,7 +43,7 @@ public class AuthenticateController extends AbstractController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signOut(HttpSession httpSession, Locale locale) {
         final ResponseView responseView = new ResponseView();
-        String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
             responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);

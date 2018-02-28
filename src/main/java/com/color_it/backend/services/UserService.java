@@ -1,7 +1,9 @@
 package com.color_it.backend.services;
 
+import com.color_it.backend.common.UserResponseMaker;
 import com.color_it.backend.entities.UserEntity;
 import com.color_it.backend.repositories.Repository;
+import org.apache.catalina.User;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +34,15 @@ public class UserService {
             UserEntity userEntity = userRepository.getByNickname(nickname);
             if (userEntity != null) {
                 userServiceResponse.setEntity(userEntity);
+                LOGGER.info("User with nickname: {} found");
             } else {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
+                LOGGER.error("User with nickname: {} not found");
+
             }
         } catch (DataAccessException dAEx) {
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
+            LOGGER.error("Error database: {}", dAEx.getLocalizedMessage());
         }
         return userServiceResponse;
     }
@@ -46,7 +52,21 @@ public class UserService {
         return new BCryptPasswordEncoder();
     }
 
-    public UserServiceResponse getUsers(Integer limit, Integer offset) {
+//    public UserServiceResponse getUsers(Integer limit, Integer offset) {
+//        return null;
+//    }
+
+
+    public UserServiceResponse updateUser(UserEntity userEntity) {
+        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
+        try {
+            UserEntity existingUser = userRepository.getByNickname(userEntity.getNickname());
+            if (existingUser != null) {
+
+            }
+        } catch (DataAccessException dAEx) {
+
+        }
         return null;
     }
 
@@ -58,7 +78,6 @@ public class UserService {
         return true;
     }
 
-    // maybe entity
     public UserServiceResponse authenticateUser(UserEntity userEntity) {
         UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
         try {
@@ -66,12 +85,15 @@ public class UserService {
             if (existingUserEntity != null) {
                 if (!checkPasswords(existingUserEntity.getPasswordHash(), userEntity.getPasswordHash())) {
                     userServiceResponse.setStatusCode(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE);
+                    LOGGER.error("User passwords not math nickname: {}", userEntity.getNickname());
                 }
             } else {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
+                LOGGER.error("User with nickname: {} not found");
             }
         } catch (DataAccessException dAEx) {
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
+            LOGGER.error("Error DataBase {}", dAEx.getLocalizedMessage());
         }
         return userServiceResponse;
     }
@@ -83,10 +105,9 @@ public class UserService {
             String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
             this.userRepository.save(userEntity);
-            LOGGER.info("user created {}", userEntity.getNickname());
+            LOGGER.info("User with nickname: {} created", userEntity.getNickname());
         } catch (DataIntegrityViolationException dIVEx) {
             SQLException sqlEx = (SQLException)dIVEx.getCause().getCause();
-            LOGGER.error("Constraint error: {}", dIVEx.getLocalizedMessage());
             if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
             } else {
@@ -94,7 +115,7 @@ public class UserService {
             }
             LOGGER.error("Constraint error: {}", sqlEx.getLocalizedMessage());
         } catch (DataAccessException dAEx) {
-            LOGGER.error("Error DataBase", dAEx);
+            LOGGER.error("Error DataBase {}", dAEx.getLocalizedMessage());
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
         }
         return userServiceResponse;
@@ -114,10 +135,10 @@ public class UserService {
         try {
             if (!userRepository.existsByNickname(nickname)) {
                 userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
-                LOGGER.error("user not found {}", nickname);
+                LOGGER.error("user with nickname: {} not found", nickname);
             }
         } catch (DataAccessException dAEx) {
-            LOGGER.error("Error DataBase", dAEx);
+            LOGGER.error("Error DataBase {}", dAEx.getLocalizedMessage());
             userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
         }
         return userServiceResponse;

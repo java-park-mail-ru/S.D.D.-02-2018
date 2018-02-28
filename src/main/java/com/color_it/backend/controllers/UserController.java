@@ -28,26 +28,19 @@ public class UserController extends AbstractController {
 
     @GetMapping(path="/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUser(HttpSession httpSession, Locale locale) {
-        String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                     new ResponseView(messageSource.getMessage("unauthorized", null, locale)));
         }
 
         UserServiceResponse userServiceResponse = userService.getUser(nickname);
-//        if (userServiceResponse.isValid()) {
-//
-//        }
-
-
         return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
-
-//        return new ResponseEntity<>(new ResponseView(), HttpStatus.OK);
     }
 
     @PostMapping(path="update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {
-        String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                     new ResponseView(messageSource.getMessage("unauthorized", null, locale)));
@@ -69,7 +62,7 @@ public class UserController extends AbstractController {
 
     @PostMapping(path="update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updatePassword(@RequestBody UpdatePasswordView updatePasswordView, HttpSession httpSession, Locale locale) {
-        String nickname = (String)httpSession.getAttribute(sessionKey);
+        final String nickname = (String)httpSession.getAttribute(sessionKey);
         if (nickname == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                     new ResponseView(messageSource.getMessage("unauthorized", null, locale)));
@@ -86,7 +79,13 @@ public class UserController extends AbstractController {
 
 
     @GetMapping(value = "/rating", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getRating() {
+    public ResponseEntity<ResponseView> getRating(HttpSession httpSession, Locale locale) {
+        final String nickname = (String)httpSession.getAttribute(sessionKey);
+        if (nickname == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    new ResponseView(messageSource.getMessage("unauthorized", null, locale)));
+        }
+
         return null;
     }
 }

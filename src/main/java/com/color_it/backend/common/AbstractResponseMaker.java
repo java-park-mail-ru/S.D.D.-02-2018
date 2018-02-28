@@ -1,14 +1,11 @@
 package  com.color_it.backend.common;
 
-import com.color_it.backend.services.UserService;
 import com.color_it.backend.services.UserServiceResponse;
 import com.color_it.backend.services.UserServiceStatusCode;
 import com.color_it.backend.views.ResponseView;
 import com.color_it.backend.views.UserView;
 import com.color_it.backend.views.ViewStatus;
 import com.color_it.backend.views.ViewStatusCode;
-//import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
-import org.apache.catalina.User;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

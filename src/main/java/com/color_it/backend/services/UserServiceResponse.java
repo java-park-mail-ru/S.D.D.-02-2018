@@ -3,7 +3,7 @@ package com.color_it.backend.services;
 import com.color_it.backend.entities.UserEntity;
 import org.springframework.http.ResponseEntity;
 
-public class UserServiceResponse implements AbstractServiceresponse {
+public class UserServiceResponse extends AbstractServiceResponse {
     UserEntity entity;
 //    List<UserEntity>
     UserServiceStatusCode statusCode;
@@ -35,10 +35,5 @@ public class UserServiceResponse implements AbstractServiceresponse {
 
     public void setStatusCode(UserServiceStatusCode statusCode) {
         this.statusCode = statusCode;
-    }
-
-    @Override
-    public ResponseEntity toHttpResponse() {
-        return null;
     }
 }
