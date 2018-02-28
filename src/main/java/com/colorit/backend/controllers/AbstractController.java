@@ -2,7 +2,6 @@ package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.services.IUserService;
-import com.colorit.backend.services.UserService;
 import com.colorit.backend.services.UserServiceOnList;
 import com.colorit.backend.views.ResponseView;
 import org.springframework.context.MessageSource;

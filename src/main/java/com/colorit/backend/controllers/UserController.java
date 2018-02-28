@@ -1,7 +1,6 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
-import com.colorit.backend.services.UserService;
 import com.colorit.backend.services.UserServiceOnList;
 import com.colorit.backend.services.UserServiceResponse;
 import com.colorit.backend.views.ResponseView;
