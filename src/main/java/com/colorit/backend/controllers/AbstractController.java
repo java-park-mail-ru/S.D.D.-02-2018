@@ -14,20 +14,35 @@ import java.util.Locale;
 
 @RestController
 public class AbstractController {
-    @SuppressWarnings("CheckStyle")
-    @NotNull
-    protected final MessageSource messageSource;
-    @SuppressWarnings("CheckStyle")
-    @NotNull
-    protected final IUserService userService;
-    @SuppressWarnings("CheckStyle")
-    protected AbstractResponseMaker responseMaker;
-    protected static final String SESSION_KEY = "nickname";
+    private final @NotNull MessageSource messageSource;
+    private final @NotNull IUserService userService;
+    private AbstractResponseMaker responseMaker;
+    private static final String SESSION_KEY = "nickname";
 
     protected ResponseEntity<ResponseView> unauthorizedResponse(Locale locale) {
         final ResponseView responseView = new ResponseView();
         responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
+    }
+
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
+
+    public IUserService getUserService() {
+        return userService;
+    }
+
+    public AbstractResponseMaker getResponseMaker() {
+        return responseMaker;
+    }
+
+    public void setResponseMaker(AbstractResponseMaker responseMaker) {
+        this.responseMaker = responseMaker;
+    }
+
+    public static String getSessionKey() {
+        return SESSION_KEY;
     }
 
     public AbstractController(@NotNull MessageSource messageSource, @NotNull UserServiceOnList userService) {

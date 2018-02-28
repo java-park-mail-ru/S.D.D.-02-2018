@@ -21,51 +21,51 @@ import java.util.Locale;
 public class UserController extends AbstractController {
     public UserController(MessageSource messageSource, UserServiceOnList userService) {
         super(messageSource, userService);
-        this.responseMaker = new UserResponseMaker();
+        setResponseMaker(new UserResponseMaker());
     }
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUserInfo(HttpSession httpSession, Locale locale) {
-        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
+        final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
             return unauthorizedResponse(locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.getUser(nickname);
-        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        final UserServiceResponse userServiceResponse = getUserService().getUser(nickname);
+        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
     }
 
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {
-        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
+        final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
             return unauthorizedResponse(locale);
         }
 
         final ViewStatus viewStatus = updateEmailView.checkValid();
         if (viewStatus.isNotValid()) {
-            return responseMaker.makeResponse(viewStatus, messageSource, locale);
+            return getResponseMaker().makeResponse(viewStatus, getMessageSource(), locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.updateEmail(nickname, updateEmailView.getNewEmail());
-        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        final UserServiceResponse userServiceResponse = getUserService().updateEmail(nickname, updateEmailView.getNewEmail());
+        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
     }
 
     @PostMapping(path = "/update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updatePassword(@RequestBody UpdatePasswordView updatePasswordView,
                                                        HttpSession httpSession, Locale locale) {
-        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
+        final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
             return unauthorizedResponse(locale);
         }
 
         final ViewStatus viewStatus = updatePasswordView.checkValid();
         if (viewStatus.isNotValid()) {
-            return responseMaker.makeResponse(viewStatus, messageSource, locale);
+            return getResponseMaker().makeResponse(viewStatus, getMessageSource(), locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
+        final UserServiceResponse userServiceResponse = getUserService().updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
-        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
     }
 }

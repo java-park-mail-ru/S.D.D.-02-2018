@@ -21,7 +21,7 @@ import java.util.Locale;
 public class AuthenticateController extends AbstractController {
     public AuthenticateController(MessageSource messageSource, UserServiceOnList userService) {
         super(messageSource, userService);
-        this.responseMaker = new AuthenticateResponseMaker();
+        setResponseMaker(new AuthenticateResponseMaker());
     }
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -29,21 +29,21 @@ public class AuthenticateController extends AbstractController {
     public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signInView.checkValid();
         if (check.isNotValid()) {
-            return responseMaker.makeResponse(check, messageSource, locale);
+            return getResponseMaker().makeResponse(check, getMessageSource(), locale);
         }
 
         final UserEntity userEntity = signInView.toEntity();
-        final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
+        final UserServiceResponse userServiceResponse = getUserService().authenticateUser(userEntity);
         if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(SESSION_KEY, userEntity.getNickname());
+            httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }
-        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
     }
 
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signOut(HttpSession httpSession, Locale locale) {
-        final String nickname = (String) httpSession.getAttribute(SESSION_KEY);
+        final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
             return unauthorizedResponse(locale);
         }
@@ -55,14 +55,14 @@ public class AuthenticateController extends AbstractController {
     public ResponseEntity<ResponseView> signUpUser(@RequestBody SignUpView signUpView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signUpView.checkValid();
         if (check.isNotValid()) {
-            return responseMaker.makeResponse(check, messageSource, locale);
+            return getResponseMaker().makeResponse(check, getMessageSource(), locale);
         }
 
         final UserEntity userEntity = signUpView.toEntity();
-        final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
+        final UserServiceResponse userServiceResponse = getUserService().createUser(userEntity);
         if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(SESSION_KEY, userEntity.getNickname());
+            httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }
-        return responseMaker.makeResponse(userServiceResponse, messageSource, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
     }
 }

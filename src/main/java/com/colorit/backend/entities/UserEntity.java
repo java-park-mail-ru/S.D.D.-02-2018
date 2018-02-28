@@ -1,5 +1,6 @@
 package com.colorit.backend.entities;
 
+@SuppressWarnings("unused")
 public class UserEntity extends AbstractEntity {
     private Integer id;
     private String nickname;

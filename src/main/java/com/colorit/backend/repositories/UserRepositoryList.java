@@ -30,6 +30,7 @@ public class UserRepositoryList {
 
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
         try {
+            //noinspection unused
             final UserEntity existringUser = getByNickame(userEntity.getNickname());
             throw new ConstraintNameException();
         } catch (NoResultException ex) {
@@ -55,15 +56,15 @@ public class UserRepositoryList {
         existringUser.setEmail(email);
     }
 
-    public class RepositoryException extends Exception {
+    public static class RepositoryException extends Exception {
     }
 
-    public class ConstraintNameException extends RepositoryException {
+    public static class ConstraintNameException extends RepositoryException {
     }
 
-    public class ConstraintEmailException extends RepositoryException {
+    public static class ConstraintEmailException extends RepositoryException {
     }
 
-    public class NoResultException extends RepositoryException {
+    public static class NoResultException extends RepositoryException {
     }
 }
