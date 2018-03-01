@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 @SuppressWarnings("ALL")
 public enum ViewStatusCode {
     OK_STATE(0, "ok", null, HttpStatus.OK),
-    EMPTY_EMAIL(1, "email", "email_empty", HttpStatus.BAD_REQUEST ),
+    EMPTY_EMAIL(1, "email", "email_empty", HttpStatus.BAD_REQUEST),
     EMPTY_PASSWORD(2, "password", "password_empty", HttpStatus.BAD_REQUEST),
     EMPTY_PASSWORD_CHECK(3, "passwordCheck", "passwordCheck_empty", HttpStatus.BAD_REQUEST),
     EMPTY_OLD_PASSWORD(4, "oldPassword", "oldPassword_empty", HttpStatus.BAD_REQUEST),

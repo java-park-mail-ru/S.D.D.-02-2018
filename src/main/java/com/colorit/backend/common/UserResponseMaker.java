@@ -17,7 +17,8 @@ public class UserResponseMaker extends AbstractResponseMaker {
     }
 
     @Override
-    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, MessageSource messageSource, Locale locale) {
+    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse,
+                                                     MessageSource messageSource, Locale locale) {
         final ResponseView<UserView> responseView = new ResponseView<>();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getEntity() != null) {

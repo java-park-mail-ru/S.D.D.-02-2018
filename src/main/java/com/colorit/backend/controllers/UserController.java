@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
 
@@ -22,7 +23,8 @@ import java.util.Locale;
 public class UserController extends AbstractController {
 
     @Autowired
-    public UserController(MessageSource messageSource, IUserService userService, UserResponseMaker userResponseMaker) {
+    public UserController(@NotNull  MessageSource messageSource, @NotNull IUserService userService,
+                          @NotNull UserResponseMaker userResponseMaker) {
         super(messageSource, userService, userResponseMaker);
     }
 

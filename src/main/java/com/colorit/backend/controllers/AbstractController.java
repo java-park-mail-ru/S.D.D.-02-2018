@@ -40,7 +40,8 @@ public class AbstractController {
         return SESSION_KEY;
     }
 
-    public AbstractController(@NotNull MessageSource messageSource, @NotNull IUserService userService, @NotNull AbstractResponseMaker abstractResponseMaker) {
+    public AbstractController(@NotNull MessageSource messageSource, @NotNull IUserService userService,
+                              @NotNull AbstractResponseMaker abstractResponseMaker) {
         this.messageSource = messageSource;
         this.userService = userService;
         this.responseMaker = abstractResponseMaker;
