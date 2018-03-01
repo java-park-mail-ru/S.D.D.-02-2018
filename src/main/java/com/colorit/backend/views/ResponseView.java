@@ -10,12 +10,8 @@ import java.util.Map;
  * @version 1.0
  */
 public class ResponseView<T> {
-    private final Map<String, String> errors;
+    private final Map<String, String> errors = new HashMap<>();
     private T data;
-
-    public ResponseView() {
-        errors = new HashMap<>();
-    }
 
     public void setData(T data) {
         this.data = data;

@@ -4,26 +4,26 @@ import com.colorit.backend.entities.AbstractEntity;
 
 import java.util.List;
 
-public class AbstractServiceResponse<T> {
-    private AbstractEntity entity;
+public class AbstractServiceResponse<T extends AbstractEntity> {
+    private T entity;
     @SuppressWarnings("unused")
-    private List<AbstractEntity> entities;
+    private List<T> entities;
 
-    public AbstractEntity getEntity() {
+    public T getEntity() {
         return entity;
     }
 
-    public void setEntity(AbstractEntity entity) {
+    public void setEntity(T entity) {
         this.entity = entity;
     }
 
     @SuppressWarnings("unused")
-    public List<AbstractEntity> getEntities() {
+    public List<T> getEntities() {
         return entities;
     }
 
     @SuppressWarnings("unused")
-    public void setEntities(List<AbstractEntity> entities) {
+    public void setEntities(List<T> entities) {
         this.entities = entities;
     }
 }

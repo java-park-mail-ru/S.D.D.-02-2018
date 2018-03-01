@@ -22,16 +22,6 @@ import java.util.Map;
  * @version 1.0
  */
 public class AbstractResponseMaker {
-    private static final Map<ViewStatusCode, String> HASH_VIEW_ERROR_AND_FIELD = Map.ofEntries(
-            Map.entry(ViewStatusCode.EMPTY_EMAIL, "email"),
-            Map.entry(ViewStatusCode.EMPTY_NICKNAME, "nickname"),
-            Map.entry(ViewStatusCode.EMPTY_OLD_PASSWORD, "oldPassword"),
-            Map.entry(ViewStatusCode.EMPTY_PASSWORD, "password"),
-            Map.entry(ViewStatusCode.EMPTY_PASSWORD_CHECK, "passwordCheck"),
-            Map.entry(ViewStatusCode.INVALID_EMAIL_STATE, "email"),
-            Map.entry(ViewStatusCode.PASSWORD_NOT_MATCH_STATE, "passwordCheck")
-    );
-
     private static final Map<ViewStatusCode, String> HASH_VIEW_ERROR_AND_MESSAGE = Map.ofEntries(
             Map.entry(ViewStatusCode.EMPTY_EMAIL, "email_empty"),
             Map.entry(ViewStatusCode.EMPTY_NICKNAME, "nickname_empty"),
@@ -91,7 +81,7 @@ public class AbstractResponseMaker {
     public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, MessageSource messageSource, Locale locale) {
         final ResponseView responseView = new ResponseView();
         for (ViewStatusCode code : viewStatus.getErrors()) {
-            responseView.addError(HASH_VIEW_ERROR_AND_FIELD.get(code),
+            responseView.addError(code.getDesc(),
                     messageSource.getMessage(HASH_VIEW_ERROR_AND_MESSAGE.get(code), null, locale));
         }
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);

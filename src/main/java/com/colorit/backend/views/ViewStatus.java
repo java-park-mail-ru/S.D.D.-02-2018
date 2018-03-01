@@ -3,11 +3,7 @@ package com.colorit.backend.views;
 import java.util.ArrayList;
 
 public class ViewStatus {
-    private final ArrayList<ViewStatusCode> arrayOfErrors;
-
-    ViewStatus() {
-        arrayOfErrors = new ArrayList<>();
-    }
+    private final ArrayList<ViewStatusCode> arrayOfErrors = new ArrayList<>();
 
     public boolean isNotValid() {
         return !arrayOfErrors.isEmpty();
