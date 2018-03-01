@@ -1,7 +1,6 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
-import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.UserServiceResponse;
 import com.colorit.backend.views.ResponseView;
@@ -25,7 +24,6 @@ public class UserController extends AbstractController {
     @Autowired
     public UserController(MessageSource messageSource, IUserService userService, UserResponseMaker userResponseMaker) {
         super(messageSource, userService, userResponseMaker);
-//        setResponseMaker(new UserResponseMaker());
     }
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)

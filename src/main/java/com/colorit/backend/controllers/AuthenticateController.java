@@ -1,6 +1,5 @@
 package com.colorit.backend.controllers;
 
-import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.common.AuthenticateResponseMaker;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.IUserService;
@@ -23,7 +22,6 @@ import java.util.Locale;
 public class AuthenticateController extends AbstractController {
     public AuthenticateController(MessageSource messageSource, IUserService userService, @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
         super(messageSource, userService, authenticateResponseMaker);
-//        setResponseMaker(new AuthenticateResponseMaker());
     }
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,

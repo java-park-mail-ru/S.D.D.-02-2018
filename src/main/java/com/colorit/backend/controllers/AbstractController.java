@@ -36,10 +36,6 @@ public class AbstractController {
         return responseMaker;
     }
 
-    public void setResponseMaker(AbstractResponseMaker responseMaker) {
-        this.responseMaker = responseMaker;
-    }
-
     public static String getSessionKey() {
         return SESSION_KEY;
     }
