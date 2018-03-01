@@ -1,6 +1,8 @@
 package com.colorit.backend.services;
 
-public class UserServiceResponse extends AbstractServiceResponse {
+import com.colorit.backend.entities.AbstractEntity;
+
+public class UserServiceResponse<T extends AbstractEntity> extends AbstractServiceResponse {
     private UserServiceStatus status;
 
     @SuppressWarnings("unused")
