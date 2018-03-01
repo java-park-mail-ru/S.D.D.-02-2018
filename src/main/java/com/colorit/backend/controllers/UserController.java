@@ -7,21 +7,25 @@ import com.colorit.backend.views.ResponseView;
 import com.colorit.backend.views.UpdateEmailView;
 import com.colorit.backend.views.UpdatePasswordView;
 import com.colorit.backend.views.ViewStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
 
 @RestController
 @RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
-    public UserController(MessageSource messageSource, IUserService userService) {
-        super(messageSource, userService);
-        setResponseMaker(new UserResponseMaker());
+
+    @Autowired
+    public UserController(@NotNull  MessageSource messageSource, @NotNull IUserService userService,
+                          @NotNull UserResponseMaker userResponseMaker) {
+        super(messageSource, userService, userResponseMaker);
     }
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)

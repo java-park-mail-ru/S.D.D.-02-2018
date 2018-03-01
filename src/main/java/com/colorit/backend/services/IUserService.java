@@ -1,9 +1,7 @@
 package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface IUserService {
     UserServiceResponse createUser(UserEntity userEntity);
 

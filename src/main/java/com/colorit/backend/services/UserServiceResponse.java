@@ -1,29 +1,29 @@
 package com.colorit.backend.services;
 
 public class UserServiceResponse extends AbstractServiceResponse {
-    private UserServiceStatusCode statusCode;
+    private UserServiceStatus status;
 
     @SuppressWarnings("unused")
     public UserServiceResponse() {
         super();
-        statusCode = UserServiceStatusCode.OK_STATE;
+        status = UserServiceStatus.OK_STATE;
     }
 
-    public UserServiceResponse(UserServiceStatusCode statusCode) {
+    public UserServiceResponse(UserServiceStatus userServiceStatus) {
         super();
-        this.statusCode = statusCode;
+        this.status = userServiceStatus;
     }
 
-    public UserServiceStatusCode getStatusCode() {
-        return statusCode;
+    public UserServiceStatus getStatus() {
+        return this.status;
     }
 
     public boolean isValid() {
-        return this.statusCode == UserServiceStatusCode.OK_STATE
-                || this.statusCode == UserServiceStatusCode.CREATED_STATE;
+        return this.status == UserServiceStatus.OK_STATE
+                || this.status == UserServiceStatus.CREATED_STATE;
     }
 
-    public void setStatusCode(UserServiceStatusCode statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus(UserServiceStatus userServiceStatus) {
+        this.status = userServiceStatus;
     }
 }

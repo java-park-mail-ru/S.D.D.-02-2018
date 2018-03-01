@@ -36,16 +36,14 @@ public class AbstractController {
         return responseMaker;
     }
 
-    public void setResponseMaker(AbstractResponseMaker responseMaker) {
-        this.responseMaker = responseMaker;
-    }
-
     public static String getSessionKey() {
         return SESSION_KEY;
     }
 
-    public AbstractController(@NotNull MessageSource messageSource, @NotNull IUserService userService) {
+    public AbstractController(@NotNull MessageSource messageSource, @NotNull IUserService userService,
+                              @NotNull AbstractResponseMaker abstractResponseMaker) {
         this.messageSource = messageSource;
         this.userService = userService;
+        this.responseMaker = abstractResponseMaker;
     }
 }
