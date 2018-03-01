@@ -22,7 +22,7 @@ public class UserRepositoryList {
 
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
         UserEntity existingUser = searchByNickname(userEntity.getNickname());
-        if(existingUser != null) {
+        if (existingUser != null) {
             throw new ConstraintNameException();
         }
 
