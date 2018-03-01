@@ -1,7 +1,9 @@
 package com.colorit.backend.common;
 
 import com.colorit.backend.services.UserServiceStatusCode;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserResponseMaker extends AbstractResponseMaker {
     public UserResponseMaker() {
         super();

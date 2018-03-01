@@ -1,5 +1,6 @@
 package com.colorit.backend.controllers;
 
+import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.common.AuthenticateResponseMaker;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.IUserService;
@@ -14,14 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/user")
 public class AuthenticateController extends AbstractController {
-    public AuthenticateController(MessageSource messageSource, IUserService userService) {
-        super(messageSource, userService);
-        setResponseMaker(new AuthenticateResponseMaker());
+    public AuthenticateController(MessageSource messageSource, IUserService userService, @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
+        super(messageSource, userService, authenticateResponseMaker);
+//        setResponseMaker(new AuthenticateResponseMaker());
     }
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
