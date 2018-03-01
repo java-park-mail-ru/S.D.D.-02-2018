@@ -13,33 +13,24 @@ public class UserRepositoryList {
     }
 
     public UserEntity getByNickame(String nickname) throws NoResultException {
-        final UserEntity userEntity = db.stream()
-                .filter(user -> user.getNickname().equals(nickname))
-                .findAny().orElse(null);
+        final UserEntity userEntity = searchByNickname(nickname);
         if (userEntity == null) {
             throw new NoResultException();
         }
         return userEntity;
     }
 
-    public UserEntity getByEmail(String email) {
-        return db.stream()
-                .filter(user -> user.getEmail().equals(email))
-                .findAny().orElse(null);
-    }
-
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
-        try {
-            //noinspection unused
-            final UserEntity existringUser = getByNickame(userEntity.getNickname());
+        UserEntity existingUser = searchByNickname(userEntity.getNickname());
+        if(existingUser != null) {
             throw new ConstraintNameException();
-        } catch (NoResultException ex) {
-            final UserEntity existringUser = getByEmail(userEntity.getEmail());
-            if (existringUser != null) {
-                throw new ConstraintEmailException();
-            }
-            db.add(userEntity);
         }
+
+        existingUser = searchByEmail(userEntity.getEmail());
+        if (existingUser != null) {
+            throw new ConstraintEmailException();
+        }
+        db.add(userEntity);
     }
 
     public void changePassword(String nickname, String password) throws NoResultException {
@@ -49,7 +40,7 @@ public class UserRepositoryList {
 
     public void changeEmail(String nickname, String email) throws NoResultException, ConstraintEmailException {
         final UserEntity existringUser = getByNickame(nickname);
-        final UserEntity checkMailEntity = getByEmail(email);
+        final UserEntity checkMailEntity = searchByEmail(email);
         if (checkMailEntity != null) {
             throw new ConstraintEmailException();
         }
@@ -66,5 +57,17 @@ public class UserRepositoryList {
     }
 
     public static class NoResultException extends RepositoryException {
+    }
+
+    private UserEntity searchByNickname(String nickname) {
+        return db.stream()
+                .filter(user -> user.getNickname().equals(nickname))
+                .findAny().orElse(null);
+    }
+
+    private UserEntity searchByEmail(String email) {
+        return db.stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findAny().orElse(null);
     }
 }

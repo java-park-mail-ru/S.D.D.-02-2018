@@ -2,7 +2,9 @@ package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceOnList implements IUserService {
     private final UserRepositoryList userRepository = new UserRepositoryList();
 
