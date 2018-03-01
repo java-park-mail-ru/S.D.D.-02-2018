@@ -2,7 +2,7 @@ package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AuthenticateResponseMaker;
 import com.colorit.backend.entities.UserEntity;
-import com.colorit.backend.services.UserServiceOnList;
+import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.UserServiceResponse;
 import com.colorit.backend.views.ResponseView;
 import com.colorit.backend.views.SignInView;
@@ -19,7 +19,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/api/user")
 public class AuthenticateController extends AbstractController {
-    public AuthenticateController(MessageSource messageSource, UserServiceOnList userService) {
+    public AuthenticateController(MessageSource messageSource, IUserService userService) {
         super(messageSource, userService);
         setResponseMaker(new AuthenticateResponseMaker());
     }

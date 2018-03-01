@@ -2,7 +2,6 @@ package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.services.IUserService;
-import com.colorit.backend.services.UserServiceOnList;
 import com.colorit.backend.views.ResponseView;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -45,7 +44,7 @@ public class AbstractController {
         return SESSION_KEY;
     }
 
-    public AbstractController(@NotNull MessageSource messageSource, @NotNull UserServiceOnList userService) {
+    public AbstractController(@NotNull MessageSource messageSource, @NotNull IUserService userService) {
         this.messageSource = messageSource;
         this.userService = userService;
     }
