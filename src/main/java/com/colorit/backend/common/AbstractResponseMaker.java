@@ -41,7 +41,7 @@ public class AbstractResponseMaker {
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
         return null;
     }
-
+    
     public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, Locale locale) {
         final ResponseView responseView = new ResponseView();
         for (ViewStatusCode code : viewStatus.getErrors()) {
@@ -49,10 +49,6 @@ public class AbstractResponseMaker {
                     messageSource.getMessage(code.getMessage(), null, locale));
         }
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
-    }
-
-    MessageSource getMessageSource() {
-        return this.messageSource;
     }
 
     ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message) {
@@ -87,6 +83,10 @@ public class AbstractResponseMaker {
             return new ResponseEntity<>(responseView, httpStatus);
         }
         return new ResponseEntity<>(new ResponseView<>(), httpStatus);
+    }
+
+    MessageSource getMessageSource() {
+        return this.messageSource;
     }
 
 }
