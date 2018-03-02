@@ -136,8 +136,6 @@ public class UserService implements IUserService {
             final String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + userPassword + PASSWORD_SAULT));
             final GameResults gameResults = new GameResults();
-            gameResults.setCountGames(10);
-            gameResults.setCountWins(5);
             gameRepository.save(gameResults);
             userEntity.setGameResults(gameResults);
             this.userRepository.save(userEntity);

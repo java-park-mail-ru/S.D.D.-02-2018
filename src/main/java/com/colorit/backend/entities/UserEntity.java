@@ -2,10 +2,9 @@ package com.colorit.backend.entities;
 
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 
 @SuppressWarnings("unused")
-@Entity(name="UserEntity")
+@Entity(name = "UserEntity")
 @Table(name = "user_entity", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
         @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
@@ -18,6 +17,7 @@ public class UserEntity extends AbstractEntity {
     private String avatarPath;
 
     private GameResults gameResults;
+
     public UserEntity() {
         gameResults = new GameResults();
     }
@@ -26,7 +26,6 @@ public class UserEntity extends AbstractEntity {
         this.nickname = nickname;
         this.email = email;
         this.passwordHash = password;
-//        gameResults = new GameResults();
     }
 
     public UserEntity(String nickname, String password) {
@@ -52,6 +51,7 @@ public class UserEntity extends AbstractEntity {
     public String getNickname() {
         return this.nickname;
     }
+
     @Column(name = "avatar_path")
     public String getAvatarPath() {
         return avatarPath;
@@ -67,7 +67,7 @@ public class UserEntity extends AbstractEntity {
         return passwordHash;
     }
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     public GameResults getGameResults() {
         return gameResults;
     }
@@ -80,6 +80,7 @@ public class UserEntity extends AbstractEntity {
         }
         return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
     }
+
     @Transient
     public Integer getCountWins() {
         return gameResults.getCountWins();
