@@ -5,6 +5,10 @@ import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.*;
+import com.colorit.backend.views.input.UpdateEmailView;
+import com.colorit.backend.views.input.UpdatePasswordView;
+import com.colorit.backend.views.input.UpdateView;
+import com.colorit.backend.views.output.ResponseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -21,20 +25,20 @@ import java.util.Locale;
 public class UserController extends AbstractController {
 
     @Autowired
-    public UserController(@NotNull MessageSource messageSource, @NotNull IUserService userService,
+    public UserController(@NotNull IUserService userService,
                           @NotNull UserResponseMaker userResponseMaker) {
-        super(messageSource, userService, userResponseMaker);
+        super(userService, userResponseMaker);
     }
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUserInfo(HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
-            return unauthorizedResponse(locale);
+            return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
         final UserServiceResponse userServiceResponse = getUserService().getUser(nickname);
-        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @PostMapping(value = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,29 +54,29 @@ public class UserController extends AbstractController {
                                                HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
-            return unauthorizedResponse(locale);
+            return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
         final UserEntity userEntity = updateView.toEntity();
         final UserServiceResponse userServiceResponse = getUserService().update(nickname, userEntity);
 
-        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
-            return unauthorizedResponse(locale);
+            return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
         final ViewStatus viewStatus = updateEmailView.checkValid();
         if (viewStatus.isNotValid()) {
-            return getResponseMaker().makeResponse(viewStatus, getMessageSource(), locale);
+            return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
         final UserServiceResponse userServiceResponse = getUserService().updateEmail(nickname, updateEmailView.getNewEmail());
-        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @PostMapping(path = "/update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,16 +84,16 @@ public class UserController extends AbstractController {
                                                        HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
-            return unauthorizedResponse(locale);
+            return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
         final ViewStatus viewStatus = updatePasswordView.checkValid();
         if (viewStatus.isNotValid()) {
-            return getResponseMaker().makeResponse(viewStatus, getMessageSource(), locale);
+            return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
         final UserServiceResponse userServiceResponse = getUserService().updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
-        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 }

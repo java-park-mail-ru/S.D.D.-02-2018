@@ -1,4 +1,7 @@
-package com.colorit.backend.views;
+package com.colorit.backend.views.input;
+
+import com.colorit.backend.views.ViewStatus;
+import com.colorit.backend.views.ViewStatusCode;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;

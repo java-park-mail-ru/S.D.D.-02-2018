@@ -2,7 +2,7 @@ package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.services.IUserService;
-import com.colorit.backend.views.ResponseView;
+import com.colorit.backend.views.output.ResponseView;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +13,9 @@ import java.util.Locale;
 
 @RestController
 public class AbstractController {
-    private final @NotNull MessageSource messageSource;
     private final @NotNull IUserService userService;
     private final AbstractResponseMaker responseMaker;
     private static final String SESSION_KEY = "nickname";
-
-    ResponseEntity<ResponseView> unauthorizedResponse(Locale locale) {
-        final ResponseView responseView = new ResponseView();
-        responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
-    }
-
-    MessageSource getMessageSource() {
-        return messageSource;
-    }
 
     IUserService getUserService() {
         return userService;
@@ -40,9 +29,8 @@ public class AbstractController {
         return SESSION_KEY;
     }
 
-    public AbstractController(@NotNull MessageSource messageSource, @NotNull IUserService userService,
+    public AbstractController(@NotNull IUserService userService,
                               @NotNull AbstractResponseMaker abstractResponseMaker) {
-        this.messageSource = messageSource;
         this.userService = userService;
         this.responseMaker = abstractResponseMaker;
     }

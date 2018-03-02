@@ -1,5 +1,6 @@
-package com.colorit.backend.views;
+package com.colorit.backend.views.input;
 
+import com.colorit.backend.views.ViewStatus;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

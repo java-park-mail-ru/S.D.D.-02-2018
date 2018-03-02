@@ -1,4 +1,4 @@
-package com.colorit.backend.views;
+package com.colorit.backend.views.output;
 
 import com.colorit.backend.entities.UserEntity;
 
