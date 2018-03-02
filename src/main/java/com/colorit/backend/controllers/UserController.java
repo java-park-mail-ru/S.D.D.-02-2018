@@ -10,7 +10,6 @@ import com.colorit.backend.views.input.UpdatePasswordView;
 import com.colorit.backend.views.input.UpdateView;
 import com.colorit.backend.views.output.ResponseView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

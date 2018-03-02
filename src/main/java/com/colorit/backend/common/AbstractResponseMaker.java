@@ -32,7 +32,25 @@ public class AbstractResponseMaker {
         this.messageSource = messageSource;
     }
 
-    // methods package private
+    public ResponseEntity<ResponseView> makeUnauthorizedResponse(Locale locale) {
+        final ResponseView responseView = new ResponseView();
+        responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
+    }
+
+    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
+        return null;
+    }
+
+    public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, Locale locale) {
+        final ResponseView responseView = new ResponseView();
+        for (ViewStatusCode code : viewStatus.getErrors()) {
+            responseView.addError(code.getField(),
+                    messageSource.getMessage(code.getMessage(), null, locale));
+        }
+        return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
+    }
+
     MessageSource getMessageSource() {
         return this.messageSource;
     }
@@ -71,23 +89,4 @@ public class AbstractResponseMaker {
         return new ResponseEntity<>(new ResponseView<>(), httpStatus);
     }
 
-    public ResponseEntity<ResponseView> makeUnauthorizedResponse(Locale locale) {
-        final ResponseView responseView = new ResponseView();
-        responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
-    }
-
-    // public methods
-    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
-        return null;
-    }
-
-    public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, Locale locale) {
-        final ResponseView responseView = new ResponseView();
-        for (ViewStatusCode code : viewStatus.getErrors()) {
-            responseView.addError(code.getField(),
-                    messageSource.getMessage(code.getMessage(), null, locale));
-        }
-        return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
-    }
 }
