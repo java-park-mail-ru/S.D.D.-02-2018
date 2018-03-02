@@ -3,8 +3,6 @@ package com.colorit.backend.views.input;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +19,7 @@ abstract class AbstractView {
         if (email == null || email.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_EMAIL);
         } else {
-            final Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+            final Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
             if (!matcher.find()) {
                 viewStatus.addStatusCode(ViewStatusCode.INVALID_EMAIL_STATE);
             }
