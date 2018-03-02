@@ -42,6 +42,19 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserServiceResponse updateAvatar(String nickname, String avatarPath) {
+
+        // TODO implement
+        return null;
+    }
+
+    @Override
+    public UserServiceResponse update(String nickname, UserEntity userEntity) {
+        // TODO implement
+        return null;
+    }
+
+    @Override
     public UserServiceResponse getUser(String nickname) {
         final UserServiceResponse userServiceResponse = new UserServiceEntityResponse(UserServiceStatus.OK_STATE);
         try {

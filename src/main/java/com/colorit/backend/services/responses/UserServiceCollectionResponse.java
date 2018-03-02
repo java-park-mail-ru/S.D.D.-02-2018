@@ -2,8 +2,6 @@ package com.colorit.backend.services.responses;
 
 import com.colorit.backend.services.statuses.UserServiceStatus;
 
-import java.util.List;
-
 public class UserServiceCollectionResponse extends UserServiceResponse {
     UserServiceCollectionResponse() {
         super();

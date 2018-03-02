@@ -1,12 +1,10 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
+import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
-import com.colorit.backend.views.ResponseView;
-import com.colorit.backend.views.UpdateEmailView;
-import com.colorit.backend.views.UpdatePasswordView;
-import com.colorit.backend.views.ViewStatus;
+import com.colorit.backend.views.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -36,6 +34,28 @@ public class UserController extends AbstractController {
         }
 
         final UserServiceResponse userServiceResponse = getUserService().getUser(nickname);
+        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+    }
+
+    @PostMapping(value = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> updateAvatar() {
+        // TODO implement
+        return null;
+    }
+
+
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> update(@RequestBody UpdateView updateView,
+                                               HttpSession httpSession, Locale locale) {
+        final String nickname = (String) httpSession.getAttribute(getSessionKey());
+        if (nickname == null) {
+            return unauthorizedResponse(locale);
+        }
+
+        final UserEntity userEntity = updateView.toEntity();
+        final UserServiceResponse userServiceResponse = getUserService().update(nickname, userEntity);
+
         return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
     }
 

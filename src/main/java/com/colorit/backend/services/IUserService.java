@@ -13,4 +13,8 @@ public interface IUserService {
     UserServiceResponse updateEmail(String nickname, String email);
 
     UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword);
+
+    UserServiceResponse update(String nickname, UserEntity userEntity);
+
+    UserServiceResponse updateAvatar(String nickname, String avatarPath);
 }
