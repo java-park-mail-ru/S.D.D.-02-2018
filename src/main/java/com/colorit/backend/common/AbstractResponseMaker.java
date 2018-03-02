@@ -51,9 +51,9 @@ public class AbstractResponseMaker {
                         return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
                     case LIST_ENTITIES:
                         final List<UserView> userViews = new ArrayList<>();
-                        final List<UserEntity> userEntities = (List<UserEntity>) userServiceResponse.getData();
-                        for (UserEntity userEntity : userEntities) {
-                            userViews.add(new UserView(userEntity));
+                        final List userEntities = (List) userServiceResponse.getData();
+                        for (Object userEntity : userEntities) {
+                            userViews.add(new UserView((UserEntity) userEntity));
                         }
                         return new ResponseEntity<>(new ResponseView<>(userViews), httpStatus);
                     default:

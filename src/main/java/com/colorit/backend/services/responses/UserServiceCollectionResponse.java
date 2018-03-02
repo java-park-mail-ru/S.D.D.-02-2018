@@ -1,13 +1,10 @@
 package com.colorit.backend.services.responses;
 
-import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 
 import java.util.List;
 
 public class UserServiceCollectionResponse extends UserServiceResponse {
-    private List<UserEntity> data;
-
     UserServiceCollectionResponse() {
         super();
         setReturnedType(ReturnedType.LIST_ENTITIES);
@@ -20,11 +17,11 @@ public class UserServiceCollectionResponse extends UserServiceResponse {
 
     @Override
     public void setData(Object data) {
-        this.data = (List<UserEntity>) data;
+        super.setData(data);
     }
 
     @Override
-    public List<UserEntity> getData() {
-        return data;
+    public Object getData() {
+        return super.getData();
     }
 }
