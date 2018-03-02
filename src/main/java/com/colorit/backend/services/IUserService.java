@@ -1,6 +1,7 @@
 package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.services.responses.UserServiceResponse;
 
 public interface IUserService {
     UserServiceResponse createUser(UserEntity userEntity);

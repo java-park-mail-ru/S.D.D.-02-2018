@@ -9,7 +9,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
         @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
 })
-public class UserEntity extends AbstractEntity {
+public class UserEntity {
     private Integer id;
     private String nickname;
     private String email;

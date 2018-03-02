@@ -4,6 +4,9 @@ import com.colorit.backend.entities.GameResults;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.repositories.GameRepositoryJpa;
 import com.colorit.backend.repositories.UserRepositoryJpa;
+import com.colorit.backend.services.responses.UserServiceEntityResponse;
+import com.colorit.backend.services.responses.UserServiceResponse;
+import com.colorit.backend.services.statuses.UserServiceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +41,13 @@ public class UserService implements IUserService {
         return passwordEncoder().matches(saultedPassword, internalPassword);
     }
 
+    @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserServiceResponse<UserEntity> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        final UserServiceResponse userServiceResponse = new UserServiceEntityResponse(UserServiceStatus.OK_STATE);
         try {
             final UserEntity userEntity = userRepository.getByNickname(nickname);
             if (userEntity != null) {
-                userServiceResponse.setEntity(userEntity);
+                userServiceResponse.setData(userEntity);
                 LOGGER.info("User with nickname: {} found");
             } else {
                 userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
@@ -57,6 +61,7 @@ public class UserService implements IUserService {
         return userServiceResponse;
     }
 
+    @Override
     public UserServiceResponse updateEmail(String nickname, String email) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
@@ -82,6 +87,7 @@ public class UserService implements IUserService {
         return userServiceResponse;
     }
 
+    @Override
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
@@ -107,6 +113,7 @@ public class UserService implements IUserService {
         return userServiceResponse;
     }
 
+    @Override
     public UserServiceResponse authenticateUser(UserEntity userEntity) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
@@ -129,18 +136,21 @@ public class UserService implements IUserService {
         return userServiceResponse;
     }
 
+    // TODO drop associated game
+    @Override
     public UserServiceResponse createUser(UserEntity userEntity) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.CREATED_STATE);
+        final GameResults gameResults = new GameResults();
         try {
             // its password
             final String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + userPassword + PASSWORD_SAULT));
-            final GameResults gameResults = new GameResults();
-            gameRepository.save(gameResults);
             userEntity.setGameResults(gameResults);
-            this.userRepository.save(userEntity);
+            gameRepository.save(gameResults);
+            userRepository.save(userEntity);
             LOGGER.info("User with nickname: {} created", userEntity.getNickname());
         } catch (DataIntegrityViolationException dIVEx) {
+            gameRepository.delete(gameResults);
             final SQLException sqlEx = (SQLException) dIVEx.getCause().getCause();
             if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
                 userServiceResponse.setStatus(UserServiceStatus.CONFLICT_NAME_STATE);

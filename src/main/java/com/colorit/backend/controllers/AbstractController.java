@@ -15,28 +15,28 @@ import java.util.Locale;
 public class AbstractController {
     private final @NotNull MessageSource messageSource;
     private final @NotNull IUserService userService;
-    private AbstractResponseMaker responseMaker;
+    private final AbstractResponseMaker responseMaker;
     private static final String SESSION_KEY = "nickname";
 
-    protected ResponseEntity<ResponseView> unauthorizedResponse(Locale locale) {
+    ResponseEntity<ResponseView> unauthorizedResponse(Locale locale) {
         final ResponseView responseView = new ResponseView();
         responseView.addError("general", messageSource.getMessage("unauthorized", null, locale));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
     }
 
-    public MessageSource getMessageSource() {
+    MessageSource getMessageSource() {
         return messageSource;
     }
 
-    public IUserService getUserService() {
+    IUserService getUserService() {
         return userService;
     }
 
-    public AbstractResponseMaker getResponseMaker() {
+    AbstractResponseMaker getResponseMaker() {
         return responseMaker;
     }
 
-    public static String getSessionKey() {
+    static String getSessionKey() {
         return SESSION_KEY;
     }
 

@@ -2,7 +2,7 @@ package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
 import com.colorit.backend.services.IUserService;
-import com.colorit.backend.services.UserServiceResponse;
+import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.ResponseView;
 import com.colorit.backend.views.UpdateEmailView;
 import com.colorit.backend.views.UpdatePasswordView;

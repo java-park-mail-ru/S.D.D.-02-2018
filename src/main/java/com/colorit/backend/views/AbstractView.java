@@ -3,13 +3,13 @@ package com.colorit.backend.views;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-class AbstractView {
+abstract class AbstractView {
     @SuppressWarnings("unused")
     ViewStatus checkValid() {
         return null;
     }
 
-    protected void checkEmail(ViewStatus viewStatus, String email) {
+    void checkEmail(ViewStatus viewStatus, String email) {
         if (email == null || email.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_EMAIL);
         } else {
