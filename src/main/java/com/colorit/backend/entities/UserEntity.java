@@ -19,7 +19,6 @@ public class UserEntity extends AbstractEntity {
     private GameResults gameResults;
 
     public UserEntity() {
-        gameResults = new GameResults();
     }
 
     public UserEntity(String nickname, String email, String password) {
@@ -34,7 +33,7 @@ public class UserEntity extends AbstractEntity {
     }
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -74,7 +73,6 @@ public class UserEntity extends AbstractEntity {
 
     @Transient
     public Double getRating() {
-        GameResults gameResults = this.getGameResults();
         if (gameResults.getCountGames() == 0) {
             return 0.0;
         }

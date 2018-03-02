@@ -19,8 +19,6 @@ import java.util.Locale;
  */
 @Component
 public class AbstractResponseMaker {
-    public AbstractResponseMaker() {
-    }
 
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, MessageSource messageSource, Locale locale) {
         return null;

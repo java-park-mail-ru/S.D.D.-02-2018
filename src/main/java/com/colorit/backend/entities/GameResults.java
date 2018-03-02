@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class GameResults {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "countGames", columnDefinition = "INTEGER DEFAULT 0")
     private Integer countGames = 0;

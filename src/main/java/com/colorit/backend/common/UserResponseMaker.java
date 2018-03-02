@@ -12,9 +12,6 @@ import java.util.Locale;
 
 @Component
 public class UserResponseMaker extends AbstractResponseMaker {
-    public UserResponseMaker() {
-        super();
-    }
 
     @Override
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse,
