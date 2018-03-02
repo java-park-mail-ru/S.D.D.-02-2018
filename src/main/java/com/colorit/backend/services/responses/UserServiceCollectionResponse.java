@@ -6,7 +6,7 @@ import com.colorit.backend.services.statuses.UserServiceStatus;
 import java.util.List;
 
 public class UserServiceCollectionResponse extends UserServiceResponse {
-    List<UserEntity> data;
+    private List<UserEntity> data;
 
     UserServiceCollectionResponse() {
         super();
