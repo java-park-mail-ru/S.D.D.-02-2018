@@ -14,11 +14,6 @@ public class UserServiceCollectionResponse extends UserServiceResponse {
     }
 
     @Override
-    public void setData(Object data) {
-        super.setData(data);
-    }
-
-    @Override
     public Object getData() {
         return super.getData();
     }

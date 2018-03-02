@@ -9,18 +9,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UpdateView extends AbstractView {
     private final String nickname;
     private final String email;
-    private final String password;
-    private final String passwordCheck;
+    private final String oldPassword;
+    private final String newPassword;
+    private final String newPasswordCheck;
 
     @JsonCreator
     public UpdateView(@JsonProperty("nickname") String nickname,
                       @JsonProperty("email") String email,
-                      @JsonProperty("password") String password,
-                      @JsonProperty("passwordCheck") String passwordCheck) {
+                      @JsonProperty("oldPassword") String oldPassword,
+                      @JsonProperty("password") String newPassword,
+                      @JsonProperty("passwordCheck") String newPasswordCheck) {
         this.nickname = nickname;
         this.email = email;
-        this.password = password;
-        this.passwordCheck = passwordCheck;
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
+        this.newPasswordCheck = newPasswordCheck;
     }
 
     @Override
@@ -32,23 +35,31 @@ public class UpdateView extends AbstractView {
         }
 
         boolean passwordFilled = true;
-        if (password == null || password.isEmpty()) {
+        if (oldPassword == null || oldPassword.isEmpty()) {
             passwordFilled = false;
-            viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD);
         }
 
-        if (passwordCheck == null || passwordCheck.isEmpty()) {
-            passwordFilled = false;
-            viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD_CHECK);
-        }
+        final boolean newPasswordFilled = newPassword != null && !newPassword.isEmpty();
+        final boolean newPasswordCheckFilled = newPasswordCheck != null && !newPasswordCheck.isEmpty();
 
-        if (passwordFilled && !passwordCheck.equals(password)) {
-            viewStatus.addStatusCode(ViewStatusCode.PASSWORD_NOT_MATCH_STATE);
+        if (newPasswordCheckFilled || newPasswordFilled) {
+            if (newPasswordCheckFilled && newPasswordFilled) {
+                if (!newPassword.equals(newPasswordCheck)) {
+                    viewStatus.addStatusCode(ViewStatusCode.PASSWORD_NOT_MATCH_STATE);
+                } else {
+                    if (newPasswordFilled) {
+                        viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD_CHECK);
+                    } else {
+                        viewStatus.addStatusCode(ViewStatusCode.EMPTY_PASSWORD);
+                    }
+                }
+            }
         }
         return viewStatus;
     }
 
+    // error
     public UserEntity toEntity() {
-        return new UserEntity(nickname, email, password);
+        return new UserEntity(nickname, email, oldPassword);
     }
 }
