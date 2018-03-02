@@ -1,6 +1,8 @@
 package com.colorit.backend.services;
 
+import com.colorit.backend.entities.GameResults;
 import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.repositories.GameRepositoryJpa;
 import com.colorit.backend.repositories.UserRepositoryJpa;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +18,14 @@ import java.sql.SQLException;
 @Service
 public class UserService implements IUserService {
     private final UserRepositoryJpa userRepository;
-
+    private final GameRepositoryJpa gameRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private static final String PASSWORD_SAULT = "sault";
 
     @Autowired
-    public UserService(final UserRepositoryJpa repository) {
+    public UserService(final UserRepositoryJpa repository, final GameRepositoryJpa gameRepository) {
         this.userRepository = repository;
+        this.gameRepository = gameRepository;
     }
 
     @Autowired
@@ -132,6 +135,11 @@ public class UserService implements IUserService {
             // its password
             final String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + userPassword + PASSWORD_SAULT));
+            final GameResults gameResults = new GameResults();
+            gameResults.setCountGames(10);
+            gameResults.setCountWins(5);
+            gameRepository.save(gameResults);
+            userEntity.setGameResults(gameResults);
             this.userRepository.save(userEntity);
             LOGGER.info("User with nickname: {} created", userEntity.getNickname());
         } catch (DataIntegrityViolationException dIVEx) {

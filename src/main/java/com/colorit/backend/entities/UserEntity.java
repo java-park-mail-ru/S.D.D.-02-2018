@@ -2,41 +2,31 @@ package com.colorit.backend.entities;
 
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 
 @SuppressWarnings("unused")
-@Entity
-@Table(name = "\"user\"", uniqueConstraints = {
+@Entity(name="UserEntity")
+@Table(name = "user_entity", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
         @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
 })
 public class UserEntity extends AbstractEntity {
-    @Id
-    @GeneratedValue()
     private Integer id;
-    @Column(name = "nickname")
     private String nickname;
-    @Column(name = "email")
     private String email;
-    @Column(name = "passwordHash")
     private String passwordHash;
-    @Column(name = "avatarPath")
     private String avatarPath;
-    @Column(name = "countGames", columnDefinition = "INTEGER DEFAULT 0")
-    private Integer countGames;
-    @Column(name = "countWins", columnDefinition = "INTEGER DEFAULT 0")
-    private Integer countWins;
 
+    private GameResults gameResults;
     public UserEntity() {
-        countGames = 0;
-        countWins = 0;
+        gameResults = new GameResults();
     }
 
     public UserEntity(String nickname, String email, String password) {
         this.nickname = nickname;
         this.email = email;
         this.passwordHash = password;
-        countGames = 0;
-        countWins = 0;
+//        gameResults = new GameResults();
     }
 
     public UserEntity(String nickname, String password) {
@@ -44,52 +34,78 @@ public class UserEntity extends AbstractEntity {
         this.passwordHash = password;
     }
 
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    @Id
+    @GeneratedValue()
+    public Integer getId() {
+        return id;
     }
 
+    public void setGameResults(GameResults gameResults) {
+        this.gameResults = gameResults;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Column(name = "nickname")
+    public String getNickname() {
+        return this.nickname;
+    }
+    @Column(name = "avatar_path")
     public String getAvatarPath() {
         return avatarPath;
     }
 
-    public String getNickname() {
-        return nickname;
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    @Column(name = "password_hash")
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    @OneToOne(fetch=FetchType.LAZY)
+    public GameResults getGameResults() {
+        return gameResults;
+    }
+
+    @Transient
+    public Double getRating() {
+        GameResults gameResults = this.getGameResults();
+        if (gameResults.getCountGames() == 0) {
+            return 0.0;
+        }
+        return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
+    }
+    @Transient
+    public Integer getCountWins() {
+        return gameResults.getCountWins();
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
     }
 
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
     }
 
-    public Integer getCountGames() {
-        return countGames;
-    }
-
     public void setCountGames(Integer countGames) {
-        this.countGames = countGames;
-    }
-
-    public Integer getCountWins() {
-        return countWins;
+        gameResults.setCountGames(countGames);
     }
 
     public void setCountWins(Integer countWins) {
-        this.countWins = countWins;
+        this.gameResults.setCountWins(countWins);
     }
 }
