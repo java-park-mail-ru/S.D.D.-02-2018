@@ -1,6 +1,5 @@
 package com.colorit.backend.services.responses;
 
-import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 
 public class UserServiceScalarResponse<T> extends UserServiceResponse {

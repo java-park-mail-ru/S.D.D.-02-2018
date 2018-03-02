@@ -11,8 +11,12 @@ import com.colorit.backend.services.statuses.IStatus;
 
 public interface AbstractServiceResponse<T> {
     void setStatus(IStatus iStatus);
+
     IStatus getStatus();
+
     boolean isValid();
+
     T getData();
+
     void setData(T data);
 }

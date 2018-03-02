@@ -56,6 +56,8 @@ public class AbstractResponseMaker {
                             userViews.add(new UserView(userEntity));
                         }
                         return new ResponseEntity<>(new ResponseView<>(userViews), httpStatus);
+                    default:
+                        return new ResponseEntity<>(new ResponseView<>(), httpStatus);
                 }
             }
         } else {
@@ -66,7 +68,6 @@ public class AbstractResponseMaker {
             final ResponseView responseView = new ResponseView<>();
             responseView.addError(field, message);
             return new ResponseEntity<>(responseView, httpStatus);
-
         }
         return new ResponseEntity<>(new ResponseView<>(), httpStatus);
     }

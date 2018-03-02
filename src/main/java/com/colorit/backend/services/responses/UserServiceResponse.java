@@ -1,13 +1,12 @@
 package com.colorit.backend.services.responses;
 
-import com.colorit.backend.services.responses.AbstractServiceResponse;
 import com.colorit.backend.services.statuses.IStatus;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 
 public class UserServiceResponse<T> implements AbstractServiceResponse {
-    UserServiceStatus serviceStatus;
-    ReturnedType returnedType;
-    T data;
+    private UserServiceStatus serviceStatus;
+    private ReturnedType returnedType;
+    private T data;
 
     public enum ReturnedType {
         ENTITY,
@@ -32,8 +31,8 @@ public class UserServiceResponse<T> implements AbstractServiceResponse {
     }
 
     @Override
-    public void setStatus(IStatus iStatus) {
-        this.serviceStatus = (UserServiceStatus) iStatus;
+    public void setStatus(IStatus istatus) {
+        this.serviceStatus = (UserServiceStatus) istatus;
     }
 
     @Override
