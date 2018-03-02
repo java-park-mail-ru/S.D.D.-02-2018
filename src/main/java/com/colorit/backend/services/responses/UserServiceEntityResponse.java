@@ -5,6 +5,7 @@ import com.colorit.backend.services.statuses.UserServiceStatus;
 
 public class UserServiceEntityResponse extends UserServiceResponse {
     private UserEntity data;
+
     public UserServiceEntityResponse() {
         super();
         setReturnedType(UserServiceResponse.ReturnedType.SCALAR);
@@ -17,11 +18,11 @@ public class UserServiceEntityResponse extends UserServiceResponse {
 
     @Override
     public void setData(Object data) {
-         this.data = (UserEntity) (data);
+        this.data = (UserEntity) (data);
     }
 
     @Override
     public UserEntity getData() {
-        return data; //(UserEntity) super.getData();
+        return data;
     }
 }

@@ -25,7 +25,6 @@ import java.util.Locale;
 @Component
 public class AbstractResponseMaker {
 
-
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, MessageSource messageSource, Locale locale) {
         return null;
     }
@@ -52,8 +51,8 @@ public class AbstractResponseMaker {
                         return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
                     case LIST_ENTITIES:
                         final List<UserView> userViews = new ArrayList<>();
-                        final List<UserEntity> userEntities = (List<UserEntity>)userServiceResponse.getData();
-                        for (UserEntity userEntity: userEntities) {
+                        final List<UserEntity> userEntities = (List<UserEntity>) userServiceResponse.getData();
+                        for (UserEntity userEntity : userEntities) {
                             userViews.add(new UserView(userEntity));
                         }
                         return new ResponseEntity<>(new ResponseView<>(userViews), httpStatus);

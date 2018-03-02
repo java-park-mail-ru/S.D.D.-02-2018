@@ -13,7 +13,8 @@ public class ResponseView<T> {
     private final Map<String, String> errors = new HashMap<>();
     private T data;
 
-    public ResponseView() {}
+    public ResponseView() {
+    }
 
     public ResponseView(T data) {
         this.data = data;

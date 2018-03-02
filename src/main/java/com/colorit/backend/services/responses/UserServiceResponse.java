@@ -19,8 +19,6 @@ public class UserServiceResponse<T> implements AbstractServiceResponse {
         serviceStatus = UserServiceStatus.OK_STATE;
     }
 
-
-
     protected void setReturnedType(ReturnedType returnedType) {
         this.returnedType = returnedType;
     }
@@ -40,13 +38,11 @@ public class UserServiceResponse<T> implements AbstractServiceResponse {
 
     @Override
     public void setData(Object data) {
-//        this.data = (T) data;
     }
 
     @Override
     public T getData() {
         return null;
-//        return this.data;
     }
 
     @Override

@@ -16,29 +16,3 @@ public interface AbstractServiceResponse<T> {
     T getData();
     void setData(T data);
 }
-//
-//public class AbstractServiceResponse<T> {
-//    private AbstractEntity entity;
-//    @SuppressWarnings("unused")
-//    private List<AbstractEntity> entities;
-//
-//    private ScalarEntity<T> data;
-//
-//    public T getData() {
-//        return data.getData();
-//    }
-//
-//    public void setData(ScalarEntity<T> data) {
-//        this.data = data;
-//    }
-////    private ScalarEntity scalarEntityntity;
-//
-//    public AbstractEntity getEntity() {
-//        return entity;
-//    }
-//
-//    public void setEntity(AbstractEntity entity) {
-//        this.entity = entity;
-//    }
-//
-//}

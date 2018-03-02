@@ -23,7 +23,7 @@ import java.util.Locale;
 public class UserController extends AbstractController {
 
     @Autowired
-    public UserController(@NotNull  MessageSource messageSource, @NotNull IUserService userService,
+    public UserController(@NotNull MessageSource messageSource, @NotNull IUserService userService,
                           @NotNull UserResponseMaker userResponseMaker) {
         super(messageSource, userService, userResponseMaker);
     }

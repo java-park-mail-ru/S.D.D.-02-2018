@@ -16,7 +16,6 @@ public class UserServiceScalarResponse<T> extends UserServiceResponse {
         setReturnedType(ReturnedType.ENTITY);
     }
 
-
     @Override
     public void setData(Object data) {
         this.data = (T) data;

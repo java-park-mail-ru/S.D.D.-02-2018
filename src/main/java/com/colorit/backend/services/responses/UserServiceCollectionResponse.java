@@ -18,7 +18,6 @@ public class UserServiceCollectionResponse extends UserServiceResponse {
         setReturnedType(ReturnedType.ENTITY);
     }
 
-
     @Override
     public void setData(Object data) {
         this.data = (List<UserEntity>) data;
