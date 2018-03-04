@@ -1,13 +1,11 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
-import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.*;
 import com.colorit.backend.views.input.UpdateEmailView;
 import com.colorit.backend.views.input.UpdatePasswordView;
-import com.colorit.backend.views.input.UpdateView;
 import com.colorit.backend.views.output.ResponseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

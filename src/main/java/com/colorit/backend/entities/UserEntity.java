@@ -1,13 +1,10 @@
 package com.colorit.backend.entities;
 
-
-//import javax.persistence.*;
-
 @SuppressWarnings("unused")
 //@Entity(name = "UserEntity")
 //@Table(name = "user_entity", uniqueConstraints = {
-        //@UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
-        //@UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
+// @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
+// @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
 //})
 public class UserEntity {
     private Integer id;
