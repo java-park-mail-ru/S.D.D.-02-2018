@@ -3,12 +3,11 @@ package com.colorit.backend.controllers;
 import com.colorit.backend.common.AuthenticateResponseMaker;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.IUserService;
-import com.colorit.backend.services.UserServiceResponse;
-import com.colorit.backend.views.ResponseView;
-import com.colorit.backend.views.SignInView;
-import com.colorit.backend.views.SignUpView;
+import com.colorit.backend.services.responses.UserServiceResponse;
+import com.colorit.backend.views.output.ResponseView;
+import com.colorit.backend.views.input.SignInView;
+import com.colorit.backend.views.input.SignUpView;
 import com.colorit.backend.views.ViewStatus;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +18,10 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/user")
-public class AuthenticateController extends AbstractController {
-    public AuthenticateController(MessageSource messageSource, IUserService userService,
+public class AuthenticateController extends Controller {
+    public AuthenticateController(@NotNull IUserService userService,
                                   @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
-        super(messageSource, userService, authenticateResponseMaker);
+        super(userService, authenticateResponseMaker);
     }
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -30,7 +29,7 @@ public class AuthenticateController extends AbstractController {
     public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signInView.checkValid();
         if (check.isNotValid()) {
-            return getResponseMaker().makeResponse(check, getMessageSource(), locale);
+            return getResponseMaker().makeResponse(check, locale);
         }
 
         final UserEntity userEntity = signInView.toEntity();
@@ -38,7 +37,7 @@ public class AuthenticateController extends AbstractController {
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }
-        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
@@ -46,7 +45,7 @@ public class AuthenticateController extends AbstractController {
     public ResponseEntity<ResponseView> signOut(HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());
         if (nickname == null) {
-            return unauthorizedResponse(locale);
+            return getResponseMaker().makeUnauthorizedResponse(locale);
         }
         httpSession.invalidate();
         return ResponseEntity.ok(new ResponseView());
@@ -56,7 +55,7 @@ public class AuthenticateController extends AbstractController {
     public ResponseEntity<ResponseView> signUpUser(@RequestBody SignUpView signUpView, HttpSession httpSession, Locale locale) {
         final ViewStatus check = signUpView.checkValid();
         if (check.isNotValid()) {
-            return getResponseMaker().makeResponse(check, getMessageSource(), locale);
+            return getResponseMaker().makeResponse(check, locale);
         }
 
         final UserEntity userEntity = signUpView.toEntity();
@@ -64,6 +63,6 @@ public class AuthenticateController extends AbstractController {
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }
-        return getResponseMaker().makeResponse(userServiceResponse, getMessageSource(), locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 }

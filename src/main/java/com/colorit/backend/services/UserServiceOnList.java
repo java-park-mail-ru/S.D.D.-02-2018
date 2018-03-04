@@ -2,6 +2,8 @@ package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
+import com.colorit.backend.services.responses.UserServiceResponse;
+import com.colorit.backend.services.statuses.UserServiceStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,10 +12,11 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse<UserEntity> userServiceResponse =
+                new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
             final UserEntity userEntity = userRepository.getByNickame(nickname);
-            userServiceResponse.setEntity(userEntity);
+            userServiceResponse.setData(userEntity);
         } catch (UserRepositoryList.NoResultException nRx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }

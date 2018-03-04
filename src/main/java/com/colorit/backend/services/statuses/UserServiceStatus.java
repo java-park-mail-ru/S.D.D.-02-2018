@@ -1,8 +1,8 @@
-package com.colorit.backend.services;
+package com.colorit.backend.services.statuses;
 
 import org.springframework.http.HttpStatus;
 
-public enum UserServiceStatus {
+public enum UserServiceStatus implements IStatus {
     OK_STATE(0, null, "ok", "ok", HttpStatus.OK),
     CREATED_STATE(1, null, "created", "created", HttpStatus.CREATED),
     CONFLICT_EMAIL_STATE(2, "email", "email_conflict", "email_conflict", HttpStatus.CONFLICT),
@@ -12,10 +12,10 @@ public enum UserServiceStatus {
     DB_ERROR_STATE(6, null, "server_error", "server_error", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private Integer id;
-    private String field;
-    private String message;
-    private String alternativeMessage;
-    private HttpStatus httpStatus;
+    private final String field;
+    private final String message;
+    private final String alternativeMessage;
+    private final HttpStatus httpStatus;
 
     UserServiceStatus(Integer id, String field, String message, String alternativeMessage, HttpStatus httpStatus) {
         this.id = id;

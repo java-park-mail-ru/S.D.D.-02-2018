@@ -1,4 +1,4 @@
-package com.colorit.backend.views;
+package com.colorit.backend.views.output;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,13 @@ import java.util.Map;
 public class ResponseView<T> {
     private final Map<String, String> errors = new HashMap<>();
     private T data;
+
+    public ResponseView() {
+    }
+
+    public ResponseView(T data) {
+        this.data = data;
+    }
 
     public void setData(T data) {
         this.data = data;

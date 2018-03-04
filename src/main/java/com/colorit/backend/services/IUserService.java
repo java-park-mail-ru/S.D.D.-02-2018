@@ -1,6 +1,7 @@
 package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.services.responses.UserServiceResponse;
 
 public interface IUserService {
     UserServiceResponse createUser(UserEntity userEntity);
@@ -12,4 +13,8 @@ public interface IUserService {
     UserServiceResponse updateEmail(String nickname, String email);
 
     UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword);
+
+    //UserServiceResponse update(String nickname, UserEntity userEntity);
+
+    //UserServiceResponse updateAvatar(String nickname, String avatarPath);
 }

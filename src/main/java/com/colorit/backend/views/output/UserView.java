@@ -1,4 +1,4 @@
-package com.colorit.backend.views;
+package com.colorit.backend.views.output;
 
 import com.colorit.backend.entities.UserEntity;
 
@@ -21,11 +21,7 @@ public class UserView {
     public UserView(UserEntity userEntity) {
         this.nickname = userEntity.getNickname();
         this.email = userEntity.getEmail();
-        if (userEntity.getCountGames() != 0 && userEntity.getCountWins() != null && userEntity.getCountGames() != null) {
-            this.rating = userEntity.getCountWins().doubleValue() / userEntity.getCountGames().doubleValue();
-        } else {
-            this.rating = 0.0;
-        }
+        this.rating = userEntity.getRating();
     }
 
     public String getNickname() {
