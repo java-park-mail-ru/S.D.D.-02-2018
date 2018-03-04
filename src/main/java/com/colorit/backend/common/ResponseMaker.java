@@ -41,7 +41,7 @@ public class ResponseMaker {
     public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
         return null;
     }
-    
+
     public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, Locale locale) {
         final ResponseView responseView = new ResponseView();
         for (ViewStatusCode code : viewStatus.getErrors()) {
@@ -56,7 +56,7 @@ public class ResponseMaker {
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                if (userServiceResponse.getData() instanceof UserEntity){
+                if (userServiceResponse.getData() instanceof UserEntity) {
                     return new ResponseEntity<>(new ResponseView<>(
                             new UserView((UserEntity) userServiceResponse.getData())), httpStatus);
                 } else if (userServiceResponse.getData() instanceof List) {

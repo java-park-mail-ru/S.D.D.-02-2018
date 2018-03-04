@@ -2,7 +2,7 @@ package com.colorit.backend.services.responses;
 
 import com.colorit.backend.services.statuses.IStatus;
 
-public interface AbstractServiceResponse<T> {
+public interface IServiceResponse<T> {
     void setStatus(IStatus istatus);
 
     IStatus getStatus();

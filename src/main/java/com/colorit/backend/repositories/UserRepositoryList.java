@@ -46,17 +46,14 @@ public class UserRepositoryList {
         }
         existringUser.setEmail(email);
     }
-
-    public static class RepositoryException extends Exception {
+    
+    public static class ConstraintNameException extends Exception {
     }
 
-    public static class ConstraintNameException extends RepositoryException {
+    public static class ConstraintEmailException extends Exception {
     }
 
-    public static class ConstraintEmailException extends RepositoryException {
-    }
-
-    public static class NoResultException extends RepositoryException {
+    public static class NoResultException extends Exception {
     }
 
     private UserEntity searchByNickname(String nickname) {

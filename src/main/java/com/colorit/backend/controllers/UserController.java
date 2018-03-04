@@ -40,28 +40,6 @@ public class UserController extends Controller {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
-    @PostMapping(value = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> updateAvatar() {
-        // TODO implement
-        return null;
-    }
-
-
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> update(@RequestBody UpdateView updateView,
-                                               HttpSession httpSession, Locale locale) {
-        final String nickname = (String) httpSession.getAttribute(getSessionKey());
-        if (nickname == null) {
-            return getResponseMaker().makeUnauthorizedResponse(locale);
-        }
-
-        final UserEntity userEntity = updateView.toEntity();
-        final UserServiceResponse userServiceResponse = getUserService().update(nickname, userEntity);
-
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
-    }
-
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());

@@ -14,7 +14,7 @@ public interface IUserService {
 
     UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword);
 
-    UserServiceResponse update(String nickname, UserEntity userEntity);
+    //UserServiceResponse update(String nickname, UserEntity userEntity);
 
-    UserServiceResponse updateAvatar(String nickname, String avatarPath);
+    //UserServiceResponse updateAvatar(String nickname, String avatarPath);
 }

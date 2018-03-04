@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotNull;
 
 @RestController
-public  class Controller {
+public class Controller {
     private final @NotNull IUserService userService;
     private final ResponseMaker responseMaker;
     private static final String SESSION_KEY = "nickname";
