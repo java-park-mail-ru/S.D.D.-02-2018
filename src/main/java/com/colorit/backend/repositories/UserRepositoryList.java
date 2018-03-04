@@ -1,5 +1,6 @@
 package com.colorit.backend.repositories;
 
+import com.colorit.backend.entities.GameResults;
 import com.colorit.backend.entities.UserEntity;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class UserRepositoryList {
         if (existingUser != null) {
             throw new ConstraintEmailException();
         }
+        final GameResults gameResults = new GameResults();
+        userEntity.setGameResults(gameResults);
         db.add(userEntity);
     }
 
@@ -46,7 +49,7 @@ public class UserRepositoryList {
         }
         existringUser.setEmail(email);
     }
-    
+
     public static class ConstraintNameException extends Exception {
     }
 

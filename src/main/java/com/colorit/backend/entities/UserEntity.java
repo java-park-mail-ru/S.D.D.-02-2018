@@ -1,14 +1,14 @@
 package com.colorit.backend.entities;
 
 
-import javax.persistence.*;
+//import javax.persistence.*;
 
 @SuppressWarnings("unused")
-@Entity(name = "UserEntity")
-@Table(name = "user_entity", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
-        @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
-})
+//@Entity(name = "UserEntity")
+//@Table(name = "user_entity", uniqueConstraints = {
+        //@UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
+        //@UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
+//})
 public class UserEntity {
     private Integer id;
     private String nickname;
@@ -32,8 +32,8 @@ public class UserEntity {
         this.passwordHash = password;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -46,32 +46,32 @@ public class UserEntity {
         this.id = id;
     }
 
-    @Column(name = "nickname")
+    //@Column(name = "nickname")
     public String getNickname() {
         return this.nickname;
     }
 
-    @Column(name = "avatar_path")
+    //@Column(name = "avatar_path")
     public String getAvatarPath() {
         return avatarPath;
     }
 
-    @Column(name = "email")
+    //@Column(name = "email")
     public String getEmail() {
         return email;
     }
 
-    @Column(name = "password_hash")
+    //@Column(name = "password_hash")
     public String getPasswordHash() {
         return passwordHash;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
+    //@OneToOne(fetch = FetchType.LAZY)
     public GameResults getGameResults() {
         return gameResults;
     }
 
-    @Transient
+    //@Transient
     public Double getRating() {
         if (gameResults.getCountGames() == 0) {
             return 0.0;
@@ -79,7 +79,7 @@ public class UserEntity {
         return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
     }
 
-    @Transient
+    //@Transient
     public Integer getCountWins() {
         return gameResults.getCountWins();
     }
