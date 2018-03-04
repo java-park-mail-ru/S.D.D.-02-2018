@@ -24,11 +24,11 @@ import java.util.Locale;
  * @version 1.0
  */
 @Component
-public class AbstractResponseMaker {
+public class ResponseMaker {
 
     private final @NotNull MessageSource messageSource;
 
-    public AbstractResponseMaker(@NotNull MessageSource messageSource) {
+    public ResponseMaker(@NotNull MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
@@ -56,21 +56,18 @@ public class AbstractResponseMaker {
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                switch (userServiceResponse.getReturnedType()) {
-                    case ENTITY:
-                        return new ResponseEntity<>(new ResponseView<>(
-                                new UserView((UserEntity) userServiceResponse.getData())), httpStatus);
-                    case SCALAR:
-                        return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
-                    case LIST_ENTITIES:
-                        final List<UserView> userViews = new ArrayList<>();
-                        final List userEntities = (List) userServiceResponse.getData();
-                        for (Object userEntity : userEntities) {
-                            userViews.add(new UserView((UserEntity) userEntity));
-                        }
-                        return new ResponseEntity<>(new ResponseView<>(userViews), httpStatus);
-                    default:
-                        return new ResponseEntity<>(new ResponseView<>(), httpStatus);
+                if (userServiceResponse.getData() instanceof UserEntity){
+                    return new ResponseEntity<>(new ResponseView<>(
+                            new UserView((UserEntity) userServiceResponse.getData())), httpStatus);
+                } else if (userServiceResponse.getData() instanceof List) {
+                    final List<UserView> userViews = new ArrayList<>();
+                    final List userEntities = (List) userServiceResponse.getData();
+                    for (Object userEntity : userEntities) {
+                        userViews.add(new UserView((UserEntity) userEntity));
+                    }
+                    return new ResponseEntity<>(new ResponseView<>(userViews), httpStatus);
+                } else {
+                    return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
                 }
             }
         } else {

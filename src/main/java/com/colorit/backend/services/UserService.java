@@ -4,7 +4,6 @@ import com.colorit.backend.entities.GameResults;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.repositories.GameRepositoryJpa;
 import com.colorit.backend.repositories.UserRepositoryJpa;
-import com.colorit.backend.services.responses.UserServiceEntityResponse;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import org.slf4j.Logger;
@@ -56,7 +55,8 @@ public class UserService implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserServiceResponse userServiceResponse = new UserServiceEntityResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse<UserEntity> userServiceResponse =
+                new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
             final UserEntity userEntity = userRepository.getByNickname(nickname);
             if (userEntity != null) {

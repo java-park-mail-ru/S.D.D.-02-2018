@@ -18,7 +18,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/user")
-public class AuthenticateController extends AbstractController {
+public class AuthenticateController extends Controller {
     public AuthenticateController(@NotNull IUserService userService,
                                   @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
         super(userService, authenticateResponseMaker);

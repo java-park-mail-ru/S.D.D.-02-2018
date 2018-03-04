@@ -21,7 +21,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping(path = "/api/user/")
-public class UserController extends AbstractController {
+public class UserController extends Controller {
 
     @Autowired
     public UserController(@NotNull IUserService userService,

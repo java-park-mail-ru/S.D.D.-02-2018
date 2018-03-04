@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
 @Component
-public class UserResponseMaker extends AbstractResponseMaker {
+public class UserResponseMaker extends ResponseMaker {
     public UserResponseMaker(@NotNull MessageSource messageSource) {
         super(messageSource);
     }
