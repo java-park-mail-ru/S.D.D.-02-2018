@@ -40,4 +40,9 @@ public enum UserServiceStatus implements IStatus {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
+    @Override
+    public boolean isError() {
+        return !(id == 0 || id == 1);
+    }
 }
