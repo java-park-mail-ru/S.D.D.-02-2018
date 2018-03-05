@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping(path = "/api/user/")
-public class UserController extends Controller {
+public class UserController extends AbstractController {
 
     @Autowired
     public UserController(@NotNull IUserService userService,

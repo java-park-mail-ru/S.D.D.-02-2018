@@ -1,22 +1,22 @@
 package com.colorit.backend.controllers;
 
-import com.colorit.backend.common.ResponseMaker;
+import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.services.IUserService;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 
 @RestController
-public class Controller {
+public abstract class AbstractController {
     private final @NotNull IUserService userService;
-    private final ResponseMaker responseMaker;
+    private final AbstractResponseMaker responseMaker;
     private static final String SESSION_KEY = "nickname";
 
     IUserService getUserService() {
         return userService;
     }
 
-    ResponseMaker getResponseMaker() {
+    AbstractResponseMaker getResponseMaker() {
         return responseMaker;
     }
 
@@ -24,8 +24,8 @@ public class Controller {
         return SESSION_KEY;
     }
 
-    public Controller(@NotNull IUserService userService,
-                      @NotNull ResponseMaker responseMaker) {
+    public AbstractController(@NotNull IUserService userService,
+                              @NotNull AbstractResponseMaker responseMaker) {
         this.userService = userService;
         this.responseMaker = responseMaker;
     }

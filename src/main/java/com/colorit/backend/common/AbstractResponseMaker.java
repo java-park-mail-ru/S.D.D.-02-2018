@@ -8,6 +8,7 @@ import com.colorit.backend.views.output.UserView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -23,12 +24,13 @@ import java.util.Locale;
  * @author HaseProgram - Dmitry Zaitsev
  * @version 1.0
  */
+@Primary
 @Component
-public class ResponseMaker {
+public abstract class AbstractResponseMaker {
 
     private final @NotNull MessageSource messageSource;
 
-    public ResponseMaker(@NotNull MessageSource messageSource) {
+    public AbstractResponseMaker(@NotNull MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 

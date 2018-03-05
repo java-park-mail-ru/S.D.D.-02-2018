@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
 @Component
-public class AuthenticateResponseMaker extends ResponseMaker {
+public class AuthenticateResponseMaker extends AbstractResponseMaker {
 
     public AuthenticateResponseMaker(@NotNull MessageSource messageSource) {
         super(messageSource);
@@ -22,5 +22,4 @@ public class AuthenticateResponseMaker extends ResponseMaker {
                 userServiceResponse.getStatus().getMessage(), null, locale);
         return makeResponse(userServiceResponse, message);
     }
-
 }

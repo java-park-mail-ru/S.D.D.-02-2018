@@ -2,14 +2,27 @@ package com.colorit.backend.services.responses;
 
 import com.colorit.backend.services.statuses.IStatus;
 
-public interface IServiceResponse<T> {
-    void setStatus(IStatus istatus);
+public abstract class IServiceResponse<T> {
+    IStatus status;
+    T data;
 
-    IStatus getStatus();
+    void setStatus(IStatus istatus) {
+        this.status = istatus;
+    }
 
-    boolean isValid();
+    IStatus getStatus() {
+        return this.status;
+    }
 
-    T getData();
+    boolean isValid() {
+        return true;
+    }
 
-    void setData(T data);
+    T getData() {
+        return null;
+    }
+
+    void setData(T data) {
+        this.data = data;
+    }
 }
