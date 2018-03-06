@@ -5,6 +5,11 @@ import com.colorit.backend.services.statuses.IStatus;
 public abstract class AbstractServiceResponse<T> {
     private IStatus status;
     private T data;
+    private Class<T> dateType;
+
+    Class<T> getDateType() {
+        return dateType;
+    }
 
     AbstractServiceResponse(IStatus istatus) {
         this.status = istatus;

@@ -24,6 +24,11 @@ public class UserServiceResponse<T> extends AbstractServiceResponse<T> {
     }
 
     @Override
+    public Class<T> getDateType() {
+        return super.getDateType();
+    }
+
+    @Override
     public void setStatus(IStatus status) {
         super.setStatus(status);
     }

@@ -47,6 +47,9 @@ public class AuthenticateController extends AbstractController {
         if (nickname == null) {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
+
+
+
         httpSession.invalidate();
         return ResponseEntity.ok(new ResponseView());
     }

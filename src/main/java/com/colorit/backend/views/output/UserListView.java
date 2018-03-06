@@ -9,10 +9,10 @@ public class UserListView {
     private List<UserView> userViewList;
     private Integer size;
 
-    public UserListView(List<UserEntity> userEntities) {
+    public UserListView(List userEntities) {
         this.userViewList = new ArrayList<>();
         userEntities.forEach(
-                userEntity -> this.userViewList.add(new UserView(userEntity)));
+                 userEntity -> this.userViewList.add(new UserView((UserEntity) userEntity)));
         this.size = this.userViewList.size();
     }
 
