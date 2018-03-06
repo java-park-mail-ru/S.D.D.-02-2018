@@ -4,6 +4,7 @@ import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.output.ResponseView;
+import com.colorit.backend.views.output.UserListView;
 import com.colorit.backend.views.output.UserView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
@@ -62,12 +63,8 @@ public abstract class AbstractResponseMaker {
                     return new ResponseEntity<>(new ResponseView<>(
                             new UserView((UserEntity) userServiceResponse.getData())), httpStatus);
                 } else if (userServiceResponse.getData() instanceof List) {
-                    final List<UserView> userViews = new ArrayList<>();
-                    final List userEntities = (List) userServiceResponse.getData();
-                    for (Object userEntity : userEntities) {
-                        userViews.add(new UserView((UserEntity) userEntity));
-                    }
-                    return new ResponseEntity<>(new ResponseView<>(userViews), httpStatus);
+                    return new ResponseEntity<>(new ResponseView<>(
+                            new UserListView((List) userServiceResponse.getData())), httpStatus);
                 } else {
                     return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
                 }
