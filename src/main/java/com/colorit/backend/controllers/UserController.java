@@ -28,15 +28,38 @@ public class UserController extends AbstractController {
         super(userService, userResponseMaker);
     }
 
-    @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getUserInfo(HttpSession httpSession, Locale locale) {
-        final String nickname = (String) httpSession.getAttribute(getSessionKey());
-        if (nickname == null) {
+    @GetMapping(path = "/info/{nickname}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getUserInfo(@PathVariable(name = "nickname") String nickname,
+                                                    HttpSession httpSession, Locale locale) {
+
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().getUser(nickname);
+        // todo check userexist, then get data;
+        final UserServiceResponse userServiceResponse = getUserService().getUser(
+                nickname != null ? nickname : sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
+    }
+
+    @PostMapping(path = "/upadate_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> updateAvatar(@RequestParam(name = "file") MultipartFile avatar,
+                                                     HttpSession httpSession) {
+        return null;
+    }
+
+    @GetMapping(path = "/avatar/{avatarPath}")
+    public ResponseEntity<ResponseView> getAvatar(@PathVariable(name = "avatarPath") String avatarPath,
+                                                  HttpSession httpSession) {
+        return null;
+    }
+
+    @PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> update(//UpdateView updateView
+                                               HttpSession httpSession) {
+        return null;
     }
 
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
