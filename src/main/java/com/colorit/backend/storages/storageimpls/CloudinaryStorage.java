@@ -1,4 +1,7 @@
-package com.colorit.backend.storages;
+package com.colorit.backend.storages.storageimpls;
+
+import com.colorit.backend.storages.IStorage;
+import com.colorit.backend.storages.responses.AbstractStorageResponse;
 
 public class CloudinaryStorage implements IStorage {
     public CloudinaryStorage() {
