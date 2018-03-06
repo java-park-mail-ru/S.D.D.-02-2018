@@ -1,7 +1,7 @@
 package com.colorit.backend.storages;
 
 public interface IStorage {
-    AbstractServiceResponse writeFile();
+    AbstractStorageResponse writeFile();
 
-    AbstractServiceResponse readFile();
+    AbstractStorageResponse readFile();
 }

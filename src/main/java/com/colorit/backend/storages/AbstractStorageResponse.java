@@ -1,4 +1,4 @@
 package com.colorit.backend.storages;
 
-public class AbstractServiceResponse {
+public class AbstractStorageResponse {
 }
