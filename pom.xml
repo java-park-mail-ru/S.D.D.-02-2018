@@ -25,7 +25,6 @@
     </properties>
 
 
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -33,16 +32,23 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.spring-social</groupId>
-            <artifactId>spring-social-google</artifactId>
-            <!--<version>${social.version}</version>-->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.17.0</version>
         </dependency>
 
         <dependency>

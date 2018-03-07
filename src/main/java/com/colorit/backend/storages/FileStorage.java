@@ -3,9 +3,14 @@ package com.colorit.backend.storages;
 import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Map;
 
+@Component
 public class FileStorage implements IStorage {
     private IStorage storage;
     private final static String HEROKU_VAR = "HEROKU_VAR";
@@ -23,11 +28,22 @@ public class FileStorage implements IStorage {
     }
 
     @Override
-    public AbstractStorageResponse writeFile() {
-        return storage.writeFile();
+    public AbstractStorageResponse writeFile(File file) {
+        return storage.writeFile(file);
     }
 
-    public AbstractStorageResponse readFile() {
-        return storage.readFile();
+    public AbstractStorageResponse readFile(String path) {
+        return storage.readFile(path);
+    }
+
+    public AbstractStorageResponse saveFile(MultipartFile multipartFile) {
+        try {
+            File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
+            multipartFile.transferTo(file);
+
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 }

@@ -48,8 +48,6 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-
-
         httpSession.invalidate();
         return ResponseEntity.ok(new ResponseView());
     }
