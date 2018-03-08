@@ -5,7 +5,7 @@ import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import java.io.File;
 
 public interface IStorage {
-    AbstractStorageResponse writeFile(File file);
+    String writeFile(File file) throws Exception;
 
-    AbstractStorageResponse readFile(String path);
+    byte[] readFile(String path) throws Exception;
 }

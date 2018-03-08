@@ -21,6 +21,12 @@ public class UserRepositoryList {
         return userEntity;
     }
 
+    public Long getPosition(String nickname) throws NoResultException {
+        UserEntity cur = searchByNickname(nickname);
+        return this.db.stream().filter(user -> cur.getRating() >
+                 user.getRating()).count();
+    }
+
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
         UserEntity existingUser = searchByNickname(userEntity.getNickname());
         if (existingUser != null) {

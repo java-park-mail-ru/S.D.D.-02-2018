@@ -1,5 +1,10 @@
 package com.colorit.backend.storages.responses;
 
-public class CloudinaryStorageResponse<T> extends AbstractStorageResponse<T> {
+import com.colorit.backend.storages.statuses.StorageStatus;
 
+public class CloudinaryStorageResponse<T> extends AbstractStorageResponse<T> {
+    @Override
+    public StorageStatus getStatus() {
+        return (StorageStatus) super.getStatus();
+    }
 }

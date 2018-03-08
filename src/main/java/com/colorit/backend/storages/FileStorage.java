@@ -1,8 +1,10 @@
 package com.colorit.backend.storages;
 
 import com.colorit.backend.storages.responses.AbstractStorageResponse;
+import com.colorit.backend.storages.statuses.StorageStatus;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,8 +12,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.Map;
 
+@Primary
 @Component
-public class FileStorage implements IStorage {
+public class FileStorage {
     private IStorage storage;
     private final static String HEROKU_VAR = "HEROKU_VAR";
     private final static String USER_HOME = System.getProperty("os.name");
@@ -27,23 +30,17 @@ public class FileStorage implements IStorage {
         }
     }
 
-    @Override
-    public AbstractStorageResponse writeFile(File file) {
-        return storage.writeFile(file);
-    }
-
-    public AbstractStorageResponse readFile(String path) {
-        return storage.readFile(path);
-    }
-
     public AbstractStorageResponse saveFile(MultipartFile multipartFile) {
+        AbstractStorageResponse<String> response = new AbstractStorageResponse<>();
         try {
             File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
             multipartFile.transferTo(file);
-
+            String name = storage.writeFile(file);
+            response.setStatus(StorageStatus.OK_STATE);
+            response.setData(name);
         } catch (Exception e) {
-            return null;
+            response.setStatus(StorageStatus.ERROR_STATE);
         }
-        return null;
+        return response;
     }
 }

@@ -3,6 +3,7 @@ package com.colorit.backend.common;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
+import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.output.UserListView;
 import com.colorit.backend.views.output.UserView;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,6 +52,15 @@ public abstract class AbstractResponseMaker {
                     messageSource.getMessage(code.getMessage(), null, locale));
         }
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<ResponseView> makeResponse(AbstractStorageResponse response) {
+        if (!response.isValid()) {
+            ResponseView responseView = new ResponseView();
+            responseView.addError("file", "Error upload");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseView);
+        }
+        return ResponseEntity.ok(new ResponseView());
     }
 
     ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message) {

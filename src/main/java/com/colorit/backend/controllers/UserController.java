@@ -4,12 +4,13 @@ import com.colorit.backend.common.UserResponseMaker;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.storages.FileStorage;
+import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.views.*;
 import com.colorit.backend.views.input.UpdateEmailView;
 import com.colorit.backend.views.input.UpdatePasswordView;
 import com.colorit.backend.views.output.ResponseView;
-import org.apache.tomcat.jni.File;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
-import java.nio.file.Files;
 import java.util.Locale;
 
 
 @RestController
 @RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
+    @Value("${api_key}")
+    String api;
+
     private FileStorage fileStorage;
+
     @Autowired
     public UserController(@NotNull IUserService userService,
                           @NotNull UserResponseMaker userResponseMaker,
@@ -48,10 +52,16 @@ public class UserController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
-    @PostMapping(path = "/upadate_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateAvatar(@RequestParam(name = "file") MultipartFile avatar,
                                                      HttpSession httpSession, Locale locale) {
-        File file = Files.createTempFile("temp", avatar.getOriginalFilename()).toFile();
+        final AbstractStorageResponse storageResponse = fileStorage.saveFile(avatar);
+        if (!storageResponse.isValid()) {
+            return getResponseMaker().makeResponse(storageResponse);
+        }
+        // update user avatar
+
+        int c = 1;
         return null;
     }
 

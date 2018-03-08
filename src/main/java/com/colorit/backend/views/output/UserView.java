@@ -13,6 +13,7 @@ public class UserView {
     private String nickname;
     private String email;
     private Double rating;
+    private String avatar;
 
     public UserView() {
 
@@ -22,6 +23,8 @@ public class UserView {
         this.nickname = userEntity.getNickname();
         this.email = userEntity.getEmail();
         this.rating = userEntity.getRating();
+        // todo
+        this.avatar = "" + userEntity.getAvatarPath();
     }
 
     public String getNickname() {
