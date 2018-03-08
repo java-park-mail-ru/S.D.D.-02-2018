@@ -15,7 +15,7 @@ import java.util.Map;
 public class CloudinaryStorage implements IStorage {
     private Cloudinary cloudinary;
 
-    @Value("${api_key}")
+//    @Value("${api_key}")
     private String apiKey;
 
     @Value("${api_secret}")
@@ -31,7 +31,7 @@ public class CloudinaryStorage implements IStorage {
         cloudName = System.getenv().get("CLOUD_NAME");
         apiKey = System.getenv().get("API_KEY");
         apiSecret = System.getenv().get("API_SECRET");
-        this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
+        //this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
     }
 
     @Override

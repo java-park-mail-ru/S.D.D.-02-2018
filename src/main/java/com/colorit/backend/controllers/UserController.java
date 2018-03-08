@@ -8,9 +8,9 @@ import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.views.*;
 import com.colorit.backend.views.input.UpdateEmailView;
 import com.colorit.backend.views.input.UpdatePasswordView;
+import com.colorit.backend.views.input.UpdateView;
 import com.colorit.backend.views.output.ResponseView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,6 @@ import java.util.Locale;
 @RestController
 @RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
-    @Value("${api_key}")
-    String api;
-
     private FileStorage fileStorage;
 
     @Autowired
@@ -37,7 +34,22 @@ public class UserController extends AbstractController {
         this.fileStorage = fileStorage;
     }
 
-    @GetMapping(path = "/info/{nickname}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getCurrentUserInfo(@PathVariable(name = "nickname") String nickname,
+                                                    HttpSession httpSession, Locale locale) {
+
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
+
+        // todo check userexist, then get data;
+        final UserServiceResponse userServiceResponse = getUserService().getUser(
+                nickname != null ? nickname : sessionNickname);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
+    }
+
+    @GetMapping(path = "/info/{nickname}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUserInfo(@PathVariable(name = "nickname") String nickname,
                                                     HttpSession httpSession, Locale locale) {
 
@@ -52,25 +64,49 @@ public class UserController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
+    @GetMapping(path = "/get_users", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getListUser(@RequestParam(name="limit") Integer limit,
+                                                    @RequestParam(name="offset") Integer offset,
+                                                    Locale locale) {
+        return null;
+    }
+
+    @GetMapping(path="/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getPosition(HttpSession httpSession, Locale locale) {
+        return null;
+    }
+
+    @GetMapping(path="/get_users_count", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getCountUsere(Locale locale) {
+        return null;
+    }
+
     @PostMapping(path = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateAvatar(@RequestParam(name = "file") MultipartFile avatar,
                                                      HttpSession httpSession, Locale locale) {
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
+
         final AbstractStorageResponse storageResponse = fileStorage.saveFile(avatar);
         if (!storageResponse.isValid()) {
             return getResponseMaker().makeResponse(storageResponse);
         }
-        // update user avatar
 
-        int c = 1;
-        return null;
+        UserServiceResponse userServiceResponse = getUserService().updateAvatar(sessionNickname,
+                (String) storageResponse.getData());
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> update(//UpdateView updateView
+    public ResponseEntity<ResponseView> update(@RequestBody UpdateView updateView,
                                                HttpSession httpSession, Locale locale) {
         return null;
     }
+
+
 
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {

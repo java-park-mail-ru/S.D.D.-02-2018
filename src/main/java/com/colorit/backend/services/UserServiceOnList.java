@@ -64,6 +64,7 @@ public class UserServiceOnList implements IUserService {
 
     }
 
+
     @Override
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
@@ -74,6 +75,36 @@ public class UserServiceOnList implements IUserService {
             } else {
                 userServiceResponse.setStatus(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
             }
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
+    }
+
+    public UserServiceResponse getPosition(String nickname) {
+        final UserServiceResponse<Long> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        try {
+            Long position = userRepository.getPosition(nickname);
+            userServiceResponse.setData(position);
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
+    }
+
+    public UserServiceResponse getUsersCount() {
+        final UserServiceResponse<Integer> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        Integer position = userRepository.getCount();
+        userServiceResponse.setData(position);
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse updateAvatar(String nickname, String avatarPath) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            final UserEntity existingEntity = userRepository.getByNickame(nickname);
+            existingEntity.setAvatarPath(avatarPath);
         } catch (UserRepositoryList.NoResultException nREx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }

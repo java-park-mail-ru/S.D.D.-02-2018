@@ -3,15 +3,14 @@ package com.colorit.backend.controllers;
 import com.colorit.backend.common.AbstractResponseMaker;
 import com.colorit.backend.services.IUserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 
 @RestController
-//@CrossOrigin(origins = "${front_url}")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public abstract class AbstractController {
-    @Value("${front_url}")
-    private String fr;
     private final @NotNull IUserService userService;
     private final AbstractResponseMaker responseMaker;
     private static final String SESSION_KEY = "nickname";

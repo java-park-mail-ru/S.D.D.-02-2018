@@ -5,6 +5,7 @@ import com.colorit.backend.entities.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class UserRepositoryList {
     private final List<UserEntity> db;
@@ -21,10 +22,20 @@ public class UserRepositoryList {
         return userEntity;
     }
 
+    public Integer getCount() {
+        return db.size();
+    }
+
     public Long getPosition(String nickname) throws NoResultException {
         UserEntity cur = searchByNickname(nickname);
         return this.db.stream().filter(user -> cur.getRating() >
                  user.getRating()).count();
+    }
+
+    public List<UserEntity> getListUsers(Integer limit, Integer offset) {
+        //
+        return null;
+//        return db.stream().sorted()//limit(limit)
     }
 
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
