@@ -18,12 +18,11 @@ public class CloudinaryStorage implements IStorage {
     //@Value("${com.colorit.backend.api_key}")
     private String apiKey;
 
-    @Autowired
     @Value("${api_secret}")
-    String apiSecret;
+    private String apiSecret;
 
     @Value("${cloud_name}")
-    String cloudName;
+    private String cloudName;
 
     public CloudinaryStorage() {
         super();

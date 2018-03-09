@@ -48,7 +48,7 @@ public class UserRepositoryList {
 
     public Long getPosition(String nickname) throws NoResultException {
         UserEntity cur = searchByNickname(nickname);
-        return this.db.stream().filter(user -> cur.getRating() > user.getRating()).count();
+        return this.db.stream().filter(user -> cur.getRating() < user.getRating()).count();
     }
 
     public List<UserEntity> getListUsers(Integer limit, Integer offset) {

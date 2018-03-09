@@ -5,11 +5,8 @@ import com.colorit.backend.entities.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
-import com.sun.jdi.request.DuplicateRequestException;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
-import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 
 @Service
