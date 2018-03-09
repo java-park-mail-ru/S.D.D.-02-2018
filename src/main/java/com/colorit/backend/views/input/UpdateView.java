@@ -101,10 +101,6 @@ public class UpdateView extends AbstractView {
         this.newPassword = newPassword;
     }
 
-    public ViewStatus isValid() {
-        return null;
-    }
-
     public String getNewPasswordCheck() {
         return newPasswordCheck;
     }

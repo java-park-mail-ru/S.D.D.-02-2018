@@ -5,8 +5,11 @@ import com.colorit.backend.entities.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
+import com.sun.jdi.request.DuplicateRequestException;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
+import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 
 @Service
@@ -125,7 +128,24 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse update(String nickname, UserUpdateEntity userUpdateEntity) {
-        return null;
+        final UserServiceResponse userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        try {
+            final UserEntity existingEntity = userRepository.getByNickame(nickname);
+            if (userUpdateEntity.getOldPassword() != null) {
+                if (!existingEntity.getPasswordHash().equals(userUpdateEntity.getOldPassword())) {
+                    userServiceResponse.setStatus(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
+                } else {
+                    userRepository.update(nickname, userUpdateEntity);
+                }
+            }
+        } catch (UserRepositoryList.NoResultException nRe) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        } catch (UserRepositoryList.ConstraintEmailException cEEx) {
+            userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
+        } catch (UserRepositoryList.ConstraintNameException cNEx) {
+            userServiceResponse.setStatus(UserServiceStatus.CONFLICT_NAME_STATE);
+        }
+        return userServiceResponse;
     }
 
     @Override

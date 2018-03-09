@@ -90,4 +90,10 @@ public class UserEntity {
     public void setCountWins(Integer countWins) {
         this.gameResults.setCountWins(countWins);
     }
+
+    public void copy(UserUpdateEntity other) {
+        this.nickname = other.getNewNickname() != null ? other.getNewNickname() : this.nickname;
+        this.passwordHash = other.getNewPassword() != null ? other.getNewPassword() : this.passwordHash;
+        this.email = other.getNewEmail() != null ? other.getNewEmail() : this.email;
+    }
 }

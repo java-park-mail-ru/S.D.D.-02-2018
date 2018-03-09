@@ -15,16 +15,16 @@ import java.util.Map;
 public class CloudinaryStorage implements IStorage {
     private Cloudinary cloudinary;
 
-    @Value("${com.colorit.backend.api_key}")
+    //@Value("${com.colorit.backend.api_key}")
     private String apiKey;
 
+    @Autowired
     @Value("${api_secret}")
-    private String apiSecret;
+    String apiSecret;
 
     @Value("${cloud_name}")
-    private String cloudName;
+    String cloudName;
 
-    @Autowired
     public CloudinaryStorage() {
         super();
         // todo improve that

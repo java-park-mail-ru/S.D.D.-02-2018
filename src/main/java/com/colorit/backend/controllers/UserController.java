@@ -118,13 +118,18 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        final ViewStatus viewStatus = updateView.isValid();
+        final ViewStatus viewStatus = updateView.checkValid();
         if (viewStatus.isNotValid()) {
             return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
         final UserUpdateEntity updateEntity = updateView.toEntity();
         UserServiceResponse userServiceResponse = getUserService().update(sessionNickname, updateEntity);
+        if (userServiceResponse.isValid()) {
+            if (updateEntity.getNewNickname() != null) {
+                httpSession.setAttribute(getSessionKey(), updateEntity.getNewNickname());
+            }
+        }
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 

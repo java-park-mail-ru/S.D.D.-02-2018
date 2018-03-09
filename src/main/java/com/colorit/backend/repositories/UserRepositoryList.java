@@ -2,6 +2,7 @@ package com.colorit.backend.repositories;
 
 import com.colorit.backend.entities.GameResults;
 import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.UserUpdateEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,15 +22,33 @@ public class UserRepositoryList {
         return userEntity;
     }
 
+    public void update(String nickname, UserUpdateEntity userUpdateEntity) throws ConstraintNameException,
+            ConstraintEmailException, NoResultException {
+        UserEntity existingUser = getByNickame(nickname);
+        if (userUpdateEntity.getNewNickname() != null) {
+            if (searchByNickname(userUpdateEntity.getNewNickname()) != null) {
+                throw new ConstraintNameException();
+            }
+        }
+
+        if (userUpdateEntity.getNewEmail() != null) {
+            if (searchByEmail(userUpdateEntity.getNewEmail()) != null) {
+                throw new ConstraintEmailException();
+            }
+        }
+
+        existingUser.copy(userUpdateEntity);
+
+
+    }
+
     public Integer getCount() {
         return db.size();
     }
 
-
     public Long getPosition(String nickname) throws NoResultException {
         UserEntity cur = searchByNickname(nickname);
-        return this.db.stream().filter(user -> cur.getRating() >
-                user.getRating()).count();
+        return this.db.stream().filter(user -> cur.getRating() > user.getRating()).count();
     }
 
     public List<UserEntity> getListUsers(Integer limit, Integer offset) {

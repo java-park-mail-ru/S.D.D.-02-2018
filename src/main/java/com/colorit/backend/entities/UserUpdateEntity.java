@@ -2,13 +2,13 @@ package com.colorit.backend.entities;
 
 public class UserUpdateEntity {
     private String newNickname;
-    private String newEmial;
+    private String newEmail;
     private String oldPassword;
     private String newPassword;
 
-    public UserUpdateEntity(String newNickname, String newEmial, String oldPassword, String newPassword) {
+    public UserUpdateEntity(String newNickname, String newEmail, String oldPassword, String newPassword) {
         this.newNickname = newNickname;
-        this.newEmial = newEmial;
+        this.newEmail = newEmail;
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
     }
@@ -21,12 +21,12 @@ public class UserUpdateEntity {
         this.newNickname = newNickname;
     }
 
-    public String getNewEmial() {
-        return newEmial;
+    public String getNewEmail() {
+        return newEmail;
     }
 
-    public void setNewEmial(String newEmial) {
-        this.newEmial = newEmial;
+    public void setNewEmail(String newEmial) {
+        this.newEmail = newEmial;
     }
 
     public String getOldPassword() {
