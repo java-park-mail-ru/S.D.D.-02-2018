@@ -42,7 +42,6 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        // maybe check user exist
         final UserServiceResponse userServiceResponse = getUserService().getUser(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
@@ -118,7 +117,7 @@ public class UserController extends AbstractController {
         if (sessionNickname == null) {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
-        // TODO implement
+
         final ViewStatus viewStatus = updateView.isValid();
         if (viewStatus.isNotValid()) {
             return getResponseMaker().makeResponse(viewStatus, locale);

@@ -27,7 +27,8 @@ public class AuthenticateController extends AbstractController {
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
+    public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession,
+                                                   Locale locale) {
         final ViewStatus check = signInView.checkValid();
         if (check.isNotValid()) {
             return getResponseMaker().makeResponse(check, locale);
@@ -35,13 +36,11 @@ public class AuthenticateController extends AbstractController {
 
         final UserEntity userEntity = signInView.toEntity();
         final UserServiceResponse userServiceResponse = getUserService().authenticateUser(userEntity);
-        ResponseEntity<ResponseView> response = getResponseMaker().makeResponse(userServiceResponse, locale);
 
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
-            response.getBody().setData(httpSession.getId());
         }
-        return response;
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
@@ -65,10 +64,8 @@ public class AuthenticateController extends AbstractController {
 
         final UserEntity userEntity = signUpView.toEntity();
         final UserServiceResponse userServiceResponse = getUserService().createUser(userEntity);
-        ResponseEntity<ResponseView> response = getResponseMaker().makeResponse(userServiceResponse, locale);
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
-            response.getBody().setData(httpSession.getId());
         }
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }

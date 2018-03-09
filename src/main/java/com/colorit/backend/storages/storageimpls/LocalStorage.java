@@ -16,8 +16,8 @@ public class LocalStorage implements IStorage {
         staticContentPath = userHome + "/static";
         try {
             md5 = java.security.MessageDigest.getInstance("md5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e.getCause());
+        } catch (NoSuchAlgorithmException nSAe) {
+            throw new RuntimeException(nSAe.getCause());
         }
     }
 
