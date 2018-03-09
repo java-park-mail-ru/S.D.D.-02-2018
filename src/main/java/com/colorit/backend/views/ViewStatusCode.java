@@ -12,7 +12,8 @@ public enum ViewStatusCode {
     EMPTY_NICKNAME(5, "nickname", "nickname_empty", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL_STATE(6, "email", "email_invalid", HttpStatus.BAD_REQUEST),
     PASSWORD_NOT_MATCH_STATE(7, "newPasswordCheck", "passwordCheck_empty", HttpStatus.BAD_REQUEST),
-    PHOTO_PATH_ERROR_STATE(8, "photo", "photo_empty", HttpStatus.BAD_REQUEST);
+    PHOTO_PATH_ERROR_STATE(8, "photo", "photo_empty", HttpStatus.BAD_REQUEST),
+    EMPTY_UPDATE_FORM_STATE(9, "general", "empty_update", HttpStatus.BAD_REQUEST);
 
     private final Integer id;
     private final String field;

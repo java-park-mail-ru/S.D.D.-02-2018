@@ -9,7 +9,7 @@ public class UpdateEmailView extends AbstractView {
 
     @SuppressWarnings("unused")
     @JsonCreator
-    public UpdateEmailView(@JsonProperty("newEmail") String newEmail) {
+    public UpdateEmailView(@JsonProperty("email") String newEmail) {
         this.newEmail = newEmail;
     }
 

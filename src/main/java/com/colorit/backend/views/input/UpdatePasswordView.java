@@ -14,8 +14,8 @@ public class UpdatePasswordView extends AbstractView {
     @SuppressWarnings("unused")
     @JsonCreator
     public UpdatePasswordView(@JsonProperty("oldPassword") String oldPassword,
-                              @JsonProperty("newPassword") String newPassword,
-                              @JsonProperty("newPasswordCheck") String newPasswordCheck) {
+                              @JsonProperty("password") String newPassword,
+                              @JsonProperty("passwordCheck") String newPasswordCheck) {
 
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
