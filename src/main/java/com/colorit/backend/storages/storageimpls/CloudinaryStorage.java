@@ -39,7 +39,7 @@ public class CloudinaryStorage implements IStorage {
         Map cloudResponse = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         JSONObject json = new JSONObject(cloudResponse);
         String url = json.getString("url");
-        return url;//url.replaceFirst(".*/([^/?]+).*", "$1");
+        return url; //url.replaceFirst(".*/([^/?]+).*", "$1");
     }
 
     @Override

@@ -16,8 +16,8 @@ import java.util.Map;
 @Component
 public class FileStorage {
     private IStorage storage;
-    private final static String HEROKU_VAR = "HEROKU_VAR";
-    private final static String USER_HOME = System.getProperty("os.name");
+    private static String HEROKU_VAR = "HEROKU_VAR";
+    private static String USER_HOME = System.getProperty("os.name");
 
     // TODO create storage, by detecting env_var -> heroku => then create Cloudinary, else local
     FileStorage() {

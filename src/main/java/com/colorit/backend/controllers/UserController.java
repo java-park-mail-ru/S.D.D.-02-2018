@@ -64,15 +64,15 @@ public class UserController extends AbstractController {
     }
 
     @GetMapping(path = "/get_users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getListUser(@RequestParam(name="limit") Integer limit,
-                                                    @RequestParam(name="offset") Integer offset,
+    public ResponseEntity<ResponseView> getListUser(@RequestParam(name = "limit") Integer limit,
+                                                    @RequestParam(name = "offset") Integer offset,
                                                     Locale locale) {
         return getResponseMaker().makeResponse(
                 getUserService().getUsers(limit, offset), locale
         );
     }
 
-    @GetMapping(path="/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getPosition(HttpSession httpSession, Locale locale) {
         final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
         if (sessionNickname == null) {
@@ -83,7 +83,7 @@ public class UserController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
-    @GetMapping(path="/get_users_count", produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/get_users_count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getCountUsers(Locale locale) {
         return getResponseMaker().makeResponse(
                 getUserService().getUsersCount(), locale
