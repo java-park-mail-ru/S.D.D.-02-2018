@@ -25,22 +25,19 @@ public class UserRepositoryList {
         return db.size();
     }
 
+
     public Long getPosition(String nickname) throws NoResultException {
         UserEntity cur = searchByNickname(nickname);
         return this.db.stream().filter(user -> cur.getRating() >
-                 user.getRating()).count();
+                user.getRating()).count();
     }
 
     public List<UserEntity> getListUsers(Integer limit, Integer offset) {
-        //
-//        return
-//        (user1, user2) ->
-//                Double.compare(user1.getRating(), user2.getRating()))
         return db.stream()
-                 .sorted(Comparator.comparingDouble(UserEntity::getRating).reversed())
-                 .skip(offset)
-                 .limit(limit)
-                 .collect(Collectors.toList());//limit(limit)
+                .sorted(Comparator.comparingDouble(UserEntity::getRating).reversed())
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {

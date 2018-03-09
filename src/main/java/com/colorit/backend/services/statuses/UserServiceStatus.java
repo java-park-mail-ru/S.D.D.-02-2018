@@ -9,8 +9,8 @@ public enum UserServiceStatus implements IStatus {
     CONFLICT_NAME_STATE(3, "nickname", "nickname_conflict", "nickname_conflict", HttpStatus.CONFLICT),
     PASSWORD_MATCH_ERROR_STATE(4, null, "forbidden_auth", "forbidden_password", HttpStatus.FORBIDDEN),
     NAME_MATCH_ERROR_STATE(5, null, "forbidden_auth", "forbidden_name", HttpStatus.FORBIDDEN),
-    // TODO NOT_FOUND state
-    DB_ERROR_STATE(6, null, "server_error", "server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+    NOT_FOUND_STATE(6, "general", "not_found", "not_found", HttpStatus.NOT_FOUND),
+    DB_ERROR_STATE(7, null, "server_error", "server_error", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private Integer id;
     private final String field;

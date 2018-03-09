@@ -15,7 +15,7 @@ import java.util.Map;
 public class CloudinaryStorage implements IStorage {
     private Cloudinary cloudinary;
 
-//    @Value("${api_key}")
+    @Value("${com.colorit.backend.api_key}")
     private String apiKey;
 
     @Value("${api_secret}")

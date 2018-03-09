@@ -1,6 +1,7 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.UserResponseMaker;
+import com.colorit.backend.entities.UserUpdateEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.storages.FileStorage;
@@ -36,13 +37,12 @@ public class UserController extends AbstractController {
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getCurrentUserInfo(HttpSession httpSession, Locale locale) {
-
         final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
         if (sessionNickname == null) {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        // todo check userexist, then get data; ??? there>
+        // maybe check user exist
         final UserServiceResponse userServiceResponse = getUserService().getUser(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
@@ -50,17 +50,17 @@ public class UserController extends AbstractController {
     @GetMapping(path = "/info/{nickname}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getUserInfo(@PathVariable(name = "nickname") String nickname,
                                                     HttpSession httpSession, Locale locale) {
-
         final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
         if (sessionNickname == null) {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
+        UserServiceResponse userServiceResponse = getUserService().userExists(sessionNickname);
+        if (!userServiceResponse.isValid()) {
+            return getResponseMaker().makeResponse(userServiceResponse, locale);
+        }
 
-
-        // todo check userexist, then get data;
-        final UserServiceResponse userServiceResponse = getUserService().getUser(
-                nickname != null ? nickname : sessionNickname);
+        userServiceResponse = getUserService().getUser(nickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -75,8 +75,13 @@ public class UserController extends AbstractController {
 
     @GetMapping(path="/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getPosition(HttpSession httpSession, Locale locale) {
-        return null;
-        // TODO implement
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
+
+        UserServiceResponse userServiceResponse = getUserService().getPosition(sessionNickname);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @GetMapping(path="/get_users_count", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -108,11 +113,21 @@ public class UserController extends AbstractController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> update(@RequestBody UpdateView updateView,
                                                HttpSession httpSession, Locale locale) {
+
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
         // TODO implement
-        return null;
+        final ViewStatus viewStatus = updateView.isValid();
+        if (viewStatus.isNotValid()) {
+            return getResponseMaker().makeResponse(viewStatus, locale);
+        }
+
+        final UserUpdateEntity updateEntity = updateView.toEntity();
+        UserServiceResponse userServiceResponse = getUserService().update(sessionNickname, updateEntity);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
-
-
 
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {

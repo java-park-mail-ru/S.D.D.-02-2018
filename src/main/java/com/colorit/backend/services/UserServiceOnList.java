@@ -1,6 +1,7 @@
 package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
@@ -20,7 +21,7 @@ public class UserServiceOnList implements IUserService {
             final UserEntity userEntity = userRepository.getByNickame(nickname);
             userServiceResponse.setData(userEntity);
         } catch (UserRepositoryList.NoResultException nRx) {
-            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+            userServiceResponse.setStatus(UserServiceStatus.NOT_FOUND_STATE);
         }
         return userServiceResponse;
     }
@@ -120,6 +121,11 @@ public class UserServiceOnList implements IUserService {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
         return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse update(String nickname, UserUpdateEntity userUpdateEntity) {
+        return null;
     }
 
     @Override

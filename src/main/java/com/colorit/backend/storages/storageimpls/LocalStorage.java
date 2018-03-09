@@ -23,10 +23,6 @@ public class LocalStorage implements IStorage {
 
     @Override
     public String writeFile(File file) {
-        String data = "ddd";
-        byte[] d = data.getBytes();
-        byte[] out = md5.digest(d);
-
         return null;
     }
 

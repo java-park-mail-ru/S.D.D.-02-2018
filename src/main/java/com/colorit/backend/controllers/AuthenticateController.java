@@ -8,6 +8,7 @@ import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.input.SignInView;
 import com.colorit.backend.views.input.SignUpView;
 import com.colorit.backend.views.ViewStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +35,13 @@ public class AuthenticateController extends AbstractController {
 
         final UserEntity userEntity = signInView.toEntity();
         final UserServiceResponse userServiceResponse = getUserService().authenticateUser(userEntity);
+        ResponseEntity<ResponseView> response = getResponseMaker().makeResponse(userServiceResponse, locale);
+
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+            response.getBody().setData(httpSession.getId());
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return response;
     }
 
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
@@ -61,8 +65,10 @@ public class AuthenticateController extends AbstractController {
 
         final UserEntity userEntity = signUpView.toEntity();
         final UserServiceResponse userServiceResponse = getUserService().createUser(userEntity);
+        ResponseEntity<ResponseView> response = getResponseMaker().makeResponse(userServiceResponse, locale);
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+            response.getBody().setData(httpSession.getId());
         }
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }

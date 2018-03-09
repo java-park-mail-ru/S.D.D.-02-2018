@@ -1,6 +1,7 @@
 package com.colorit.backend.services;
 
 import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.UserUpdateEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
 
 public interface IUserService {
@@ -15,6 +16,8 @@ public interface IUserService {
     UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword);
 
     UserServiceResponse updateAvatar(String nickname, String avatar);
+
+    UserServiceResponse update(String nickname, UserUpdateEntity updateEntity);
 
     UserServiceResponse getUsersCount();
 
