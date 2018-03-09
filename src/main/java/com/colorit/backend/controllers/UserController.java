@@ -43,7 +43,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        // todo check userexist, then get data;
+        // todo check userexist, then get data; ??? there>
         final UserServiceResponse userServiceResponse = getUserService().getUser(
                 nickname != null ? nickname : sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
@@ -58,6 +58,8 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
+
+
         // todo check userexist, then get data;
         final UserServiceResponse userServiceResponse = getUserService().getUser(
                 nickname != null ? nickname : sessionNickname);
@@ -68,7 +70,9 @@ public class UserController extends AbstractController {
     public ResponseEntity<ResponseView> getListUser(@RequestParam(name="limit") Integer limit,
                                                     @RequestParam(name="offset") Integer offset,
                                                     Locale locale) {
-        return null;
+        return getResponseMaker().makeResponse(
+                getUserService().getUsers(limit, offset), locale
+        );
     }
 
     @GetMapping(path="/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,8 +81,10 @@ public class UserController extends AbstractController {
     }
 
     @GetMapping(path="/get_users_count", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getCountUsere(Locale locale) {
-        return null;
+    public ResponseEntity<ResponseView> getCountUsers(Locale locale) {
+        return getResponseMaker().makeResponse(
+                getUserService().getUsersCount(), locale
+        );
     }
 
     @PostMapping(path = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -3,9 +3,8 @@ package com.colorit.backend.repositories;
 import com.colorit.backend.entities.GameResults;
 import com.colorit.backend.entities.UserEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserRepositoryList {
     private final List<UserEntity> db;
@@ -34,8 +33,14 @@ public class UserRepositoryList {
 
     public List<UserEntity> getListUsers(Integer limit, Integer offset) {
         //
-        return null;
-//        return db.stream().sorted()//limit(limit)
+//        return
+//        (user1, user2) ->
+//                Double.compare(user1.getRating(), user2.getRating()))
+        return db.stream()
+                 .sorted(Comparator.comparingDouble(UserEntity::getRating).reversed())
+                 .skip(offset)
+                 .limit(limit)
+                 .collect(Collectors.toList());//limit(limit)
     }
 
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
@@ -49,6 +54,9 @@ public class UserRepositoryList {
             throw new ConstraintEmailException();
         }
         final GameResults gameResults = new GameResults();
+        Random rnd = new Random();
+        gameResults.setCountGames(rnd.nextInt(100));
+        gameResults.setCountWins(rnd.nextInt(20));
         userEntity.setGameResults(gameResults);
         db.add(userEntity);
     }

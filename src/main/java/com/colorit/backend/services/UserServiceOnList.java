@@ -6,6 +6,8 @@ import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceOnList implements IUserService {
     private final UserRepositoryList userRepository = new UserRepositoryList();
@@ -81,6 +83,7 @@ public class UserServiceOnList implements IUserService {
         return userServiceResponse;
     }
 
+    @Override
     public UserServiceResponse getPosition(String nickname) {
         final UserServiceResponse<Long> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
@@ -92,10 +95,30 @@ public class UserServiceOnList implements IUserService {
         return userServiceResponse;
     }
 
+    @Override
+    public UserServiceResponse getUsers(Integer limit, Integer offset) {
+        UserServiceResponse<List<UserEntity>> userServiceresponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        List<UserEntity> userEntityList = userRepository.getListUsers(limit, offset);
+        userServiceresponse.setData(userEntityList);
+        return userServiceresponse;
+    }
+
+    @Override
     public UserServiceResponse getUsersCount() {
         final UserServiceResponse<Integer> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         Integer position = userRepository.getCount();
         userServiceResponse.setData(position);
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse userExists(String nickname) {
+        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            UserEntity userEntity = userRepository.getByNickame(nickname);
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
         return userServiceResponse;
     }
 

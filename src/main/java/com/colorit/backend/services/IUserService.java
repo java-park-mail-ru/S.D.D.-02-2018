@@ -15,4 +15,12 @@ public interface IUserService {
     UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword);
 
     UserServiceResponse updateAvatar(String nickname, String avatar);
+
+    UserServiceResponse getUsersCount();
+
+    UserServiceResponse getPosition(String nickname);
+
+    UserServiceResponse getUsers(Integer limit, Integer offset);
+
+    UserServiceResponse userExists(String nickname);
 }
