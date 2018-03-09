@@ -24,7 +24,7 @@ public class UserView {
         this.email = userEntity.getEmail();
         this.rating = userEntity.getRating();
         // todo
-        this.avatar = "" + userEntity.getAvatarPath();
+        this.avatar = userEntity.getAvatarPath();
     }
 
     public String getNickname() {
@@ -49,5 +49,9 @@ public class UserView {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 }

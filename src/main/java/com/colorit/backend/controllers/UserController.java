@@ -35,8 +35,7 @@ public class UserController extends AbstractController {
     }
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getCurrentUserInfo(@PathVariable(name = "nickname") String nickname,
-                                                    HttpSession httpSession, Locale locale) {
+    public ResponseEntity<ResponseView> getCurrentUserInfo(HttpSession httpSession, Locale locale) {
 
         final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
         if (sessionNickname == null) {
@@ -44,8 +43,7 @@ public class UserController extends AbstractController {
         }
 
         // todo check userexist, then get data; ??? there>
-        final UserServiceResponse userServiceResponse = getUserService().getUser(
-                nickname != null ? nickname : sessionNickname);
+        final UserServiceResponse userServiceResponse = getUserService().getUser(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -78,6 +76,7 @@ public class UserController extends AbstractController {
     @GetMapping(path="/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getPosition(HttpSession httpSession, Locale locale) {
         return null;
+        // TODO implement
     }
 
     @GetMapping(path="/get_users_count", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -109,6 +108,7 @@ public class UserController extends AbstractController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> update(@RequestBody UpdateView updateView,
                                                HttpSession httpSession, Locale locale) {
+        // TODO implement
         return null;
     }
 

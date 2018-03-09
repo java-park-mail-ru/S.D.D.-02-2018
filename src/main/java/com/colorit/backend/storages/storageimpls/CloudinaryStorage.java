@@ -31,7 +31,7 @@ public class CloudinaryStorage implements IStorage {
         cloudName = System.getenv().get("CLOUD_NAME");
         apiKey = System.getenv().get("API_KEY");
         apiSecret = System.getenv().get("API_SECRET");
-        //this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
+        this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CloudinaryStorage implements IStorage {
         Map cloudResponse = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         JSONObject json = new JSONObject(cloudResponse);
         String url = json.getString("url");
-        return url.replaceFirst(".*/([^/?]+).*", "$1");
+        return url;//url.replaceFirst(".*/([^/?]+).*", "$1");
     }
 
     @Override
