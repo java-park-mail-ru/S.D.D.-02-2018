@@ -21,11 +21,13 @@ import java.util.Locale;
 @RestController
 @RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
+    private final IUserService userService;
 
     @Autowired
     public UserController(@NotNull IUserService userService,
                           @NotNull UserResponseMaker userResponseMaker) {
-        super(userService, userResponseMaker);
+        super(userResponseMaker);
+        this.userService = userService;
     }
 
     @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,7 +37,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().getUser(nickname);
+        final UserServiceResponse userServiceResponse = userService.getUser(nickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -51,7 +53,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().updateEmail(nickname, updateEmailView.getNewEmail());
+        final UserServiceResponse userServiceResponse = userService.updateEmail(nickname, updateEmailView.getNewEmail());
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -68,7 +70,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().updatePassword(nickname,
+        final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
