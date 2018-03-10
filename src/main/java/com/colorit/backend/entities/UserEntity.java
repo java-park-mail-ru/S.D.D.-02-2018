@@ -72,14 +72,6 @@ public class UserEntity {
         this.gameResults.setRating(rating);
     }
 
-//    public Double getRating() {
-//        if (gameResults.getCountGames() == 0) {
-//            return 0.0;
-//        }
-//        return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
-//    }
-
-
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
