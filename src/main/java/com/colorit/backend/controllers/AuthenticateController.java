@@ -19,9 +19,11 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/api/user")
 public class AuthenticateController extends AbstractController {
+    private final IUserService userService;
     public AuthenticateController(@NotNull IUserService userService,
                                   @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
-        super(userService, authenticateResponseMaker);
+        super(authenticateResponseMaker);
+        this.userService = userService;
     }
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -34,7 +36,7 @@ public class AuthenticateController extends AbstractController {
         }
 
         final UserEntity userEntity = signInView.toEntity();
-        final UserServiceResponse userServiceResponse = getUserService().authenticateUser(userEntity);
+        final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
 
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
@@ -62,7 +64,7 @@ public class AuthenticateController extends AbstractController {
         }
 
         final UserEntity userEntity = signUpView.toEntity();
-        final UserServiceResponse userServiceResponse = getUserService().createUser(userEntity);
+        final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }

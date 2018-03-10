@@ -26,12 +26,14 @@ import java.util.Locale;
 @RequestMapping(path = "/api/user/")
 public class UserController extends AbstractController {
     private FileStorage fileStorage;
+    private final IUserService userService;
 
     @Autowired
     public UserController(@NotNull IUserService userService,
                           @NotNull UserResponseMaker userResponseMaker,
                           @NotNull FileStorage fileStorage) {
-        super(userService, userResponseMaker);
+        super(userResponseMaker);
+        this.userService = userService;
         this.fileStorage = fileStorage;
     }
 
@@ -42,7 +44,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().getUser(sessionNickname);
+        final UserServiceResponse userServiceResponse = userService.getUser(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -54,12 +56,12 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        UserServiceResponse userServiceResponse = getUserService().userExists(sessionNickname);
+        UserServiceResponse userServiceResponse = userService.userExists(sessionNickname);
         if (!userServiceResponse.isValid()) {
             return getResponseMaker().makeResponse(userServiceResponse, locale);
         }
 
-        userServiceResponse = getUserService().getUser(nickname);
+        userServiceResponse = userService.getUser(nickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -68,7 +70,7 @@ public class UserController extends AbstractController {
                                                     @RequestParam(name = "offset") Integer offset,
                                                     Locale locale) {
         return getResponseMaker().makeResponse(
-                getUserService().getUsers(limit, offset), locale
+                userService.getUsers(limit, offset), locale
         );
     }
 
@@ -79,14 +81,14 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        UserServiceResponse userServiceResponse = getUserService().getPosition(sessionNickname);
+        UserServiceResponse userServiceResponse = userService.getPosition(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
     @GetMapping(path = "/get_users_count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getCountUsers(Locale locale) {
         return getResponseMaker().makeResponse(
-                getUserService().getUsersCount(), locale
+                userService.getUsersCount(), locale
         );
     }
 
@@ -103,7 +105,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeResponse(storageResponse);
         }
 
-        UserServiceResponse userServiceResponse = getUserService().updateAvatar(sessionNickname,
+        UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
                 (String) storageResponse.getData());
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
@@ -124,7 +126,7 @@ public class UserController extends AbstractController {
         }
 
         final UserUpdateEntity updateEntity = updateView.toEntity();
-        UserServiceResponse userServiceResponse = getUserService().update(sessionNickname, updateEntity);
+        UserServiceResponse userServiceResponse = userService.update(sessionNickname, updateEntity);
         if (userServiceResponse.isValid()) {
             if (updateEntity.getNewNickname() != null) {
                 httpSession.setAttribute(getSessionKey(), updateEntity.getNewNickname());
@@ -145,7 +147,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().updateEmail(nickname, updateEmailView.getNewEmail());
+        final UserServiceResponse userServiceResponse = userService.updateEmail(nickname, updateEmailView.getNewEmail());
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
@@ -162,7 +164,7 @@ public class UserController extends AbstractController {
             return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
-        final UserServiceResponse userServiceResponse = getUserService().updatePassword(nickname,
+        final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
