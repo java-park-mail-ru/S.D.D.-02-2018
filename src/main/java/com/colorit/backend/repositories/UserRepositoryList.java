@@ -36,10 +36,7 @@ public class UserRepositoryList {
                 throw new ConstraintEmailException();
             }
         }
-
         existingUser.copy(userUpdateEntity);
-
-
     }
 
     public Integer getCount() {
@@ -71,8 +68,9 @@ public class UserRepositoryList {
         }
         final GameResults gameResults = new GameResults();
         Random rnd = new Random();
-        gameResults.setCountGames(rnd.nextInt(100));
+        gameResults.setCountGames(rnd.nextInt(20));
         gameResults.setCountWins(rnd.nextInt(20));
+        gameResults.setRating(rnd.nextInt(30));
         userEntity.setGameResults(gameResults);
         db.add(userEntity);
     }

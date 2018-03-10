@@ -56,16 +56,29 @@ public class UserEntity {
         return gameResults;
     }
 
-    public Double getRating() {
-        if (gameResults.getCountGames() == 0) {
-            return 0.0;
-        }
-        return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
+    public Integer getCountGames() {
+        return gameResults.getCountGames();
     }
 
     public Integer getCountWins() {
         return gameResults.getCountWins();
     }
+
+    public Integer getRating() {
+        return gameResults.getRating();
+    }
+
+    public void setRating(Integer rating) {
+        this.gameResults.setRating(rating);
+    }
+
+//    public Double getRating() {
+//        if (gameResults.getCountGames() == 0) {
+//            return 0.0;
+//        }
+//        return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
+//    }
+
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;

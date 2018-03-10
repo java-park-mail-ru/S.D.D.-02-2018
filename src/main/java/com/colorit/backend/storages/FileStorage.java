@@ -4,6 +4,7 @@ import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Primary
 @Component
 public class FileStorage {
+    @Autowired
     private IStorage storage;
     private static final String HEROKU_VAR = "HEROKU_VAR";
     private static final String USER_HOME = System.getProperty("os.name");

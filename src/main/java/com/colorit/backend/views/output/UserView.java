@@ -12,8 +12,10 @@ import com.colorit.backend.entities.UserEntity;
 public class UserView {
     private String nickname;
     private String email;
-    private Double rating;
     private String avatar;
+    private Integer countWins;
+    private Integer countGames;
+    private Integer rating;
 
     public UserView() {
 
@@ -24,6 +26,8 @@ public class UserView {
         this.email = userEntity.getEmail();
         this.rating = userEntity.getRating();
         this.avatar = userEntity.getAvatarPath(); // todo set pat
+        this.countGames = userEntity.getCountGames();
+        this.countWins = userEntity.getCountWins();
     }
 
     public String getNickname() {
@@ -42,12 +46,20 @@ public class UserView {
         this.email = email;
     }
 
-    public Double getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public Integer getCountGames() {
+        return countGames;
+    }
+
+    public Integer getCountWins() {
+        return countWins;
     }
 
     public String getAvatar() {
