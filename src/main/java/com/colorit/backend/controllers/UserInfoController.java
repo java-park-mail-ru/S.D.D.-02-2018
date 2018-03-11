@@ -3,7 +3,6 @@ package com.colorit.backend.controllers;
 import com.colorit.backend.common.UserResponseMaker;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
-import com.colorit.backend.storages.FileStorage;
 import com.colorit.backend.views.output.ResponseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

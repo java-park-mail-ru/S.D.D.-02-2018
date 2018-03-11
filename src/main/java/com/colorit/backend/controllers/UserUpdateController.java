@@ -4,7 +4,6 @@ import com.colorit.backend.common.UserResponseMaker;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
-import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.storages.FileStorage;
 import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.views.*;
@@ -100,7 +99,7 @@ public class UserUpdateController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
-    @PostMapping(path = "/update_avatar", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/update_nickname", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateNickname(@RequestBody UpdateNicknameView updateNickanmeView,
                                                        HttpSession httpSession, Locale locale) {
@@ -116,6 +115,9 @@ public class UserUpdateController extends AbstractController {
 
         final UserServiceResponse userServiceResponse = userService.updateNickname(sessionNickname,
                 updateNickanmeView.getNickname());
+        if (userServiceResponse.isValid()) {
+            httpSession.setAttribute(getSessionKey(), updateNickanmeView.getNickname());
+        }
 
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
