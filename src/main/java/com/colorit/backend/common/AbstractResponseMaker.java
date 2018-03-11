@@ -1,11 +1,9 @@
 package com.colorit.backend.common;
 
-import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
+import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.views.output.ResponseView;
-import com.colorit.backend.views.output.UserListView;
-import com.colorit.backend.views.output.UserView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import org.springframework.context.MessageSource;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -53,20 +50,21 @@ public abstract class AbstractResponseMaker {
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<ResponseView> makeResponse(AbstractStorageResponse response) {
+        if (!response.isValid()) {
+            ResponseView responseView = new ResponseView();
+            responseView.addError("file", "Error upload");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseView);
+        }
+        return ResponseEntity.ok(new ResponseView());
+    }
+
     ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message) {
         final UserServiceStatus userServiceStatus = userServiceResponse.getStatus();
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                if (userServiceResponse.getData() instanceof UserEntity) {
-                    return new ResponseEntity<>(new ResponseView<>(
-                            new UserView((UserEntity) userServiceResponse.getData())), httpStatus);
-                } else if (userServiceResponse.getData() instanceof List) {
-                    return new ResponseEntity<>(new ResponseView<>(
-                            new UserListView((List) userServiceResponse.getData())), httpStatus);
-                } else {
-                    return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
-                }
+                return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData().toView()), httpStatus);
             }
         } else {
             String field = "general";

@@ -1,7 +1,12 @@
-package com.colorit.backend.entities;
+package com.colorit.backend.entities.db;
+
+import com.colorit.backend.entities.IEntity;
+import com.colorit.backend.entities.input.UserUpdateEntity;
+import com.colorit.backend.views.input.AbstractInputView;
+import com.colorit.backend.views.output.UserView;
 
 @SuppressWarnings("unused")
-public class UserEntity {
+public class UserEntity implements IEntity {
     private Integer id;
     private String nickname;
     private String email;
@@ -56,15 +61,20 @@ public class UserEntity {
         return gameResults;
     }
 
-    public Double getRating() {
-        if (gameResults.getCountGames() == 0) {
-            return 0.0;
-        }
-        return gameResults.getCountWins() / gameResults.getCountGames().doubleValue();
+    public Integer getCountGames() {
+        return gameResults.getCountGames();
     }
 
     public Integer getCountWins() {
         return gameResults.getCountWins();
+    }
+
+    public Integer getRating() {
+        return gameResults.getRating();
+    }
+
+    public void setRating(Integer rating) {
+        this.gameResults.setRating(rating);
     }
 
     public void setPasswordHash(String passwordHash) {
@@ -87,7 +97,28 @@ public class UserEntity {
         gameResults.setCountGames(countGames);
     }
 
+
     public void setCountWins(Integer countWins) {
         this.gameResults.setCountWins(countWins);
+    }
+
+    public void copy(UserUpdateEntity other) {
+        this.nickname = other.getNewNickname() != null ? other.getNewNickname() : this.nickname;
+        this.passwordHash = other.getNewPassword() != null ? other.getNewPassword() : this.passwordHash;
+        this.email = other.getNewEmail() != null ? other.getNewEmail() : this.email;
+    }
+
+    @Override
+    public UserView toView() {
+        return new UserView(nickname, email, avatarPath, gameResults.getRating(),
+                gameResults.getCountWins(), gameResults.getCountGames());
+    }
+
+    public static UserEntity fromView(AbstractInputView view) {
+        return new UserEntity(
+                view.getNickname(),
+                view.getEmail(),
+                view.getPassword()
+        );
     }
 }

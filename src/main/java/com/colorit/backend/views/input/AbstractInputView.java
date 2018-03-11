@@ -6,13 +6,13 @@ import com.colorit.backend.views.ViewStatusCode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-abstract class AbstractView {
+public abstract class AbstractInputView {
     @SuppressWarnings("unused")
     ViewStatus checkValid() {
         return null;
     }
 
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+    static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     void checkEmail(ViewStatus viewStatus, String email) {
@@ -24,5 +24,17 @@ abstract class AbstractView {
                 viewStatus.addStatusCode(ViewStatusCode.INVALID_EMAIL_STATE);
             }
         }
+    }
+
+    public String getNickname() {
+        return null;
+    }
+
+    public String getEmail() {
+        return null;
+    }
+
+    public String getPassword() {
+        return null;
     }
 }

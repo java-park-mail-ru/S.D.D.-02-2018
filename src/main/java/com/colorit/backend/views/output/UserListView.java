@@ -1,19 +1,14 @@
 package com.colorit.backend.views.output;
 
-import com.colorit.backend.entities.UserEntity;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class UserListView {
+public class UserListView implements AbstractOutputView {
     private List<UserView> userViewList;
     private Integer size;
 
-    public UserListView(List<UserEntity> userEntities) {
-        this.userViewList = new ArrayList<>();
-        userEntities.forEach(
-                userEntity -> this.userViewList.add(new UserView(userEntity)));
-        this.size = this.userViewList.size();
+    public UserListView(List<UserView> userViews) {
+        this.userViewList = userViews;
+        this.size = userViews.size();
     }
 
     public List<UserView> getUserViewList() {

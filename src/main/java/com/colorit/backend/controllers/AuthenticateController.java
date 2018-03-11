@@ -1,7 +1,7 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AuthenticateResponseMaker;
-import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.output.ResponseView;
@@ -22,7 +22,6 @@ import java.util.Locale;
 public class AuthenticateController extends AbstractController {
     private final IUserService userService;
 
-    @Autowired
     public AuthenticateController(@NotNull IUserService userService,
                                   @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
         super(authenticateResponseMaker);
@@ -31,14 +30,21 @@ public class AuthenticateController extends AbstractController {
 
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession, Locale locale) {
+    public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession,
+                                                   Locale locale) {
         final ViewStatus check = signInView.checkValid();
         if (check.isNotValid()) {
             return getResponseMaker().makeResponse(check, locale);
         }
 
+<<<<<<< HEAD
         final UserEntity userEntity = signInView.toEntity();
         final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
+=======
+        final UserEntity userEntity = UserEntity.fromView(signInView); //signInView.toEntity();
+        final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
+
+>>>>>>> refactor
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }
@@ -52,6 +58,7 @@ public class AuthenticateController extends AbstractController {
         if (nickname == null) {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
+
         httpSession.invalidate();
         return ResponseEntity.ok(new ResponseView());
     }
@@ -63,7 +70,11 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
+<<<<<<< HEAD
         final UserEntity userEntity = signUpView.toEntity();
+=======
+        final UserEntity userEntity = UserEntity.fromView(signUpView); //signUpView.toEntity();
+>>>>>>> refactor
         final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());

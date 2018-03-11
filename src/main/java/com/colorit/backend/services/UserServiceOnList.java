@@ -1,10 +1,15 @@
 package com.colorit.backend.services;
 
-import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.db.UserEntity;
+import com.colorit.backend.entities.output.ScalarEntity;
+import com.colorit.backend.entities.output.UserListEntity;
+import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceOnList implements IUserService {
@@ -12,13 +17,13 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserServiceResponse<UserEntity> userServiceResponse =
-                new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        final UserServiceResponse userServiceResponse =
+                new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
             final UserEntity userEntity = userRepository.getByNickame(nickname);
             userServiceResponse.setData(userEntity);
         } catch (UserRepositoryList.NoResultException nRx) {
-            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+            userServiceResponse.setStatus(UserServiceStatus.NOT_FOUND_STATE);
         }
         return userServiceResponse;
     }
@@ -61,7 +66,19 @@ public class UserServiceOnList implements IUserService {
             userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
         }
         return userServiceResponse;
+    }
 
+    @Override
+    public UserServiceResponse updateNickname(String nickname, String newNickname) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            userRepository.changeNickname(nickname, newNickname);
+        } catch (UserRepositoryList.ConstraintNameException cNEx) {
+            userServiceResponse.setStatus(UserServiceStatus.CONFLICT_NAME_STATE);
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
     }
 
     @Override
@@ -74,6 +91,79 @@ public class UserServiceOnList implements IUserService {
             } else {
                 userServiceResponse.setStatus(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
             }
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse getPosition(String nickname) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            Long position = userRepository.getPosition(nickname);
+            userServiceResponse.setData(new ScalarEntity<>(position));
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse getUsers(Integer limit, Integer offset) {
+        UserServiceResponse userServiceresponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        List<UserEntity> userEntityList = userRepository.getListUsers(limit, offset);
+        userServiceresponse.setData(new UserListEntity(userEntityList));
+        return userServiceresponse;
+    }
+
+    @Override
+    public UserServiceResponse getUsersCount() {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        Integer position = userRepository.getCount();
+        userServiceResponse.setData(new ScalarEntity<>(position));
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse userExists(String nickname) {
+        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            UserEntity userEntity = userRepository.getByNickame(nickname);
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse update(String nickname, UserUpdateEntity userUpdateEntity) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            final UserEntity existingEntity = userRepository.getByNickame(nickname);
+            if (userUpdateEntity.getOldPassword() != null) {
+                if (!existingEntity.getPasswordHash().equals(userUpdateEntity.getOldPassword())) {
+                    userServiceResponse.setStatus(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
+                } else {
+                    userRepository.update(nickname, userUpdateEntity);
+                }
+            }
+        } catch (UserRepositoryList.NoResultException nRe) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        } catch (UserRepositoryList.ConstraintEmailException cEEx) {
+            userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
+        } catch (UserRepositoryList.ConstraintNameException cNEx) {
+            userServiceResponse.setStatus(UserServiceStatus.CONFLICT_NAME_STATE);
+        }
+        return userServiceResponse;
+    }
+
+    @Override
+    public UserServiceResponse updateAvatar(String nickname, String avatarPath) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            final UserEntity existingEntity = userRepository.getByNickame(nickname);
+            existingEntity.setAvatarPath(avatarPath);
         } catch (UserRepositoryList.NoResultException nREx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }

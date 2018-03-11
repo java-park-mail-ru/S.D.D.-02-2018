@@ -1,10 +1,11 @@
 package com.colorit.backend.repositories;
 
-import com.colorit.backend.entities.GameResults;
-import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.db.GameResults;
+import com.colorit.backend.entities.db.UserEntity;
+import com.colorit.backend.entities.input.UserUpdateEntity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserRepositoryList {
     private final List<UserEntity> db;
@@ -21,6 +22,49 @@ public class UserRepositoryList {
         return userEntity;
     }
 
+    public void changeNickname(String nickname, String newNickname) throws ConstraintNameException,
+            NoResultException {
+        if (searchByNickname(newNickname) != null) {
+            throw new ConstraintNameException();
+        }
+        UserEntity exisitingUser = getByNickame(nickname);
+        exisitingUser.setNickname(newNickname);
+    }
+
+    public void update(String nickname, UserUpdateEntity userUpdateEntity) throws ConstraintNameException,
+            ConstraintEmailException, NoResultException {
+        UserEntity existingUser = getByNickame(nickname);
+        if (userUpdateEntity.getNewNickname() != null) {
+            if (searchByNickname(userUpdateEntity.getNewNickname()) != null) {
+                throw new ConstraintNameException();
+            }
+        }
+
+        if (userUpdateEntity.getNewEmail() != null) {
+            if (searchByEmail(userUpdateEntity.getNewEmail()) != null) {
+                throw new ConstraintEmailException();
+            }
+        }
+        existingUser.copy(userUpdateEntity);
+    }
+
+    public Integer getCount() {
+        return db.size();
+    }
+
+    public Long getPosition(String nickname) throws NoResultException {
+        UserEntity cur = searchByNickname(nickname);
+        return this.db.stream().filter(user -> cur.getRating() < user.getRating()).count();
+    }
+
+    public List<UserEntity> getListUsers(Integer limit, Integer offset) {
+        return db.stream()
+                .sorted(Comparator.comparingDouble(UserEntity::getRating).reversed())
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
     public void save(UserEntity userEntity) throws ConstraintNameException, ConstraintEmailException {
         UserEntity existingUser = searchByNickname(userEntity.getNickname());
         if (existingUser != null) {
@@ -32,6 +76,10 @@ public class UserRepositoryList {
             throw new ConstraintEmailException();
         }
         final GameResults gameResults = new GameResults();
+        Random rnd = new Random();
+        gameResults.setCountGames(rnd.nextInt(20));
+        gameResults.setCountWins(rnd.nextInt(20));
+        gameResults.setRating(rnd.nextInt(30));
         userEntity.setGameResults(gameResults);
         db.add(userEntity);
     }
