@@ -1,9 +1,11 @@
 package com.colorit.backend.common;
 
+import com.colorit.backend.entities.IEntity;
 import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.storages.responses.AbstractStorageResponse;
+import com.colorit.backend.views.output.AbstractOutputView;
 import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.output.UserListView;
 import com.colorit.backend.views.output.UserView;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.views.AbstractView;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -68,15 +71,7 @@ public abstract class AbstractResponseMaker {
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                if (userServiceResponse.getData() instanceof UserEntity) {
-                    return new ResponseEntity<>(new ResponseView<>(
-                            new UserView((UserEntity) userServiceResponse.getData())), httpStatus);
-                } else if (userServiceResponse.getData() instanceof List) {
-                    return new ResponseEntity<>(new ResponseView<>(
-                            new UserListView((List) userServiceResponse.getData())), httpStatus);
-                } else {
-                    return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
-                }
+                return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData().toView()), httpStatus);
             }
         } else {
             String field = "general";

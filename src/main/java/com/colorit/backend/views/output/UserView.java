@@ -9,7 +9,7 @@ import com.colorit.backend.entities.UserEntity;
  * @version 1.0
  */
 @SuppressWarnings("ALL")
-public class UserView {
+public class UserView implements AbstractOutputView {
     private String nickname;
     private String email;
     private String avatar;
@@ -19,6 +19,10 @@ public class UserView {
 
     public UserView() {
 
+    }
+
+    public UserView(String nickname, String email, String avatar, Integer rating) {
+        this.nickname = nickname;
     }
 
     public UserView(UserEntity userEntity) {

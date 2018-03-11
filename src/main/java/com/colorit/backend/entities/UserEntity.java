@@ -1,7 +1,9 @@
 package com.colorit.backend.entities;
 
+import com.colorit.backend.views.output.UserView;
+
 @SuppressWarnings("unused")
-public class UserEntity {
+public class UserEntity implements IEntity {
     private Integer id;
     private String nickname;
     private String email;
@@ -92,6 +94,7 @@ public class UserEntity {
         gameResults.setCountGames(countGames);
     }
 
+
     public void setCountWins(Integer countWins) {
         this.gameResults.setCountWins(countWins);
     }
@@ -100,5 +103,10 @@ public class UserEntity {
         this.nickname = other.getNewNickname() != null ? other.getNewNickname() : this.nickname;
         this.passwordHash = other.getNewPassword() != null ? other.getNewPassword() : this.passwordHash;
         this.email = other.getNewEmail() != null ? other.getNewEmail() : this.email;
+    }
+
+    @Override
+    public UserView toView() {
+        return new UserView(nickname, email, avatarPath, getRating());
     }
 }
