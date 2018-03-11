@@ -37,61 +37,14 @@ public class UserController extends AbstractController {
         this.fileStorage = fileStorage;
     }
 
-    @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getCurrentUserInfo(HttpSession httpSession, Locale locale) {
-        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
-        if (sessionNickname == null) {
-            return getResponseMaker().makeUnauthorizedResponse(locale);
-        }
 
-        final UserServiceResponse userServiceResponse = userService.getUser(sessionNickname);
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
-    }
-
-    @GetMapping(path = "/info/{nickname}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getUserInfo(@PathVariable(name = "nickname") String nickname,
-                                                    HttpSession httpSession, Locale locale) {
-        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
-        if (sessionNickname == null) {
-            return getResponseMaker().makeUnauthorizedResponse(locale);
-        }
-
-        UserServiceResponse userServiceResponse = userService.userExists(sessionNickname);
-        if (!userServiceResponse.isValid()) {
-            return getResponseMaker().makeResponse(userServiceResponse, locale);
-        }
-
-        userServiceResponse = userService.getUser(nickname);
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
-    }
-
-    @GetMapping(path = "/get_users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getListUser(@RequestParam(name = "limit") Integer limit,
-                                                    @RequestParam(name = "offset") Integer offset,
-                                                    Locale locale) {
-        return getResponseMaker().makeResponse(
-                userService.getUsers(limit, offset), locale
-        );
-    }
-
-    @GetMapping(path = "/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getPosition(HttpSession httpSession, Locale locale) {
-        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
-        if (sessionNickname == null) {
-            return getResponseMaker().makeUnauthorizedResponse(locale);
-        }
-
-        UserServiceResponse userServiceResponse = userService.getPosition(sessionNickname);
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
-    }
-
-    @GetMapping(path = "/get_users_count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseView> getCountUsers(Locale locale) {
-        return getResponseMaker().makeResponse(
-                userService.getUsersCount(), locale
-        );
-    }
-
+    /**
+     * Updates avatar of current user
+     * @param avatar - user avatar
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
     @PostMapping(path = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateAvatar(@RequestParam(name = "file") MultipartFile avatar,
                                                      HttpSession httpSession, Locale locale) {
@@ -110,6 +63,14 @@ public class UserController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
+
+    /**
+     * upates all field, which contains user (some of them can be empty - no update)
+     * @param updateView - view, which contains fields, need to update
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
     @PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> update(@RequestBody UpdateView updateView,
@@ -135,6 +96,14 @@ public class UserController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
+
+    /**
+     * updates email of current user
+     * @param updateEmailView - view, which contains new email
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateEmail(@RequestBody UpdateEmailView updateEmailView, HttpSession httpSession, Locale locale) {
         final String nickname = (String) httpSession.getAttribute(getSessionKey());
@@ -151,6 +120,14 @@ public class UserController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
+
+    /**
+     * Updates password of current user
+     * @param updatePasswordView - view, which contains oldpassword and newpassword
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
     @PostMapping(path = "/update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updatePassword(@RequestBody UpdatePasswordView updatePasswordView,
                                                        HttpSession httpSession, Locale locale) {
@@ -166,6 +143,97 @@ public class UserController extends AbstractController {
 
         final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
+    }
+
+
+    /**
+     * Get info about current user
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
+    @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getCurrentUserInfo(HttpSession httpSession, Locale locale) {
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
+
+        final UserServiceResponse userServiceResponse = userService.getUser(sessionNickname);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
+    }
+
+
+    /**
+     * Get info about another user
+     * @param nickname - nickname of another user
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
+    @GetMapping(path = "/info/{nickname}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getUserInfo(@PathVariable(name = "nickname") String nickname,
+                                                    HttpSession httpSession, Locale locale) {
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
+
+        UserServiceResponse userServiceResponse = userService.userExists(sessionNickname);
+        if (!userServiceResponse.isValid()) {
+            return getResponseMaker().makeResponse(userServiceResponse, locale);
+        }
+
+        userServiceResponse = userService.getUser(nickname);
+        return getResponseMaker().makeResponse(userServiceResponse, locale);
+    }
+
+
+    /**
+     * Get users for scoreboard
+     * @param limit - limit users on page
+     * @param offset - offset, depend on current page
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
+    @GetMapping(path = "/get_users", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getListUser(@RequestParam(name = "limit") Integer limit,
+                                                    @RequestParam(name = "offset") Integer offset,
+                                                    Locale locale) {
+        return getResponseMaker().makeResponse(
+                userService.getUsers(limit, offset), locale
+        );
+    }
+
+
+    /**
+     * returns count of users for pagination
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
+    @GetMapping(path = "/get_users_count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getCountUsers(Locale locale) {
+        return getResponseMaker().makeResponse(
+                userService.getUsersCount(), locale
+        );
+    }
+
+
+    /**
+     * returns user position in scoreboard
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
+    @GetMapping(path = "/get_position", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseView> getPosition(HttpSession httpSession, Locale locale) {
+        final String sessionNickname = (String) httpSession.getAttribute(getSessionKey());
+        if (sessionNickname == null) {
+            return getResponseMaker().makeUnauthorizedResponse(locale);
+        }
+
+        UserServiceResponse userServiceResponse = userService.getPosition(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 }

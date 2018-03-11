@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class UpdateView extends AbstractView {
+public class UpdateView extends AbstractInputView {
     private String nickname;
     private String email;
     private String oldPasswrod;

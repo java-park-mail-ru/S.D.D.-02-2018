@@ -36,7 +36,7 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserEntity userEntity = signInView.toEntity();
+        final UserEntity userEntity = UserEntity.fromView(signInView); //signInView.toEntity();
         final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
 
         if (userServiceResponse.isValid()) {
@@ -64,7 +64,7 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserEntity userEntity = signUpView.toEntity();
+        final UserEntity userEntity = UserEntity.fromView(signUpView); //signUpView.toEntity();
         final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());

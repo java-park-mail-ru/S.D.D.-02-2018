@@ -4,7 +4,6 @@ import com.colorit.backend.entities.*;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
-import org.omg.CORBA.IRObject;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

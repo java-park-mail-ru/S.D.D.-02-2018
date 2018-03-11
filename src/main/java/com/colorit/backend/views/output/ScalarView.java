@@ -1,7 +1,5 @@
 package com.colorit.backend.views.output;
 
-import com.colorit.backend.entities.ScalarEntity;
-
 public class ScalarView<T> implements AbstractOutputView {
     T data;
 

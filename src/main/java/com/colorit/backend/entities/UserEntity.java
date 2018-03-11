@@ -1,5 +1,6 @@
 package com.colorit.backend.entities;
 
+import com.colorit.backend.views.input.AbstractInputView;
 import com.colorit.backend.views.output.UserView;
 
 @SuppressWarnings("unused")
@@ -107,6 +108,15 @@ public class UserEntity implements IEntity {
 
     @Override
     public UserView toView() {
-        return new UserView(nickname, email, avatarPath, getRating());
+        return new UserView(nickname, email, avatarPath, gameResults.getRating(),
+                gameResults.getCountWins(), gameResults.getCountGames());
+    }
+
+    public static UserEntity fromView(AbstractInputView view) {
+        return new UserEntity(
+                view.getNickname(),
+                view.getEmail(),
+                view.getPassword()
+        );
     }
 }

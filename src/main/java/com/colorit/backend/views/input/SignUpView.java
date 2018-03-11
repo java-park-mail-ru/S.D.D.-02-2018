@@ -1,12 +1,11 @@
 package com.colorit.backend.views.input;
 
-import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SignUpView extends AbstractView {
+public class SignUpView extends AbstractInputView {
     private final String nickname;
     private final String email;
     private final String password;
@@ -51,7 +50,18 @@ public class SignUpView extends AbstractView {
         return viewStatus;
     }
 
-    public UserEntity toEntity() {
-        return new UserEntity(nickname, email, password);
+    @Override
+    public String getNickname() {
+        return this.nickname;
+    }
+
+    @Override
+    public String getEmail() {
+        return this.email;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 }

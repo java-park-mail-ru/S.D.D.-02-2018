@@ -1,14 +1,9 @@
 package com.colorit.backend.common;
 
-import com.colorit.backend.entities.IEntity;
-import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.storages.responses.AbstractStorageResponse;
-import com.colorit.backend.views.output.AbstractOutputView;
 import com.colorit.backend.views.output.ResponseView;
-import com.colorit.backend.views.output.UserListView;
-import com.colorit.backend.views.output.UserView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import org.springframework.context.MessageSource;
@@ -16,10 +11,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.views.AbstractView;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Locale;
 
 /**

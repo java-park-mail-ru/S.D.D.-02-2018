@@ -18,7 +18,8 @@ public class UserListEntity implements IEntity {
         List<UserView> userViews = new ArrayList<>();
         this.userEntityList.forEach(userEntity -> userViews.add(
                 new UserView(userEntity.getNickname(), userEntity.getEmail(),
-                        userEntity.getAvatarPath(), userEntity.getRating())
+                        userEntity.getAvatarPath(), userEntity.getRating(),
+                        userEntity.getCountWins(), userEntity.getCountGames())
                 )
         );
         return new UserListView(userViews);

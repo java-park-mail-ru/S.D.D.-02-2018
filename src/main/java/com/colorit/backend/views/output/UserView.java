@@ -1,6 +1,5 @@
 package com.colorit.backend.views.output;
 
-import com.colorit.backend.entities.UserEntity;
 
 /**
  * An abstract class that represents output view.
@@ -21,18 +20,24 @@ public class UserView implements AbstractOutputView {
 
     }
 
-    public UserView(String nickname, String email, String avatar, Integer rating) {
+    public UserView(String nickname, String email, String avatar,
+                    Integer rating, Integer countWins, Integer countGames) {
         this.nickname = nickname;
+        this.email = email;
+        this.avatar = avatar;
+        this.countWins = countWins;
+        this.rating = rating;
+        this.countGames = countGames;
     }
-
-    public UserView(UserEntity userEntity) {
-        this.nickname = userEntity.getNickname();
-        this.email = userEntity.getEmail();
-        this.rating = userEntity.getRating();
-        this.avatar = userEntity.getAvatarPath(); // todo set pat
-        this.countGames = userEntity.getCountGames();
-        this.countWins = userEntity.getCountWins();
-    }
+//
+//    public UserView(UserEntity userEntity) {
+//        this.nickname = userEntity.getNickname();
+//        this.email = userEntity.getEmail();
+//        this.rating = userEntity.getRating();
+//        this.avatar = userEntity.getAvatarPath(); // todo set pat
+//        this.countGames = userEntity.getCountGames();
+//        this.countWins = userEntity.getCountWins();
+//    }
 
     public String getNickname() {
         return this.nickname;

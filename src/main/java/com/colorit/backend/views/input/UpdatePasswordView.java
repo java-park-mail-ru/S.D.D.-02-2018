@@ -1,12 +1,11 @@
 package com.colorit.backend.views.input;
 
-import com.colorit.backend.entities.UserEntity;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UpdatePasswordView extends AbstractView {
+public class UpdatePasswordView extends AbstractInputView {
     private final String oldPassword;
     private final String newPassword;
     private final String newPasswordCheck;
@@ -51,10 +50,5 @@ public class UpdatePasswordView extends AbstractView {
             viewStatus.addStatusCode(ViewStatusCode.PASSWORD_NOT_MATCH_STATE);
         }
         return viewStatus;
-    }
-
-    @SuppressWarnings({"SameReturnValue", "unused"})
-    public UserEntity toEntity() {
-        return null;
     }
 }
