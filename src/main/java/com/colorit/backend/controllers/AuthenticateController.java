@@ -22,6 +22,7 @@ import java.util.Locale;
 public class AuthenticateController extends AbstractController {
     private final IUserService userService;
 
+    @Autowired
     public AuthenticateController(@NotNull IUserService userService,
                                   @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
         super(authenticateResponseMaker);
