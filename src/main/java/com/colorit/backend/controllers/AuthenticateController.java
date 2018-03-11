@@ -37,14 +37,9 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-<<<<<<< HEAD
-        final UserEntity userEntity = signInView.toEntity();
-        final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
-=======
         final UserEntity userEntity = UserEntity.fromView(signInView); //signInView.toEntity();
         final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
 
->>>>>>> refactor
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
         }
@@ -70,11 +65,7 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-<<<<<<< HEAD
-        final UserEntity userEntity = signUpView.toEntity();
-=======
         final UserEntity userEntity = UserEntity.fromView(signUpView); //signUpView.toEntity();
->>>>>>> refactor
         final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
         if (userServiceResponse.isValid()) {
             httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
