@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateNicknameView extends AbstractInputView {
     private String newNickname;
+
     @JsonCreator
     public UpdateNicknameView(@JsonProperty("nickname") String newNickname) {
         this.newNickname = newNickname;

@@ -40,7 +40,7 @@ public class UserUpdateController extends AbstractController {
 
 
     /**
-     * Updates avatar of current user
+     * Updates avatar of current user.
      *
      * @param avatar - user avatar
      * @param httpSession - current session
@@ -67,7 +67,7 @@ public class UserUpdateController extends AbstractController {
 
 
     /**
-     * Upates all field, which contains user (some of them can be empty - no update)
+     * Upates all field, which contains user (some of them can be empty - no update).
      *
      * @param updateView - view, which contains fields, need to update
      * @param httpSession - current session
@@ -99,6 +99,13 @@ public class UserUpdateController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
 
+    /**
+     * Updates nickname of current use.
+     * @param updateNickanmeView - view, which contains nickname
+     * @param httpSession - current session
+     * @param locale - user locale
+     * @return ResponseEntity
+     */
     @PostMapping(path = "/update_nickname", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> updateNickname(@RequestBody UpdateNicknameView updateNickanmeView,
@@ -121,8 +128,10 @@ public class UserUpdateController extends AbstractController {
 
         return getResponseMaker().makeResponse(userServiceResponse, locale);
     }
+
+    
     /**
-     * Updates email of current user
+     * Updates email of current user.
      *
      * @param updateEmailView - view, which contains new email
      * @param httpSession - current session
@@ -147,7 +156,7 @@ public class UserUpdateController extends AbstractController {
 
 
     /**
-     * Updates password of current user
+     * Updates password of current user.
      *
      * @param updatePasswordView - view, which contains oldpassword and newpassword
      * @param httpSession - current session

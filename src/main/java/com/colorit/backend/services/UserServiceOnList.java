@@ -7,8 +7,6 @@ import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
-import org.apache.catalina.User;
-import org.springframework.core.Constants;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
