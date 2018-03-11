@@ -29,15 +29,6 @@ public class UserView implements AbstractOutputView {
         this.rating = rating;
         this.countGames = countGames;
     }
-//
-//    public UserView(UserEntity userEntity) {
-//        this.nickname = userEntity.getNickname();
-//        this.email = userEntity.getEmail();
-//        this.rating = userEntity.getRating();
-//        this.avatar = userEntity.getAvatarPath(); // todo set pat
-//        this.countGames = userEntity.getCountGames();
-//        this.countWins = userEntity.getCountWins();
-//    }
 
     public String getNickname() {
         return this.nickname;

@@ -1,8 +1,8 @@
 package com.colorit.backend.repositories;
 
-import com.colorit.backend.entities.GameResults;
-import com.colorit.backend.entities.UserEntity;
-import com.colorit.backend.entities.UserUpdateEntity;
+import com.colorit.backend.entities.db.GameResults;
+import com.colorit.backend.entities.db.UserEntity;
+import com.colorit.backend.entities.input.UserUpdateEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +20,15 @@ public class UserRepositoryList {
             throw new NoResultException();
         }
         return userEntity;
+    }
+
+    public void changeNickname(String nickname, String newNickname) throws ConstraintNameException,
+            NoResultException {
+        if (searchByNickname(newNickname) != null) {
+            throw new ConstraintNameException();
+        }
+        UserEntity exisitingUser = getByNickame(nickname);
+        exisitingUser.setNickname(newNickname);
     }
 
     public void update(String nickname, UserUpdateEntity userUpdateEntity) throws ConstraintNameException,

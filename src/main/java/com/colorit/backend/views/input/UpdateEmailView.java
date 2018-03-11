@@ -13,10 +13,6 @@ public class UpdateEmailView extends AbstractInputView {
         this.newEmail = newEmail;
     }
 
-    public String getNewEmail() {
-        return newEmail;
-    }
-
     @Override
     public ViewStatus checkValid() {
         final ViewStatus viewStatus = new ViewStatus();

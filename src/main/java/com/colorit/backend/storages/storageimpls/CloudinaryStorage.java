@@ -13,19 +13,12 @@ import java.util.Map;
 @Component
 public class CloudinaryStorage implements IStorage {
     private Cloudinary cloudinary;
-
-    //@Value("${com.colorit.backend.api_key}")
     private String apiKey;
-
-    @Value("${api_secret}")
     private String apiSecret;
-
-    @Value("${cloud_name}")
     private String cloudName;
 
     public CloudinaryStorage() {
-        super();
-        // todo improve that
+        // todo autowire value
         cloudName = System.getenv().get("CLOUD_NAME");
         apiKey = System.getenv().get("API_KEY");
         apiSecret = System.getenv().get("API_SECRET");
@@ -36,8 +29,7 @@ public class CloudinaryStorage implements IStorage {
     public String writeFile(File file) throws Exception {
         Map cloudResponse = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         JSONObject json = new JSONObject(cloudResponse);
-        String url = json.getString("url");
-        return url; //url.replaceFirst(".*/([^/?]+).*", "$1");
+        return json.getString("url");
     }
 
     @Override

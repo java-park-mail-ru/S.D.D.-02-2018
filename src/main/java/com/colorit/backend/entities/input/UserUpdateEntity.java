@@ -1,4 +1,4 @@
-package com.colorit.backend.entities;
+package com.colorit.backend.entities.input;
 
 public class UserUpdateEntity {
     private String newNickname;

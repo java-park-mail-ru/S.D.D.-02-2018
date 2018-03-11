@@ -1,9 +1,14 @@
 package com.colorit.backend.services;
 
-import com.colorit.backend.entities.*;
+import com.colorit.backend.entities.db.UserEntity;
+import com.colorit.backend.entities.output.ScalarEntity;
+import com.colorit.backend.entities.output.UserListEntity;
+import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
+import org.apache.catalina.User;
+import org.springframework.core.Constants;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,9 +68,20 @@ public class UserServiceOnList implements IUserService {
             userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
         }
         return userServiceResponse;
-
     }
 
+    @Override
+    public UserServiceResponse updateNickname(String nickname, String newNickname) {
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        try {
+            userRepository.changeNickname(nickname, newNickname);
+        } catch (UserRepositoryList.ConstraintNameException cNEx) {
+            userServiceResponse.setStatus(UserServiceStatus.CONFLICT_NAME_STATE);
+        } catch (UserRepositoryList.NoResultException nREx) {
+            userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return userServiceResponse;
+    }
 
     @Override
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {

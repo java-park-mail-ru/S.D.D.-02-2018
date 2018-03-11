@@ -1,6 +1,6 @@
 package com.colorit.backend.views.input;
 
-import com.colorit.backend.entities.UserUpdateEntity;
+import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import com.fasterxml.jackson.annotation.JsonCreator;

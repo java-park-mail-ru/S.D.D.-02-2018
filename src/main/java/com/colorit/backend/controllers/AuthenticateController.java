@@ -1,7 +1,7 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AuthenticateResponseMaker;
-import com.colorit.backend.entities.UserEntity;
+import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.output.ResponseView;
