@@ -1,12 +1,11 @@
 package com.colorit.backend.entities.db;
 
-import com.colorit.backend.entities.IEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.views.input.AbstractInputView;
-import com.colorit.backend.views.entity.UserView;
+import com.colorit.backend.views.output.UserView;
 
 @SuppressWarnings("unused")
-public class UserEntity implements IEntity {
+public class UserEntity {
     private Integer id;
     private String nickname;
     private String email;
@@ -108,7 +107,6 @@ public class UserEntity implements IEntity {
         this.email = other.getNewEmail() != null ? other.getNewEmail() : this.email;
     }
 
-    @Override
     public UserView toView() {
         return new UserView(nickname, email, avatarPath, gameResults.getRating(),
                 gameResults.getCountWins(), gameResults.getCountGames());

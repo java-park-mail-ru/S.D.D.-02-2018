@@ -21,6 +21,11 @@ public class ResponseView<T> {
         this.data = data;
     }
 
+    public void setData(String field, T data) {
+        this.data1 = new HashMap<>();
+        this.data1.put(field, data);
+    }
+
     public void setData(T data) {
         this.data = data;
     }

@@ -1,11 +1,10 @@
 package com.colorit.backend.services.responses;
 
-import com.colorit.backend.entities.IEntity;
 import com.colorit.backend.services.statuses.IStatus;
 
-public abstract class AbstractServiceResponse {
+public abstract class AbstractServiceResponse<T> {
     private IStatus status;
-    private IEntity data;
+    private T data;
 
     AbstractServiceResponse(IStatus istatus) {
         this.status = istatus;
@@ -23,11 +22,11 @@ public abstract class AbstractServiceResponse {
         return true;
     }
 
-    IEntity getData() {
+    T getData() {
         return this.data;
     }
 
-    void setData(IEntity data) {
+    void setData(T data) {
         this.data = data;
     }
 }

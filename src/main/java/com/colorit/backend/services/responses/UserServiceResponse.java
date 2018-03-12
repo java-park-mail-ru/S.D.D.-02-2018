@@ -1,10 +1,9 @@
 package com.colorit.backend.services.responses;
 
-import com.colorit.backend.entities.IEntity;
 import com.colorit.backend.services.statuses.IStatus;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 
-public class UserServiceResponse extends AbstractServiceResponse {
+public class UserServiceResponse<T>  extends AbstractServiceResponse<T> {
     public UserServiceResponse(UserServiceStatus userServiceStatus) {
         super(userServiceStatus);
     }
@@ -20,7 +19,7 @@ public class UserServiceResponse extends AbstractServiceResponse {
     }
 
     @Override
-    public void setData(IEntity data) {
+    public void setData(T data) {
         super.setData(data);
     }
 
@@ -30,7 +29,7 @@ public class UserServiceResponse extends AbstractServiceResponse {
     }
 
     @Override
-    public IEntity getData() {
+    public T getData() {
         return super.getData();
     }
 }

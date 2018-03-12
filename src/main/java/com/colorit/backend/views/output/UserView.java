@@ -1,4 +1,4 @@
-package com.colorit.backend.views.entity;
+package com.colorit.backend.views.output;
 
 
 /**

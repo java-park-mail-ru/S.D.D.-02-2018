@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
@@ -50,6 +51,13 @@ public abstract class AbstractResponseMaker {
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<ResponseView> authorizedResponse(UserServiceResponse userServiceResponse,
+                                                           HttpSession httpSession, String field) {
+        final ResponseView<String> responseView = new ResponseView<>();
+        responseView.setData(field, httpSession.getId());
+        return new ResponseEntity<>(responseView, userServiceResponse.getStatus().getHttpStatus());
+    }
+
     public ResponseEntity<ResponseView> makeResponse(AbstractStorageResponse response) {
         if (!response.isValid()) {
             ResponseView responseView = new ResponseView();
@@ -59,12 +67,16 @@ public abstract class AbstractResponseMaker {
         return ResponseEntity.ok(new ResponseView());
     }
 
+    // TODO make error response
+
     ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message) {
         final UserServiceStatus userServiceStatus = userServiceResponse.getStatus();
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                return new ResponseEntity<>(new ResponseView(userServiceResponse.getData().toView()), httpStatus);
+                return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
+            } else {
+                return new ResponseEntity<>(new ResponseView(), httpStatus);
             }
         } else {
             String field = "general";
@@ -75,11 +87,9 @@ public abstract class AbstractResponseMaker {
             responseView.addError(field, message);
             return new ResponseEntity<>(responseView, httpStatus);
         }
-        return new ResponseEntity<>(new ResponseView(), httpStatus);
     }
 
     MessageSource getMessageSource() {
         return this.messageSource;
     }
-
 }

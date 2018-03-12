@@ -1,12 +1,14 @@
 package com.colorit.backend.services;
 
 import com.colorit.backend.entities.db.UserEntity;
-import com.colorit.backend.entities.output.ScalarEntity;
-import com.colorit.backend.entities.output.UserListEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
+import com.colorit.backend.views.output.UserListView;
+import com.colorit.backend.views.output.UserView;
+import com.colorit.backend.views.input.SignInView;
+import com.colorit.backend.views.input.SignUpView;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +19,11 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserServiceResponse userServiceResponse =
-                new UserServiceResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse<UserView> userServiceResponse =
+                new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
             final UserEntity userEntity = userRepository.getByNickame(nickname);
-            userServiceResponse.setData(userEntity);
+            userServiceResponse.setData(userEntity.toView());
         } catch (UserRepositoryList.NoResultException nRx) {
             userServiceResponse.setStatus(UserServiceStatus.NOT_FOUND_STATE);
         }
@@ -29,11 +31,11 @@ public class UserServiceOnList implements IUserService {
     }
 
     @Override
-    public UserServiceResponse authenticateUser(UserEntity userEntity) {
+    public UserServiceResponse authenticateUser(SignInView user) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
-            final UserEntity existingEntity = userRepository.getByNickame(userEntity.getNickname());
-            if (!existingEntity.getPasswordHash().equals(userEntity.getPasswordHash())) {
+            final UserEntity existingEntity = userRepository.getByNickame(user.getNickname());
+            if (!existingEntity.getPasswordHash().equals(user.getPassword())) {
                 userServiceResponse.setStatus(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
             }
         } catch (UserRepositoryList.NoResultException nRx) {
@@ -43,9 +45,10 @@ public class UserServiceOnList implements IUserService {
     }
 
     @Override
-    public UserServiceResponse createUser(UserEntity userEntity) {
+    public UserServiceResponse createUser(SignUpView user) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.CREATED_STATE);
         try {
+            UserEntity userEntity = UserEntity.fromView(user);
             userRepository.save(userEntity);
         } catch (UserRepositoryList.ConstraintEmailException cEEx) {
             userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
@@ -99,10 +102,10 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getPosition(String nickname) {
-        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse<Long> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
             Long position = userRepository.getPosition(nickname);
-            userServiceResponse.setData(new ScalarEntity<>(position));
+            userServiceResponse.setData(position);
         } catch (UserRepositoryList.NoResultException nREx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
@@ -111,17 +114,17 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUsers(Integer limit, Integer offset) {
-        UserServiceResponse userServiceresponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        UserServiceResponse<UserListView> userServiceresponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         List<UserEntity> userEntityList = userRepository.getListUsers(limit, offset);
-        userServiceresponse.setData(new UserListEntity(userEntityList));
+        userServiceresponse.setData(new UserListView(userEntityList));
         return userServiceresponse;
     }
 
     @Override
     public UserServiceResponse getUsersCount() {
-        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse<Integer> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         Integer position = userRepository.getCount();
-        userServiceResponse.setData(new ScalarEntity<>(position));
+        userServiceResponse.setData(position);
         return userServiceResponse;
     }
 
