@@ -3,7 +3,7 @@ package com.colorit.backend.entities.db;
 import com.colorit.backend.entities.IEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.views.input.AbstractInputView;
-import com.colorit.backend.views.output.UserView;
+import com.colorit.backend.views.entity.UserView;
 
 @SuppressWarnings("unused")
 public class UserEntity implements IEntity {

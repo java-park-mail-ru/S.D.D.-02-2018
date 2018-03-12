@@ -38,13 +38,14 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserEntity userEntity = UserEntity.fromView(signInView); //signInView.toEntity();
+        final UserEntity userEntity = UserEntity.fromView(signInView);
         final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
 
-        if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+        if (!userServiceResponse.isValid()) {
+            return getResponseMaker().makeResponse(userServiceResponse, locale);
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        httpSession.setAttribute(getSessionKey(), signInView.getNickname());
+        return getResponseMaker().authorizeResponse(httpSession, "sessionId");
     }
 
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
@@ -69,8 +70,9 @@ public class AuthenticateController extends AbstractController {
         final UserEntity userEntity = UserEntity.fromView(signUpView); //signUpView.toEntity();
         final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
         if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+            return getResponseMaker().makeResponse(userServiceResponse, locale);
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+        return getResponseMaker().authorizeResponse(httpSession, "sessionId");
     }
 }

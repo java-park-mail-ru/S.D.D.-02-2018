@@ -1,8 +1,8 @@
-package com.colorit.backend.views.output;
+package com.colorit.backend.views.entity;
 
 import java.util.List;
 
-public class UserListView implements IOutputView {
+public class UserListView {
     private List<UserView> userViewList;
     private Integer size;
 

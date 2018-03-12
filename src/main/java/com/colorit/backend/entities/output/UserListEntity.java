@@ -2,8 +2,8 @@ package com.colorit.backend.entities.output;
 
 import com.colorit.backend.entities.IEntity;
 import com.colorit.backend.entities.db.UserEntity;
-import com.colorit.backend.views.output.UserListView;
-import com.colorit.backend.views.output.UserView;
+import com.colorit.backend.views.entity.UserListView;
+import com.colorit.backend.views.entity.UserView;
 
 import java.util.ArrayList;
 import java.util.List;

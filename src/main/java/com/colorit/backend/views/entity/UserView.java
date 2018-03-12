@@ -1,4 +1,4 @@
-package com.colorit.backend.views.output;
+package com.colorit.backend.views.entity;
 
 
 /**
@@ -8,7 +8,7 @@ package com.colorit.backend.views.output;
  * @version 1.0
  */
 @SuppressWarnings("ALL")
-public class UserView implements IOutputView {
+public class UserView {
     private String nickname;
     private String email;
     private String avatar;

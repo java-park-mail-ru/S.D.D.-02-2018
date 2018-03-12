@@ -1,7 +1,7 @@
 package com.colorit.backend.entities.output;
 
 import com.colorit.backend.entities.IEntity;
-import com.colorit.backend.views.output.ScalarView;
+import com.colorit.backend.views.entity.ScalarView;
 
 public class ScalarEntity<T> implements IEntity {
     private T data;

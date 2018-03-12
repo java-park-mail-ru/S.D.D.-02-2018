@@ -9,18 +9,19 @@ import java.util.Map;
  * @author hustonMavr - Barulev Alexandr
  * @version 1.0
  */
-public class ResponseView {
+public class ResponseView<T> {
     private final Map<String, String> errors = new HashMap<>();
-    private IOutputView data;
+    private T data;
+    private HashMap<String, T> data1;
 
     public ResponseView() {
     }
 
-    public ResponseView(IOutputView data) {
+    public ResponseView(T data) {
         this.data = data;
     }
 
-    public void setData(IOutputView data) {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -35,7 +36,7 @@ public class ResponseView {
     }
 
     @SuppressWarnings("unused")
-    public IOutputView getData() {
+    public T getData() {
         return data;
     }
 }
