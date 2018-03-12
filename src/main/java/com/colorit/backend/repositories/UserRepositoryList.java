@@ -81,7 +81,7 @@ public class UserRepositoryList {
         Integer countWins = rnd.nextInt(countGames);
         Integer maxRat = 40;
         Integer minRat = 20;
-        Integer rating = - minRat + (rnd.nextInt(maxRat - (-minRat)));
+        Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
         gameResults.setCountGames(countGames);
         gameResults.setCountWins(countWins);
         gameResults.setRating(rating);
