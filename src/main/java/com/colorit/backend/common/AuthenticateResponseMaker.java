@@ -23,3 +23,4 @@ public class AuthenticateResponseMaker extends AbstractResponseMaker {
         return makeResponse(userServiceResponse, message);
     }
 }
+

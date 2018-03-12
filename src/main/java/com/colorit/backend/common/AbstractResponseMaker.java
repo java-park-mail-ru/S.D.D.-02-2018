@@ -2,7 +2,7 @@ package com.colorit.backend.common;
 
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
-import com.colorit.backend.storages.responses.AbstractStorageResponse;
+import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
@@ -58,7 +58,7 @@ public abstract class AbstractResponseMaker {
         return new ResponseEntity<>(responseView, userServiceResponse.getStatus().getHttpStatus());
     }
 
-    public ResponseEntity<ResponseView> makeResponse(AbstractStorageResponse response) {
+    public ResponseEntity<ResponseView> makeResponse(StorageResponse response) {
         if (!response.isValid()) {
             ResponseView responseView = new ResponseView();
             responseView.addError("file", "Error upload");

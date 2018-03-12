@@ -1,6 +1,6 @@
 package com.colorit.backend.storages;
 
-import com.colorit.backend.storages.responses.AbstractStorageResponse;
+import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
@@ -9,7 +9,6 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +19,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Map;
 
-@Primary
 @Component
 public class FileStorage {
     @Autowired
@@ -51,8 +49,8 @@ public class FileStorage {
         }
     }
 
-    public AbstractStorageResponse saveImage(MultipartFile multipartFile) {
-        AbstractStorageResponse<String> response = new AbstractStorageResponse<>();
+    public StorageResponse saveImage(MultipartFile multipartFile) {
+        StorageResponse<String> response = new StorageResponse<>();
         try {
             File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
             if (!getFileContent(file).equals("image")) {
@@ -65,12 +63,11 @@ public class FileStorage {
         } catch (Exception ex) {
 
         }
-
         return null;
     }
 
-    public AbstractStorageResponse saveFile(MultipartFile multipartFile) {
-        AbstractStorageResponse<String> response = new AbstractStorageResponse<>();
+    public StorageResponse saveFile(MultipartFile multipartFile) {
+        StorageResponse<String> response = new StorageResponse<>();
         try {
             // TODO check file is image
             File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
