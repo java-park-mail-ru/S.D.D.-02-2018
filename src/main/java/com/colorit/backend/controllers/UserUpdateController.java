@@ -101,6 +101,7 @@ public class UserUpdateController extends AbstractController {
 
     /**
      * Updates nickname of current use.
+     *
      * @param updateNickanmeView - view, which contains nickname
      * @param httpSession - current session
      * @param locale - user locale

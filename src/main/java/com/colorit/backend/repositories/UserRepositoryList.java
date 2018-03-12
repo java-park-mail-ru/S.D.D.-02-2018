@@ -77,10 +77,14 @@ public class UserRepositoryList {
         }
         final GameResults gameResults = new GameResults();
         Random rnd = new Random();
-        gameResults.setCountGames(rnd.nextInt(20));
-        gameResults.setCountWins(rnd.nextInt(20));
-        gameResults.setRating(rnd.nextInt(30));
-        userEntity.setGameResults(gameResults);
+        Integer countGames = rnd.nextInt(20);
+        Integer countWins = rnd.nextInt(countGames);
+        Integer maxRat = 40;
+        Integer minRat = 20;
+        Integer rating = - minRat + (rnd.nextInt(maxRat - (-minRat)));
+        gameResults.setCountGames(countGames);
+        gameResults.setCountWins(countWins);
+        gameResults.setRating(rating);
         db.add(userEntity);
     }
 

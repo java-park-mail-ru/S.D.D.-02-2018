@@ -35,6 +35,7 @@ public class FileStorage {
     public AbstractStorageResponse saveFile(MultipartFile multipartFile) {
         AbstractStorageResponse<String> response = new AbstractStorageResponse<>();
         try {
+            // TODO check file is image
             File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
             multipartFile.transferTo(file);
             String name = storage.writeFile(file);
