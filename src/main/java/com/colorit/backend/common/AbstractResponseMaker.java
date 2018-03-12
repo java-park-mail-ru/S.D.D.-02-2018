@@ -64,18 +64,18 @@ public abstract class AbstractResponseMaker {
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData().toView()), httpStatus);
+                return new ResponseEntity<>(new ResponseView(userServiceResponse.getData().toView()), httpStatus);
             }
         } else {
             String field = "general";
             if (userServiceResponse.getStatus().getField() != null) {
                 field = userServiceResponse.getStatus().getField();
             }
-            final ResponseView responseView = new ResponseView<>();
+            final ResponseView responseView = new ResponseView();
             responseView.addError(field, message);
             return new ResponseEntity<>(responseView, httpStatus);
         }
-        return new ResponseEntity<>(new ResponseView<>(), httpStatus);
+        return new ResponseEntity<>(new ResponseView(), httpStatus);
     }
 
     MessageSource getMessageSource() {
