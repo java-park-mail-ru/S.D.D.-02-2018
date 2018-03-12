@@ -17,10 +17,11 @@ public class AuthenticateResponseMaker extends AbstractResponseMaker {
     }
 
     @Override
-    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
+    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale,
+                                                     String responseFieldName) {
         final String message = getMessageSource().getMessage(
                 userServiceResponse.getStatus().getMessage(), null, locale);
-        return makeResponse(userServiceResponse, message);
+        return makeResponse(userServiceResponse, message, responseFieldName);
     }
 }
 

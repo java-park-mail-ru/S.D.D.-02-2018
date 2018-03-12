@@ -38,7 +38,8 @@ public abstract class AbstractResponseMaker {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
     }
 
-    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
+    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale,
+                                                     String responseFielName) {
         return null;
     }
 
@@ -69,22 +70,24 @@ public abstract class AbstractResponseMaker {
 
     // TODO make error response
 
-    ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message) {
+    ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message,
+                                              String responseFieldName) {
         final UserServiceStatus userServiceStatus = userServiceResponse.getStatus();
         final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
         if (userServiceResponse.isValid()) {
             if (userServiceResponse.getData() != null) {
-                return new ResponseEntity<>(new ResponseView<>(userServiceResponse.getData()), httpStatus);
+                return new ResponseEntity<>(new ResponseView<>(responseFieldName, userServiceResponse.getData()),
+                        httpStatus);
             } else {
                 return new ResponseEntity<>(new ResponseView(), httpStatus);
             }
         } else {
-            String field = "general";
+            String errrorField = "general";
             if (userServiceResponse.getStatus().getField() != null) {
-                field = userServiceResponse.getStatus().getField();
+                errrorField = userServiceResponse.getStatus().getField();
             }
             final ResponseView responseView = new ResponseView();
-            responseView.addError(field, message);
+            responseView.addError(errrorField, message);
             return new ResponseEntity<>(responseView, httpStatus);
         }
     }

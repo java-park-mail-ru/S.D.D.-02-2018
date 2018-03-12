@@ -41,7 +41,7 @@ public class AuthenticateController extends AbstractController {
         final UserServiceResponse userServiceResponse = userService.authenticateUser(signInView);
 
         if (!userServiceResponse.isValid()) {
-            return getResponseMaker().makeResponse(userServiceResponse, locale);
+            return getResponseMaker().makeResponse(userServiceResponse, locale,  null);
         }
         httpSession.setAttribute(getSessionKey(), signInView.getNickname());
         return getResponseMaker().authorizedResponse(userServiceResponse, httpSession, "sessionId");
@@ -68,7 +68,7 @@ public class AuthenticateController extends AbstractController {
 
         final UserServiceResponse userServiceResponse = userService.createUser(signUpView);
         if (!userServiceResponse.isValid()) {
-            return getResponseMaker().makeResponse(userServiceResponse, locale);
+            return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
         httpSession.setAttribute(getSessionKey(), signUpView.getNickname());
         return getResponseMaker().authorizedResponse(userServiceResponse, httpSession, "sessionId");

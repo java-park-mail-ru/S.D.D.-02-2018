@@ -41,7 +41,7 @@ public class UserInfoController extends AbstractController {
         }
 
         final UserServiceResponse userServiceResponse = userService.getUser(sessionNickname);
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, "current_user");
     }
 
 
@@ -63,11 +63,11 @@ public class UserInfoController extends AbstractController {
 
         UserServiceResponse userServiceResponse = userService.userExists(sessionNickname);
         if (!userServiceResponse.isValid()) {
-            return getResponseMaker().makeResponse(userServiceResponse, locale);
+            return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
 
         userServiceResponse = userService.getUser(nickname);
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, "user");
     }
 
 
@@ -84,7 +84,7 @@ public class UserInfoController extends AbstractController {
                                                     @RequestParam(name = "offset") Integer offset,
                                                     Locale locale) {
         return getResponseMaker().makeResponse(
-                userService.getUsers(limit, offset), locale
+                userService.getUsers(limit, offset), locale, "users_list"
         );
     }
 
@@ -98,7 +98,7 @@ public class UserInfoController extends AbstractController {
     @GetMapping(path = "/get_users_count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> getCountUsers(Locale locale) {
         return getResponseMaker().makeResponse(
-                userService.getUsersCount(), locale
+                userService.getUsersCount(), locale, "count_users"
         );
     }
 
@@ -118,7 +118,7 @@ public class UserInfoController extends AbstractController {
         }
 
         UserServiceResponse userServiceResponse = userService.getPosition(sessionNickname);
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, "position");
     }
 
 }

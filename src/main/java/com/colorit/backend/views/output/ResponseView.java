@@ -17,8 +17,8 @@ public class ResponseView<T> {
     public ResponseView() {
     }
 
-    public ResponseView(T data) {
-        this.data = data;
+    public ResponseView(String field, T data) {
+        this.data1.put(field, data);
     }
 
     public void setData(String field, T data) {
