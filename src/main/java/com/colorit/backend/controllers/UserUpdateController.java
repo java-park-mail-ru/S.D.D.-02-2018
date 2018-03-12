@@ -62,7 +62,7 @@ public class UserUpdateController extends AbstractController {
 
         UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
                 (String) storageResponse.getData());
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
 
@@ -96,7 +96,7 @@ public class UserUpdateController extends AbstractController {
                 httpSession.setAttribute(getSessionKey(), updateEntity.getNewNickname());
             }
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
     /**
@@ -127,7 +127,7 @@ public class UserUpdateController extends AbstractController {
             httpSession.setAttribute(getSessionKey(), updateNickanmeView.getNickname());
         }
 
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
     
@@ -152,7 +152,7 @@ public class UserUpdateController extends AbstractController {
         }
 
         final UserServiceResponse userServiceResponse = userService.updateEmail(nickname, updateEmailView.getEmail());
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
 
@@ -179,6 +179,6 @@ public class UserUpdateController extends AbstractController {
 
         final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 }

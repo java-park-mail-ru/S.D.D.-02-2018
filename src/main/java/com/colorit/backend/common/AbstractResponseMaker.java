@@ -6,6 +6,7 @@ import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
+import org.apache.catalina.User;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
@@ -38,9 +39,11 @@ public abstract class AbstractResponseMaker {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseView);
     }
 
-    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale,
-                                                     String responseFielName) {
-        return null;
+    public ResponseEntity<ResponseView> authorizedResponse(UserServiceResponse userServiceResponse,
+                                                           HttpSession httpSession, String field) {
+        final ResponseView<String> responseView = new ResponseView<>();
+        responseView.setData(field, httpSession.getId());
+        return new ResponseEntity<>(responseView, userServiceResponse.getStatus().getHttpStatus());
     }
 
     public ResponseEntity<ResponseView> makeResponse(ViewStatus viewStatus, Locale locale) {
@@ -52,13 +55,6 @@ public abstract class AbstractResponseMaker {
         return new ResponseEntity<>(responseView, HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<ResponseView> authorizedResponse(UserServiceResponse userServiceResponse,
-                                                           HttpSession httpSession, String field) {
-        final ResponseView<String> responseView = new ResponseView<>();
-        responseView.setData(field, httpSession.getId());
-        return new ResponseEntity<>(responseView, userServiceResponse.getStatus().getHttpStatus());
-    }
-
     public ResponseEntity<ResponseView> makeResponse(StorageResponse response) {
         if (!response.isValid()) {
             ResponseView responseView = new ResponseView();
@@ -68,28 +64,30 @@ public abstract class AbstractResponseMaker {
         return ResponseEntity.ok(new ResponseView());
     }
 
-    // TODO make error response
+    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale,
+                                                     String responseFielName) {
+        return null;
+    }
 
-    ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, String message,
-                                              String responseFieldName) {
-        final UserServiceStatus userServiceStatus = userServiceResponse.getStatus();
-        final HttpStatus httpStatus = userServiceStatus.getHttpStatus();
-        if (userServiceResponse.isValid()) {
-            if (userServiceResponse.getData() != null) {
-                return new ResponseEntity<>(new ResponseView<>(responseFieldName, userServiceResponse.getData()),
-                        httpStatus);
-            } else {
-                return new ResponseEntity<>(new ResponseView(), httpStatus);
-            }
+    ResponseEntity<ResponseView> makeOkUserServiceResponse(UserServiceResponse userServiceResponse,
+                                                           String responseFieldName) {
+        if (userServiceResponse.getData() != null) {
+            return new ResponseEntity<>(new ResponseView<>(responseFieldName, userServiceResponse.getData()),
+                    userServiceResponse.getStatus().getHttpStatus());
         } else {
-            String errrorField = "general";
-            if (userServiceResponse.getStatus().getField() != null) {
-                errrorField = userServiceResponse.getStatus().getField();
-            }
-            final ResponseView responseView = new ResponseView();
-            responseView.addError(errrorField, message);
-            return new ResponseEntity<>(responseView, httpStatus);
+            return new ResponseEntity<>(new ResponseView(), userServiceResponse.getStatus().getHttpStatus());
         }
+    }
+
+    ResponseEntity<ResponseView> makeErrorUserServiceResponse(UserServiceResponse userServiceResponse,
+                                                              String message) {
+        String errorField = "general";
+        if (userServiceResponse.getStatus().getField() != null) {
+            errorField = userServiceResponse.getStatus().getField();
+        }
+        final ResponseView responseView = new ResponseView();
+        responseView.addError(errorField, message);
+        return new ResponseEntity<>(responseView, userServiceResponse.getStatus().getHttpStatus());
     }
 
     MessageSource getMessageSource() {
