@@ -85,6 +85,7 @@ public class UserRepositoryList {
         gameResults.setCountGames(countGames);
         gameResults.setCountWins(countWins);
         gameResults.setRating(rating);
+        userEntity.setGameResults(gameResults);
         db.add(userEntity);
     }
 
