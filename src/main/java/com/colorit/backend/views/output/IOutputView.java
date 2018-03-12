@@ -1,4 +1,4 @@
 package com.colorit.backend.views.output;
 
-public interface AbstractOutputView {
+public interface IOutputView {
 }

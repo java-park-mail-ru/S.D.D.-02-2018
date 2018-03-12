@@ -8,7 +8,7 @@ package com.colorit.backend.views.output;
  * @version 1.0
  */
 @SuppressWarnings("ALL")
-public class UserView implements AbstractOutputView {
+public class UserView implements IOutputView {
     private String nickname;
     private String email;
     private String avatar;

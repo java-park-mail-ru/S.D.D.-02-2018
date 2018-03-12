@@ -4,12 +4,19 @@ import com.colorit.backend.storages.responses.AbstractStorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.AutoDetectParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -30,6 +37,36 @@ public class FileStorage {
 
             this.storage = new LocalStorage(USER_HOME);
         }
+    }
+
+    private String getFileContent(File file) throws Exception {
+        // TODO correctly check exceptions
+        try (InputStream is = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(is);) {
+            AutoDetectParser parser = new AutoDetectParser();
+            Detector detector = parser.getDetector();
+            Metadata md = new Metadata();
+            MediaType mediaType = detector.detect(bis, md);
+            return mediaType.getType();
+        }
+    }
+
+    public AbstractStorageResponse saveImage(MultipartFile multipartFile) {
+        AbstractStorageResponse<String> response = new AbstractStorageResponse<>();
+        try {
+            File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
+            if (!getFileContent(file).equals("image")) {
+                return null; // TODO ERROR Incorrect file
+            }
+            multipartFile.transferTo(file);
+            String name = storage.writeFile(file);
+            response.setStatus(StorageStatus.OK_STATE);
+            response.setData(name);
+        } catch (Exception ex) {
+
+        }
+
+        return null;
     }
 
     public AbstractStorageResponse saveFile(MultipartFile multipartFile) {

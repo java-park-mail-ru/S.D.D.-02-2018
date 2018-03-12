@@ -2,7 +2,7 @@ package com.colorit.backend.views.output;
 
 import java.util.List;
 
-public class UserListView implements AbstractOutputView {
+public class UserListView implements IOutputView {
     private List<UserView> userViewList;
     private Integer size;
 

@@ -1,6 +1,6 @@
 package com.colorit.backend.views.output;
 
-public class ScalarView<T> implements AbstractOutputView {
+public class ScalarView<T> implements IOutputView {
     private T data;
 
     public ScalarView(T data) {

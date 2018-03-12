@@ -8,11 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserRepositoryList {
-    private final List<UserEntity> db;
-
-    public UserRepositoryList() {
-        db = new ArrayList<>();
-    }
+    private final List<UserEntity> db = new ArrayList<>();
 
     public UserEntity getByNickame(String nickname) throws NoResultException {
         final UserEntity userEntity = searchByNickname(nickname);
@@ -85,6 +81,7 @@ public class UserRepositoryList {
         gameResults.setCountGames(countGames);
         gameResults.setCountWins(countWins);
         gameResults.setRating(rating);
+        userEntity.setGameResults(gameResults);
         db.add(userEntity);
     }
 
