@@ -21,11 +21,13 @@ public class LocalStorage implements IStorage {
         }
     }
 
+    // todo implement while deploy on standalone server
     @Override
     public String writeFile(File file) {
         return null;
     }
 
+    // todo implement while deploy on standalone server
     @Override
     public byte[] readFile(String path) {
         return null;

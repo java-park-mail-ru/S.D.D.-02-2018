@@ -16,9 +16,13 @@ public class UserResponseMaker extends AbstractResponseMaker {
     }
 
     @Override
-    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale) {
-        final String message = getMessageSource().getMessage(
-                userServiceResponse.getStatus().getAlternativeMessage(), null, locale);
-        return makeResponse(userServiceResponse, message);
+    public ResponseEntity<ResponseView> makeResponse(UserServiceResponse userServiceResponse, Locale locale,
+                                                     String responseFieldName) {
+        if (userServiceResponse.isValid()) {
+            return makeOkUserServiceResponse(userServiceResponse, responseFieldName);
+        } else {
+            return makeErrorUserServiceResponse(userServiceResponse, getMessageSource().getMessage(
+                    userServiceResponse.getStatus().getAlternativeMessage(), null, locale));
+        }
     }
 }

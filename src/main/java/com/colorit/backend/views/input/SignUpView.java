@@ -1,5 +1,6 @@
 package com.colorit.backend.views.input;
 
+import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -63,5 +64,9 @@ public class SignUpView extends AbstractInputView {
     @Override
     public String getPassword() {
         return this.password;
+    }
+
+    public UserEntity toEntity() {
+        return new UserEntity(nickname, email, password);
     }
 }

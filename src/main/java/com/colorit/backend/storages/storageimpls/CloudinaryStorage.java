@@ -11,16 +11,13 @@ import java.util.Map;
 
 @Component
 public class CloudinaryStorage implements IStorage {
-    private Cloudinary cloudinary;
-    private String apiKey;
-    private String apiSecret;
-    private String cloudName;
+    private final Cloudinary cloudinary;
+    // todo autowire value
+    private static final String apiKey = System.getenv().get("API_SECRET");
+    private static final String apiSecret = System.getenv().get("API_KEY");
+    private static final String cloudName = System.getenv().get("CLOUD_NAME");
 
     public CloudinaryStorage() {
-        // todo autowire value
-        cloudName = System.getenv().get("CLOUD_NAME");
-        apiKey = System.getenv().get("API_KEY");
-        apiSecret = System.getenv().get("API_SECRET");
         this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
     }
 

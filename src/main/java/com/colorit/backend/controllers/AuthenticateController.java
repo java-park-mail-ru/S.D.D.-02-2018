@@ -1,7 +1,6 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AuthenticateResponseMaker;
-import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.output.ResponseView;
@@ -38,13 +37,13 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserEntity userEntity = UserEntity.fromView(signInView); //signInView.toEntity();
-        final UserServiceResponse userServiceResponse = userService.authenticateUser(userEntity);
+        final UserServiceResponse userServiceResponse = userService.authenticateUser(signInView);
 
-        if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+        if (!userServiceResponse.isValid()) {
+            return getResponseMaker().makeResponse(userServiceResponse, locale,  null);
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        httpSession.setAttribute(getSessionKey(), signInView.getNickname());
+        return getResponseMaker().authorizedResponse(userServiceResponse, httpSession, "sessionId");
     }
 
     @RequestMapping(value = "/signout", method = {RequestMethod.GET, RequestMethod.POST},
@@ -66,11 +65,11 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserEntity userEntity = UserEntity.fromView(signUpView); //signUpView.toEntity();
-        final UserServiceResponse userServiceResponse = userService.createUser(userEntity);
-        if (userServiceResponse.isValid()) {
-            httpSession.setAttribute(getSessionKey(), userEntity.getNickname());
+        final UserServiceResponse userServiceResponse = userService.createUser(signUpView);
+        if (!userServiceResponse.isValid()) {
+            return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        httpSession.setAttribute(getSessionKey(), signUpView.getNickname());
+        return getResponseMaker().authorizedResponse(userServiceResponse, httpSession, "sessionId");
     }
 }

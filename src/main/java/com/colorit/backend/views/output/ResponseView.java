@@ -9,19 +9,23 @@ import java.util.Map;
  * @author hustonMavr - Barulev Alexandr
  * @version 1.0
  */
-public class ResponseView {
+public class ResponseView<T> {
     private final Map<String, String> errors = new HashMap<>();
-    private IOutputView data;
+    private final HashMap<String, T> data = new HashMap<>();
 
     public ResponseView() {
     }
 
-    public ResponseView(IOutputView data) {
-        this.data = data;
+    public ResponseView(String field, T data) {
+        this.data.put(field, data);
     }
 
-    public void setData(IOutputView data) {
-        this.data = data;
+    public void setData(String field, T data) {
+        this.data.put(field, data);
+    }
+
+    public Map<String, T> getData() {
+        return this.data;
     }
 
     public void addError(String field, String message) {
@@ -32,10 +36,5 @@ public class ResponseView {
     @SuppressWarnings("unused")
     public Map<String, String> getErrors() {
         return errors;
-    }
-
-    @SuppressWarnings("unused")
-    public IOutputView getData() {
-        return data;
     }
 }

@@ -2,7 +2,7 @@ package com.colorit.backend.storages.responses;
 
 import com.colorit.backend.storages.statuses.IStatus;
 
-public class AbstractStorageResponse<T> {
+public class StorageResponse<T> {
     private T data;
     private IStatus status;
 

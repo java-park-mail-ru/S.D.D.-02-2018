@@ -5,7 +5,7 @@ import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.storages.FileStorage;
-import com.colorit.backend.storages.responses.AbstractStorageResponse;
+import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.views.*;
 import com.colorit.backend.views.input.UpdateEmailView;
 import com.colorit.backend.views.input.UpdateNicknameView;
@@ -55,14 +55,14 @@ public class UserUpdateController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        final AbstractStorageResponse storageResponse = fileStorage.saveFile(avatar);
+        final StorageResponse storageResponse = fileStorage.saveFile(avatar);
         if (!storageResponse.isValid()) {
             return getResponseMaker().makeResponse(storageResponse);
         }
 
         UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
                 (String) storageResponse.getData());
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
 
@@ -96,7 +96,7 @@ public class UserUpdateController extends AbstractController {
                 httpSession.setAttribute(getSessionKey(), updateEntity.getNewNickname());
             }
         }
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
     /**
@@ -127,7 +127,7 @@ public class UserUpdateController extends AbstractController {
             httpSession.setAttribute(getSessionKey(), updateNickanmeView.getNickname());
         }
 
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
     
@@ -152,7 +152,7 @@ public class UserUpdateController extends AbstractController {
         }
 
         final UserServiceResponse userServiceResponse = userService.updateEmail(nickname, updateEmailView.getEmail());
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
 
@@ -179,6 +179,6 @@ public class UserUpdateController extends AbstractController {
 
         final UserServiceResponse userServiceResponse = userService.updatePassword(nickname,
                 updatePasswordView.getOldPassword(), updatePasswordView.getNewPassword());
-        return getResponseMaker().makeResponse(userServiceResponse, locale);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 }
