@@ -1,4 +1,4 @@
-package com.colorit.backend.views.output;
+package com.colorit.backend.views.entity.representations;
 
 
 /**
@@ -8,7 +8,7 @@ package com.colorit.backend.views.output;
  * @version 1.0
  */
 @SuppressWarnings("ALL")
-public class UserView {
+public class UserEntityRepresentation {
     private String nickname;
     private String email;
     private String avatar;
@@ -16,12 +16,12 @@ public class UserView {
     private Integer countGames;
     private Integer rating;
 
-    public UserView() {
+    public UserEntityRepresentation() {
 
     }
 
-    public UserView(String nickname, String email, String avatar,
-                    Integer rating, Integer countWins, Integer countGames) {
+    public UserEntityRepresentation(String nickname, String email, String avatar,
+                                    Integer rating, Integer countWins, Integer countGames) {
         this.nickname = nickname;
         this.email = email;
         this.avatar = avatar;

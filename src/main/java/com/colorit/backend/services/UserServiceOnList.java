@@ -5,8 +5,8 @@ import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.UserRepositoryList;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
-import com.colorit.backend.views.output.UserListView;
-import com.colorit.backend.views.output.UserView;
+import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
+import com.colorit.backend.views.entity.representations.UserEntityRepresentation;
 import com.colorit.backend.views.input.SignInView;
 import com.colorit.backend.views.input.SignUpView;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserServiceResponse<UserView> userServiceResponse =
+        final UserServiceResponse<UserEntityRepresentation> userServiceResponse =
                 new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
             final UserEntity userEntity = userRepository.getByNickame(nickname);
-            userServiceResponse.setData(userEntity.toView());
+            userServiceResponse.setData(userEntity.toRepresentation());
         } catch (UserRepositoryList.NoResultException nRx) {
             userServiceResponse.setStatus(UserServiceStatus.NOT_FOUND_STATE);
         }
@@ -114,9 +114,9 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUsers(Integer limit, Integer offset) {
-        UserServiceResponse<UserListView> userServiceresponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        UserServiceResponse<UserListEntityRepresentation> userServiceresponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         List<UserEntity> userEntityList = userRepository.getListUsers(limit, offset);
-        userServiceresponse.setData(new UserListView(userEntityList));
+        userServiceresponse.setData(new UserListEntityRepresentation(userEntityList));
         return userServiceresponse;
     }
 

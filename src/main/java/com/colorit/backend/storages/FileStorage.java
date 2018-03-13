@@ -8,7 +8,6 @@ import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +20,6 @@ import java.util.Map;
 
 @Component
 public class FileStorage {
-    @Autowired
     private IStorage storage;
     private static final String HEROKU_VAR = "HEROKU_VAR";
     private static final String USER_HOME = System.getProperty("os.name");
@@ -32,7 +30,6 @@ public class FileStorage {
         if (envVars.get(HEROKU_VAR) != null) {
             this.storage = new CloudinaryStorage();
         } else {
-
             this.storage = new LocalStorage(USER_HOME);
         }
     }

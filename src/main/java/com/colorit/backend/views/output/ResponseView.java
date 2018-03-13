@@ -11,8 +11,7 @@ import java.util.Map;
  */
 public class ResponseView<T> {
     private final Map<String, String> errors = new HashMap<>();
-//    private T data;
-    private HashMap<String, T> data;
+    private final HashMap<String, T> data = new HashMap<>();
 
     public ResponseView() {
     }
@@ -22,13 +21,8 @@ public class ResponseView<T> {
     }
 
     public void setData(String field, T data) {
-        this.data = new HashMap<>();
         this.data.put(field, data);
     }
-
-//    public void setData(T data) {
-//        this.data = data;
-//    }
 
     public Map<String, T> getData() {
         return this.data;
@@ -43,9 +37,4 @@ public class ResponseView<T> {
     public Map<String, String> getErrors() {
         return errors;
     }
-
-//    @SuppressWarnings("unused")
-//    public T getData() {
-//        return data;
-//    }
 }

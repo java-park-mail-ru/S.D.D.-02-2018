@@ -1,24 +1,24 @@
-package com.colorit.backend.views.output;
+package com.colorit.backend.views.entity.representations;
 
 import com.colorit.backend.entities.db.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListView {
-    private List<UserView> userViewList = new ArrayList<>();
+public class UserListEntityRepresentation {
+    private List<UserEntityRepresentation> userViewList = new ArrayList<>();
     private Integer size;
 
-    public UserListView(List<UserEntity> userViews) {
+    public UserListEntityRepresentation(List<UserEntity> userViews) {
         userViews.forEach(user -> this.userViewList.add(
-                new UserView(user.getNickname(), user.getEmail(), user.getAvatarPath(),
+                new UserEntityRepresentation(user.getNickname(), user.getEmail(), user.getAvatarPath(),
                         user.getRating(), user.getCountWins(), user.getCountGames()
                 ))
         );
         this.size = userViews.size();
     }
 
-    public List<UserView> getUserViewList() {
+    public List<UserEntityRepresentation> getUserViewList() {
         return userViewList;
     }
 

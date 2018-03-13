@@ -1,12 +1,10 @@
 package com.colorit.backend.common;
 
 import com.colorit.backend.services.responses.UserServiceResponse;
-import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
-import org.apache.catalina.User;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
