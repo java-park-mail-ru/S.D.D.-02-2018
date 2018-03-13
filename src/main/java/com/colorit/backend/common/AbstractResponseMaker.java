@@ -24,7 +24,6 @@ import java.util.Locale;
 @Primary
 @Component
 public abstract class AbstractResponseMaker {
-
     private final @NotNull MessageSource messageSource;
 
     public AbstractResponseMaker(@NotNull MessageSource messageSource) {
