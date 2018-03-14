@@ -4,17 +4,10 @@ import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
-import org.apache.tika.detect.Detector;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
-import org.apache.tika.parser.AutoDetectParser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -34,39 +27,9 @@ public class FileStorage {
         }
     }
 
-    private String getFileContent(File file) throws Exception {
-        // TODO correctly check exceptions
-        try (InputStream is = new FileInputStream(file);
-             BufferedInputStream bis = new BufferedInputStream(is);) {
-            AutoDetectParser parser = new AutoDetectParser();
-            Detector detector = parser.getDetector();
-            Metadata md = new Metadata();
-            MediaType mediaType = detector.detect(bis, md);
-            return mediaType.getType();
-        }
-    }
-
-    public StorageResponse saveImage(MultipartFile multipartFile) {
-        StorageResponse<String> response = new StorageResponse<>();
-        try {
-            File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
-            if (!getFileContent(file).equals("image")) {
-                return null; // TODO ERROR Incorrect file
-            }
-            multipartFile.transferTo(file);
-            String name = storage.writeFile(file);
-            response.setStatus(StorageStatus.OK_STATE);
-            response.setData(name);
-        } catch (Exception ex) {
-
-        }
-        return null;
-    }
-
     public StorageResponse saveFile(MultipartFile multipartFile) {
         StorageResponse<String> response = new StorageResponse<>();
         try {
-            // TODO check file is image
             File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
             multipartFile.transferTo(file);
             String name = storage.writeFile(file);

@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 @RestController
 @CrossOrigin(origins = {"${front_url_heroku}", "${front_url_local"}, allowCredentials = "true")
 public abstract class AbstractController {
-    private String data;
-
     private final AbstractResponseMaker responseMaker;
     private static final String SESSION_KEY = "nickname";
 
