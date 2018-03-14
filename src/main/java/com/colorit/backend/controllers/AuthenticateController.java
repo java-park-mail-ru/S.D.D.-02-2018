@@ -32,7 +32,6 @@ public class AuthenticateController extends AbstractController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseView> signInUser(@RequestBody SignInView signInView, HttpSession httpSession,
                                                    Locale locale) {
-        System.out.print(data);
         final ViewStatus check = signInView.checkValid();
         if (check.isNotValid()) {
             return getResponseMaker().makeResponse(check, locale);
