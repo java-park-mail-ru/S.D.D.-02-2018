@@ -42,9 +42,9 @@ public class UserUpdateController extends AbstractController {
     /**
      * Updates avatar of current user.
      *
-     * @param avatar - user avatar
+     * @param avatar      - user avatar
      * @param httpSession - current session
-     * @param locale - user locale
+     * @param locale      - user locale
      * @return ResponseEntity
      */
     @PostMapping(path = "/update_avatar", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,9 +69,9 @@ public class UserUpdateController extends AbstractController {
     /**
      * Upates all field, which contains user (some of them can be empty - no update).
      *
-     * @param updateView - view, which contains fields, need to update
+     * @param updateView  - view, which contains fields, need to update
      * @param httpSession - current session
-     * @param locale - user locale
+     * @param locale      - user locale
      * @return ResponseEntity
      */
     @PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -103,8 +103,8 @@ public class UserUpdateController extends AbstractController {
      * Updates nickname of current use.
      *
      * @param updateNickanmeView - view, which contains nickname
-     * @param httpSession - current session
-     * @param locale - user locale
+     * @param httpSession        - current session
+     * @param locale             - user locale
      * @return ResponseEntity
      */
     @PostMapping(path = "/update_nickname", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -135,8 +135,8 @@ public class UserUpdateController extends AbstractController {
      * Updates email of current user.
      *
      * @param updateEmailView - view, which contains new email
-     * @param httpSession - current session
-     * @param locale - user locale
+     * @param httpSession     - current session
+     * @param locale          - user locale
      * @return ResponseEntity
      */
     @PostMapping(path = "/update_email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -160,8 +160,8 @@ public class UserUpdateController extends AbstractController {
      * Updates password of current user.
      *
      * @param updatePasswordView - view, which contains oldpassword and newpassword
-     * @param httpSession - current session
-     * @param locale - user locale
+     * @param httpSession        - current session
+     * @param locale             - user locale
      * @return ResponseEntity
      */
     @PostMapping(path = "/update_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

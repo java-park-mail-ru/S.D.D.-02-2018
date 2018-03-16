@@ -53,7 +53,7 @@ public class FileStorage {
 
         if (image.getHeight() > image.getWidth()) {
             startY += step / 2;
-            endY -=  step;
+            endY -= step;
         } else {
             startX += step / 2;
             endX -= step;
@@ -107,7 +107,7 @@ public class FileStorage {
             String name = storage.writeFile(file);
             response.setStatus(StorageStatus.OK_STATE);
             response.setData(name);
-        }  catch (Exception ex) {
+        } catch (Exception ex) {
             response.setStatus(StorageStatus.SERVICE_ERROR_STATE);
         }
         return response;
