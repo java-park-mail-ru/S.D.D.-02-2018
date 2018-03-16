@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractInputView {
     @SuppressWarnings("unused")
-    ViewStatus checkValid() {
+    public ViewStatus checkValid() {
         return null;
     }
 
@@ -35,6 +35,10 @@ public abstract class AbstractInputView {
     }
 
     public String getPassword() {
+        return null;
+    }
+
+    public String getNewPassword() {
         return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.colorit.backend.entities.input;
 
+import com.colorit.backend.views.input.AbstractInputView;
+
 public class UserUpdateEntity {
     private String newNickname;
     private String newEmail;
@@ -44,4 +46,11 @@ public class UserUpdateEntity {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
+
+    public static UserUpdateEntity fromView(AbstractInputView inputView) {
+        return  new UserUpdateEntity( inputView.getNickname(), inputView.getEmail(),
+                inputView.getPassword(), inputView.getNewPassword());
+    }
+
+
 }

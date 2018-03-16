@@ -1,6 +1,5 @@
 package com.colorit.backend.views.input;
 
-import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.views.ViewStatus;
 import com.colorit.backend.views.ViewStatusCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -69,6 +68,7 @@ public class UpdateView extends AbstractInputView {
         return viewStatus;
     }
 
+    @Override
     public String getNickname() {
         return nickname;
     }
@@ -77,6 +77,7 @@ public class UpdateView extends AbstractInputView {
         this.nickname = nickname;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
@@ -89,10 +90,16 @@ public class UpdateView extends AbstractInputView {
         return oldPasswrod;
     }
 
+    @Override
+    public String getPassword() {
+        return oldPasswrod;
+    }
+
     public void setOldPasswrod(String oldPasswrod) {
         this.oldPasswrod = oldPasswrod;
     }
 
+    @Override
     public String getNewPassword() {
         return newPassword;
     }
@@ -107,9 +114,5 @@ public class UpdateView extends AbstractInputView {
 
     public void setNewPasswordCheck(String newPasswordCheck) {
         this.newPasswordCheck = newPasswordCheck;
-    }
-
-    public UserUpdateEntity toEntity() {
-        return new UserUpdateEntity(nickname, email, oldPasswrod, newPassword);
     }
 }

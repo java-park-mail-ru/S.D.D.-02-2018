@@ -25,6 +25,12 @@ public class UpdatePasswordView extends AbstractInputView {
         return oldPassword;
     }
 
+    @Override
+    public String getPassword() {
+        return oldPassword;
+    }
+
+    @Override
     public String getNewPassword() {
         return newPassword;
     }

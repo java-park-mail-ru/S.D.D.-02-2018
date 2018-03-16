@@ -89,7 +89,7 @@ public class UserUpdateController extends AbstractController {
             return getResponseMaker().makeResponse(viewStatus, locale);
         }
 
-        final UserUpdateEntity updateEntity = updateView.toEntity();
+        final UserUpdateEntity updateEntity = UserUpdateEntity.fromView(updateView);
         UserServiceResponse userServiceResponse = userService.update(sessionNickname, updateEntity);
         if (userServiceResponse.isValid()) {
             if (updateEntity.getNewNickname() != null) {
@@ -130,7 +130,7 @@ public class UserUpdateController extends AbstractController {
         return getResponseMaker().makeResponse(userServiceResponse, locale, null);
     }
 
-    
+
     /**
      * Updates email of current user.
      *
