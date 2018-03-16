@@ -55,9 +55,9 @@ public class UserUpdateController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        final StorageResponse storageResponse = fileStorage.saveFile(avatar);
+        final StorageResponse storageResponse = fileStorage.saveImage(avatar);
         if (!storageResponse.isValid()) {
-            return getResponseMaker().makeResponse(storageResponse);
+            return getResponseMaker().makeResponse(storageResponse, locale);
         }
 
         UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
