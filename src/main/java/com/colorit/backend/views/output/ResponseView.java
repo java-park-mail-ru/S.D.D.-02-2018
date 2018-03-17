@@ -16,12 +16,12 @@ public class ResponseView<T> {
     public ResponseView() {
     }
 
-    public ResponseView(String field, T data) {
-        this.data.put(field, data);
+    public ResponseView(String field, T value) {
+        this.data.put(field, value);
     }
 
-    public void setData(String field, T data) {
-        this.data.put(field, data);
+    public void setData(String field, T value) {
+        this.data.put(field, value);
     }
 
     public Map<String, T> getData() {

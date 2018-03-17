@@ -2,15 +2,12 @@ package com.colorit.backend.storages;
 
 import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
-import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
-import com.colorit.backend.storages.storageimpls.LocalStorage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +17,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Map;
 
 @Component
 public class FileStorage {
@@ -41,8 +37,10 @@ public class FileStorage {
         Integer startX = 0, endX = image.getWidth();
         Integer startY = 0, endY = image.getHeight();
         Integer step = Math.abs(image.getHeight() - image.getWidth());
+        BufferedImage outImage = image;
+
         if (step.equals(0)) {
-            return image;
+            return outImage;
         }
 
         if (image.getHeight() > image.getWidth()) {
@@ -53,11 +51,12 @@ public class FileStorage {
             endX -= step;
         }
 
-        BufferedImage img = image.getSubimage(startX, startY, endX, endY); //fill in the corners of the desired crop location here
-        BufferedImage copyOfImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics g = copyOfImage.createGraphics();
-        g.drawImage(img, 0, 0, null);
-        return copyOfImage;
+        final BufferedImage subImage = image.getSubimage(startX, startY, endX, endY); //fill in the corners of the desired crop location here
+        BufferedImage copyOfImage = new BufferedImage(subImage.getWidth(), subImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = copyOfImage.createGraphics();
+        graphics.drawImage(subImage, 0, 0, null);
+        outImage = subImage;
+        return outImage;
     }
 
 
@@ -66,7 +65,7 @@ public class FileStorage {
      *
      * @param file - temp file which .
      * @return String - type of file
-     * @throws IOException
+     * @throws IOException - exception (may occour with file processing).
      */
     private String getFileContent(File file) throws IOException {
         try (InputStream is = new FileInputStream(file);

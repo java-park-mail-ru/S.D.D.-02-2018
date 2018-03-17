@@ -48,7 +48,7 @@ public class UserUpdateEntity {
     }
 
     public static UserUpdateEntity fromView(AbstractInputView inputView) {
-        return  new UserUpdateEntity( inputView.getNickname(), inputView.getEmail(),
+        return new UserUpdateEntity(inputView.getNickname(), inputView.getEmail(),
                 inputView.getPassword(), inputView.getNewPassword());
     }
 
