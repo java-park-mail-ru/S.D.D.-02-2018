@@ -34,13 +34,14 @@ public class FileStorage {
      * @return new image buffer.
      */
     private BufferedImage cropImage(BufferedImage image) {
-        Integer startX = 0, endX = image.getWidth();
-        Integer startY = 0, endY = image.getHeight();
+        Integer startX = 0;
+        Integer endX = image.getWidth();
+        Integer startY = 0;
+        Integer endY = image.getHeight();
         Integer step = Math.abs(image.getHeight() - image.getWidth());
-        BufferedImage outImage = image;
 
         if (step.equals(0)) {
-            return outImage;
+            return image;
         }
 
         if (image.getHeight() > image.getWidth()) {
@@ -51,12 +52,12 @@ public class FileStorage {
             endX -= step;
         }
 
-        final BufferedImage subImage = image.getSubimage(startX, startY, endX, endY); //fill in the corners of the desired crop location here
+        //fill in the corners of the desired crop location here
+        final BufferedImage subImage = image.getSubimage(startX, startY, endX, endY);
         BufferedImage copyOfImage = new BufferedImage(subImage.getWidth(), subImage.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics graphics = copyOfImage.createGraphics();
         graphics.drawImage(subImage, 0, 0, null);
-        outImage = subImage;
-        return outImage;
+        return subImage;
     }
 
 
