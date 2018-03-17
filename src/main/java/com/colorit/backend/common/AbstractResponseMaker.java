@@ -54,7 +54,7 @@ public abstract class AbstractResponseMaker {
 
     public ResponseEntity<ResponseView> makeResponse(StorageResponse response, Locale locale) {
         if (!response.isValid()) {
-            ResponseView responseView = new ResponseView();
+            final ResponseView responseView = new ResponseView();
             responseView.addError("file", messageSource.getMessage(response.getStatus().getMessage(),
                     null, locale));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseView);

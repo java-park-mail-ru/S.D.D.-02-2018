@@ -12,7 +12,7 @@ public enum UserServiceStatus implements IStatus {
     NOT_FOUND_STATE(6, "general", "not_found", "not_found", HttpStatus.NOT_FOUND),
     DB_ERROR_STATE(7, null, "server_error", "server_error", HttpStatus.INTERNAL_SERVER_ERROR);
 
-    private Integer id;
+    private final Integer id;
     private final String field;
     private final String message;
     private final String alternativeMessage;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateNicknameView extends AbstractInputView {
-    private String newNickname;
+    private final String newNickname;
 
     @JsonCreator
     public UpdateNicknameView(@JsonProperty("nickname") String newNickname) {
@@ -15,8 +15,8 @@ public class UpdateNicknameView extends AbstractInputView {
 
     @Override
     public ViewStatus checkValid() {
-        ViewStatus viewStatus = new ViewStatus();
-        if (newNickname == null || newNickname.equals("")) {
+        final ViewStatus viewStatus = new ViewStatus();
+        if (newNickname == null || newNickname.isEmpty()) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_NICKNAME);
         }
         return viewStatus;

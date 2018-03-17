@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserListEntityRepresentation {
-    private List<UserEntityRepresentation> userViewList = new ArrayList<>();
-    private Integer size;
+    private final List<UserEntityRepresentation> userViewList = new ArrayList<>();
+    private final Integer size;
 
     public UserListEntityRepresentation(List<UserEntity> userViews) {
         userViews.forEach(user -> this.userViewList.add(

@@ -28,12 +28,12 @@ public class UpdateView extends AbstractInputView {
 
     @Override
     public ViewStatus checkValid() {
-        ViewStatus viewStatus = new ViewStatus();
-        boolean emptyNick = nickname == null || nickname.equals("");
-        boolean emptyEmail = email == null || email.equals("");
-        boolean emptyOldPassword = oldPasswrod == null || oldPasswrod.equals("");
-        boolean emptyNewPassword = newPassword == null || newPassword.equals("");
-        boolean emptyNewPasswordCheck = newPasswordCheck == null || newPasswordCheck.equals("");
+        final ViewStatus viewStatus = new ViewStatus();
+        final boolean emptyNick = nickname == null || nickname.isEmpty();
+        final boolean emptyEmail = email == null || email.isEmpty();
+        final boolean emptyOldPassword = oldPasswrod == null || oldPasswrod.isEmpty();
+        final boolean emptyNewPassword = newPassword == null || newPassword.isEmpty();
+        final boolean emptyNewPasswordCheck = newPasswordCheck == null || newPasswordCheck.isEmpty();
 
         if (emptyNick && emptyEmail && emptyOldPassword && emptyNewPassword && emptyNewPasswordCheck) {
             viewStatus.addStatusCode(ViewStatusCode.EMPTY_UPDATE_FORM_STATE);

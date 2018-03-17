@@ -15,10 +15,10 @@ import java.util.Map;
 @Component
 @ConditionalOnExpression("'${heroku_var}' == 'true'")
 public class CloudinaryStorage implements IStorage {
-    private Cloudinary cloudinary;
-    private String apiKey;
-    private String apiSecret;
-    private String cloudName;
+    private final Cloudinary cloudinary;
+    private final String apiKey;
+    private final String apiSecret;
+    private final String cloudName;
 
     @Autowired
     public CloudinaryStorage(@Value("${cloud_name}") String cloudName,
@@ -27,14 +27,14 @@ public class CloudinaryStorage implements IStorage {
         this.cloudName = cloudName;
         this.apiSecret = apiSeret;
         this.apiKey = apiKey;
-        this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
+        this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ':' + apiSecret + '@' + cloudName);
 
     }
 
     @Override
     public String writeFile(File file) throws Exception {
-        Map cloudResponse = this.cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        JSONObject json = new JSONObject(cloudResponse);
+        final Map cloudResponse = this.cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        final JSONObject json = new JSONObject(cloudResponse);
         return json.getString("url");
     }
 

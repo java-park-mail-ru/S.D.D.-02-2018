@@ -23,13 +23,13 @@ public class UserRepositoryList {
         if (searchByNickname(newNickname) != null) {
             throw new ConstraintNameException();
         }
-        UserEntity exisitingUser = getByNickame(nickname);
+        final UserEntity exisitingUser = getByNickame(nickname);
         exisitingUser.setNickname(newNickname);
     }
 
     public void update(String nickname, UserUpdateEntity userUpdateEntity) throws ConstraintNameException,
             ConstraintEmailException, NoResultException {
-        UserEntity existingUser = getByNickame(nickname);
+        final UserEntity existingUser = getByNickame(nickname);
         if (userUpdateEntity.getNewNickname() != null) {
             if (searchByNickname(userUpdateEntity.getNewNickname()) != null) {
                 throw new ConstraintNameException();
@@ -49,7 +49,7 @@ public class UserRepositoryList {
     }
 
     public Long getPosition(String nickname) throws NoResultException {
-        UserEntity cur = searchByNickname(nickname);
+        final UserEntity cur = searchByNickname(nickname);
         return this.db.stream().filter(user -> cur.getRating() < user.getRating()).count();
     }
 
@@ -72,12 +72,12 @@ public class UserRepositoryList {
             throw new ConstraintEmailException();
         }
         final GameResults gameResults = new GameResults();
-        Random rnd = new Random();
-        Integer countGames = rnd.nextInt(20);
-        Integer countWins = rnd.nextInt(countGames);
-        Integer maxRat = 40;
-        Integer minRat = 20;
-        Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
+        final Random rnd = new Random();
+        final Integer countGames = rnd.nextInt(20);
+        final Integer countWins = rnd.nextInt(countGames);
+        final Integer maxRat = 40;
+        final Integer minRat = 20;
+        final Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
         gameResults.setCountGames(countGames);
         gameResults.setCountWins(countWins);
         gameResults.setRating(rating);

@@ -117,7 +117,7 @@ public class UserInfoController extends AbstractController {
             return getResponseMaker().makeUnauthorizedResponse(locale);
         }
 
-        UserServiceResponse userServiceResponse = userService.getPosition(sessionNickname);
+        final UserServiceResponse userServiceResponse = userService.getPosition(sessionNickname);
         return getResponseMaker().makeResponse(userServiceResponse, locale, "position");
     }
 

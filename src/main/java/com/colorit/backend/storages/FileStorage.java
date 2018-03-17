@@ -22,8 +22,8 @@ import java.nio.file.Files;
 
 @Component
 public class FileStorage {
-    private IStorage storage;
-    private static Logger LOGGER = LoggerFactory.getLogger(FileStorage.class);
+    private final IStorage storage;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileStorage.class);
 
     @Autowired
     FileStorage(@NotNull IStorage storage) {
@@ -38,16 +38,16 @@ public class FileStorage {
      * @return new image buffer.
      */
     private BufferedImage cropImage(BufferedImage image) {
-        Integer startX = 0;
         Integer endX = image.getWidth();
-        Integer startY = 0;
         Integer endY = image.getHeight();
-        Integer step = Math.abs(image.getHeight() - image.getWidth());
+        final Integer step = Math.abs(image.getHeight() - image.getWidth());
 
         if (step.equals(0)) {
             return image;
         }
 
+        Integer startX = 0;
+        Integer startY = 0;
         if (image.getHeight() > image.getWidth()) {
             startY += step / 2;
             endY -= step;
@@ -58,8 +58,8 @@ public class FileStorage {
 
         //fill in the corners of the desired crop location here
         final BufferedImage subImage = image.getSubimage(startX, startY, endX, endY);
-        BufferedImage copyOfImage = new BufferedImage(subImage.getWidth(), subImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics graphics = copyOfImage.createGraphics();
+        final BufferedImage copyOfImage = new BufferedImage(subImage.getWidth(), subImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        final Graphics graphics = copyOfImage.createGraphics();
         graphics.drawImage(subImage, 0, 0, null);
         return subImage;
     }
@@ -74,11 +74,11 @@ public class FileStorage {
      */
     private String getFileContent(File file) throws IOException {
         try (InputStream is = new FileInputStream(file);
-             BufferedInputStream bis = new BufferedInputStream(is);) {
-            AutoDetectParser parser = new AutoDetectParser();
-            Detector detector = parser.getDetector();
-            Metadata md = new Metadata();
-            MediaType mediaType = detector.detect(bis, md);
+             BufferedInputStream bis = new BufferedInputStream(is)) {
+            final AutoDetectParser parser = new AutoDetectParser();
+            final Detector detector = parser.getDetector();
+            final Metadata md = new Metadata();
+            final MediaType mediaType = detector.detect(bis, md);
             return mediaType.getType();
         }
     }
@@ -91,18 +91,18 @@ public class FileStorage {
      * @return StorageResponse.
      */
     public StorageResponse saveImage(MultipartFile multipartFile) {
-        StorageResponse<String> response = new StorageResponse<>();
+        final StorageResponse<String> response = new StorageResponse<>();
         try {
             if (!multipartFile.getContentType().contains("image")) {
                 response.setStatus(StorageStatus.INCORRECT_FILE_TYPE_STATE);
                 return response;
             }
 
-            File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
-            BufferedImage image = cropImage(ImageIO.read(multipartFile.getInputStream()));
+            final File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
+            final BufferedImage image = cropImage(ImageIO.read(multipartFile.getInputStream()));
             ImageIO.write(image, FilenameUtils.getExtension(file.getName()), file);
 
-            String name = storage.writeFile(file);
+            final String name = storage.writeFile(file);
             response.setStatus(StorageStatus.OK_STATE);
             response.setData(name);
         } catch (Exception ex) {
@@ -119,11 +119,11 @@ public class FileStorage {
      * @return StoreageResponse
      */
     public StorageResponse saveFile(MultipartFile multipartFile) {
-        StorageResponse<String> response = new StorageResponse<>();
+        final StorageResponse<String> response = new StorageResponse<>();
         try {
-            File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
+            final File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
             multipartFile.transferTo(file);
-            String name = storage.writeFile(file);
+            final String name = storage.writeFile(file);
             response.setStatus(StorageStatus.OK_STATE);
             response.setData(name);
         } catch (Exception e) {

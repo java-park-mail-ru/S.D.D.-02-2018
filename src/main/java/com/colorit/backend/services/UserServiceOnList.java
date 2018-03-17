@@ -48,7 +48,7 @@ public class UserServiceOnList implements IUserService {
     public UserServiceResponse createUser(SignUpView user) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.CREATED_STATE);
         try {
-            UserEntity userEntity = UserEntity.fromView(user);
+            final UserEntity userEntity = UserEntity.fromView(user);
             userRepository.save(userEntity);
         } catch (UserRepositoryList.ConstraintEmailException cEEx) {
             userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
@@ -104,7 +104,7 @@ public class UserServiceOnList implements IUserService {
     public UserServiceResponse getPosition(String nickname) {
         final UserServiceResponse<Long> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
-            Long position = userRepository.getPosition(nickname);
+            final Long position = userRepository.getPosition(nickname);
             userServiceResponse.setData(position);
         } catch (UserRepositoryList.NoResultException nREx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
@@ -114,8 +114,8 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse getUsers(Integer limit, Integer offset) {
-        UserServiceResponse<UserListEntityRepresentation> userServiceresponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
-        List<UserEntity> userEntityList = userRepository.getListUsers(limit, offset);
+        final UserServiceResponse<UserListEntityRepresentation> userServiceresponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
+        final List<UserEntity> userEntityList = userRepository.getListUsers(limit, offset);
         userServiceresponse.setData(new UserListEntityRepresentation(userEntityList));
         return userServiceresponse;
     }
@@ -123,16 +123,16 @@ public class UserServiceOnList implements IUserService {
     @Override
     public UserServiceResponse getUsersCount() {
         final UserServiceResponse<Integer> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
-        Integer position = userRepository.getCount();
+        final Integer position = userRepository.getCount();
         userServiceResponse.setData(position);
         return userServiceResponse;
     }
 
     @Override
     public UserServiceResponse userExists(String nickname) {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
-            UserEntity userEntity = userRepository.getByNickame(nickname);
+            final UserEntity userEntity = userRepository.getByNickame(nickname);
         } catch (UserRepositoryList.NoResultException nREx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }

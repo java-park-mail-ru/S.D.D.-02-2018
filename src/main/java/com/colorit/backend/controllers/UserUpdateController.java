@@ -26,7 +26,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping(path = "/api/user/")
 public class UserUpdateController extends AbstractController {
-    private FileStorage fileStorage;
+    private final FileStorage fileStorage;
     private final IUserService userService;
 
     @Autowired
@@ -60,7 +60,7 @@ public class UserUpdateController extends AbstractController {
             return getResponseMaker().makeResponse(storageResponse, locale);
         }
 
-        UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
+        final UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
                 (String) storageResponse.getData());
         return getResponseMaker().makeResponse(userServiceResponse, locale, "avatar");
     }
@@ -90,7 +90,7 @@ public class UserUpdateController extends AbstractController {
         }
 
         final UserUpdateEntity updateEntity = UserUpdateEntity.fromView(updateView);
-        UserServiceResponse userServiceResponse = userService.update(sessionNickname, updateEntity);
+        final UserServiceResponse userServiceResponse = userService.update(sessionNickname, updateEntity);
         if (userServiceResponse.isValid()) {
             if (updateEntity.getNewNickname() != null) {
                 httpSession.setAttribute(getSessionKey(), updateEntity.getNewNickname());

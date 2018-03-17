@@ -12,14 +12,14 @@ import java.io.File;
 @Component
 @ConditionalOnExpression("'${heroku_var}' != 'true'")
 public class LocalStorage implements IStorage {
-    private String staticContentPath;
+    private final String staticContentPath;
     private MessageDigest md5;
 
     public LocalStorage() {
-        String userHome = System.getenv("os.home");
+        final String userHome = System.getenv("os.home");
         staticContentPath = userHome + "/static";
         try {
-            md5 = java.security.MessageDigest.getInstance("md5");
+            md5 = MessageDigest.getInstance("md5");
         } catch (NoSuchAlgorithmException nSAe) {
             throw new RuntimeException(nSAe.getCause());
         }
