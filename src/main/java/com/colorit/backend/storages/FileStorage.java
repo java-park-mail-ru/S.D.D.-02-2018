@@ -4,6 +4,7 @@ import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
 import com.colorit.backend.storages.storageimpls.CloudinaryStorage;
 import com.colorit.backend.storages.storageimpls.LocalStorage;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.validation.constraints.NotNull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -23,18 +25,11 @@ import java.util.Map;
 @Component
 public class FileStorage {
     private IStorage storage;
-    private static final String USER_HOME = System.getProperty("os.name");
 
     @Autowired
-    FileStorage(@Value("${heroku_var}") String herokuVar) {
-        Map<String, String> envVars = System.getenv();
-        if (herokuVar != null) {
-            this.storage = new CloudinaryStorage();
-        } else {
-            this.storage = new LocalStorage(USER_HOME);
-        }
+    FileStorage(@NotNull IStorage storage) {
+        this.storage = storage;
     }
-
 
     /**
      * Crops image. Make it square (w == h).
@@ -101,7 +96,7 @@ public class FileStorage {
 
             File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
             BufferedImage image = cropImage(ImageIO.read(multipartFile.getInputStream()));
-            ImageIO.write(image, org.apache.commons.io.FilenameUtils.getExtension(file.getName()), file);
+            ImageIO.write(image, FilenameUtils.getExtension(file.getName()), file);
 
             String name = storage.writeFile(file);
             response.setStatus(StorageStatus.OK_STATE);

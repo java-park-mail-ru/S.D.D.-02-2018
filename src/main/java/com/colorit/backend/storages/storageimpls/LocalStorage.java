@@ -1,18 +1,22 @@
 package com.colorit.backend.storages.storageimpls;
 
 import com.colorit.backend.storages.IStorage;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import java.io.File;
 
-
+@Component
+@ConditionalOnExpression("'${heroku_var}' != 'true'")
 public class LocalStorage implements IStorage {
     private String staticContentPath;
     private MessageDigest md5;
 
-    public LocalStorage(String userHome) {
+    public LocalStorage() {
+        String userHome = System.getenv("os.home");
         staticContentPath = userHome + "/static";
         try {
             md5 = java.security.MessageDigest.getInstance("md5");

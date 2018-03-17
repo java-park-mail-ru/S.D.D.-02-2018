@@ -4,18 +4,31 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.colorit.backend.storages.IStorage;
 import org.cloudinary.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Map;
 
+@Component
+@ConditionalOnExpression("'${heroku_var}' == 'true'")
 public class CloudinaryStorage implements IStorage {
     private Cloudinary cloudinary;
-    private static String apiKey = System.getenv().get("API_KEY");
-    private static String apiSecret = System.getenv().get("API_SECRET");
-    private static String cloudName = System.getenv().get("CLOUD_NAME");
+    private String apiKey;
+    private String apiSecret;
+    private String cloudName;
 
-    public CloudinaryStorage() {
+    @Autowired
+    public CloudinaryStorage(@Value("${cloud_name}") String cloudName,
+                      @Value("${api_key}") String apiKey,
+                      @Value("${api_secret}") String apiSeret) {
+        this.cloudName = cloudName;
+        this.apiSecret = apiSeret;
+        this.apiKey = apiKey;
         this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
+
     }
 
     @Override

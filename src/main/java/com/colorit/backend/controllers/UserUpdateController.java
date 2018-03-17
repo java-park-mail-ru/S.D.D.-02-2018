@@ -62,7 +62,7 @@ public class UserUpdateController extends AbstractController {
 
         UserServiceResponse userServiceResponse = userService.updateAvatar(sessionNickname,
                 (String) storageResponse.getData());
-        return getResponseMaker().makeResponse(userServiceResponse, locale, null);
+        return getResponseMaker().makeResponse(userServiceResponse, locale, "avatar");
     }
 
 

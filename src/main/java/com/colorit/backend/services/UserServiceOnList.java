@@ -163,10 +163,11 @@ public class UserServiceOnList implements IUserService {
 
     @Override
     public UserServiceResponse updateAvatar(String nickname, String avatarPath) {
-        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
+        final UserServiceResponse<String> userServiceResponse = new UserServiceResponse<>(UserServiceStatus.OK_STATE);
         try {
             final UserEntity existingEntity = userRepository.getByNickame(nickname);
             existingEntity.setAvatarPath(avatarPath);
+            userServiceResponse.setData(avatarPath);
         } catch (UserRepositoryList.NoResultException nREx) {
             userServiceResponse.setStatus(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }

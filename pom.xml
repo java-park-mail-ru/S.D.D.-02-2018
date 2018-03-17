@@ -81,7 +81,7 @@
             <artifactId>spring-security-core</artifactId>
             <version>3.1.0.RELEASE</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>
