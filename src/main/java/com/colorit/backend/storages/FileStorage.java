@@ -26,11 +26,10 @@ public class FileStorage {
     private static final String USER_HOME = System.getProperty("os.name");
 
     @Autowired
-    FileStorage(@Value("${heroku_var}") String herokuVar, @Value("${api_secret}") String apiSecret,
-                @Value("${api_key}") String apiKey, @Value("${cloud_name}") String cloudName) {
+    FileStorage(@Value("${heroku_var}") String herokuVar) {
         Map<String, String> envVars = System.getenv();
         if (herokuVar != null) {
-            this.storage = new CloudinaryStorage(apiKey, apiSecret, cloudName);
+            this.storage = new CloudinaryStorage();
         } else {
             this.storage = new LocalStorage(USER_HOME);
         }

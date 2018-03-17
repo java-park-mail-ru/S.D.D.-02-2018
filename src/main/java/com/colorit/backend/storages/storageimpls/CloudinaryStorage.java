@@ -4,27 +4,17 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.colorit.backend.storages.IStorage;
 import org.cloudinary.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.Map;
 
 public class CloudinaryStorage implements IStorage {
     private Cloudinary cloudinary;
-    private final String apiKey;
-    private final String apiSecret;
-    private final String cloudName;
+    private static String apiKey = System.getenv().get("API_KEY");
+    private static String apiSecret = System.getenv().get("API_SECRET");
+    private static String cloudName = System.getenv().get("CLOUD_NAME");
 
-    public CloudinaryStorage(String apiKey, String apiSecret, String cloudName) {
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.cloudName = cloudName;
+    public CloudinaryStorage() {
         this.cloudinary = new Cloudinary("cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName);
     }
 

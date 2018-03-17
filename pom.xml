@@ -32,9 +32,9 @@
         </dependency>
 
         <dependency>
-            <groupId>aspectj</groupId>
+            <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.5.4</version>
+            <version>1.6.7</version>
         </dependency>
 
         <dependency>
@@ -81,10 +81,7 @@
             <artifactId>spring-security-core</artifactId>
             <version>3.1.0.RELEASE</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--</dependency>-->
+        
     </dependencies>
 
     <build>
@@ -127,7 +124,6 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
     <repositories>
