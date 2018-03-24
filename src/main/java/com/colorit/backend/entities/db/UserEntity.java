@@ -66,14 +66,17 @@ public class UserEntity {
         return gameResults;
     }
 
+    @Transient
     public Integer getCountGames() {
         return gameResults.getCountGames();
     }
 
+    @Transient
     public Integer getCountWins() {
         return gameResults.getCountWins();
     }
 
+    @Transient
     public Integer getRating() {
         return gameResults.getRating();
     }
@@ -86,6 +89,7 @@ public class UserEntity {
         this.id = id;
     }
 
+    @Transient
     public void setRating(Integer rating) {
         this.gameResults.setRating(rating);
     }
@@ -106,26 +110,30 @@ public class UserEntity {
         this.avatarPath = avatarPath;
     }
 
+    @Transient
     public void setCountGames(Integer countGames) {
         gameResults.setCountGames(countGames);
     }
 
-
+    @Transient
     public void setCountWins(Integer countWins) {
         this.gameResults.setCountWins(countWins);
     }
 
+    @Transient
     public void copy(UserUpdateEntity other) {
         this.nickname = other.getNewNickname() != null ? other.getNewNickname() : this.nickname;
         this.passwordHash = other.getNewPassword() != null ? other.getNewPassword() : this.passwordHash;
         this.email = other.getNewEmail() != null ? other.getNewEmail() : this.email;
     }
 
+    @Transient
     public UserEntityRepresentation toRepresentation() {
         return new UserEntityRepresentation(nickname, email, avatarPath, gameResults.getRating(),
                 gameResults.getCountWins(), gameResults.getCountGames());
     }
 
+    @Transient
     public static UserEntity fromView(AbstractInputView view) {
         return new UserEntity(
                 view.getNickname(),

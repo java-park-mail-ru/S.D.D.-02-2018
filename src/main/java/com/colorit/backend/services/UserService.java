@@ -1,6 +1,7 @@
 package com.colorit.backend.services;
 
 
+import com.colorit.backend.entities.db.GameResults;
 import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.GameRepository;
@@ -13,14 +14,12 @@ import com.colorit.backend.views.input.SignUpView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.sql.SQLException;
 
 @Service
 public class UserService implements IUserService {
@@ -50,147 +49,134 @@ public class UserService implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        //UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
-        // TODO aspect, checks dataaceess exception
-        //try {
-            UserEntity userEntity = userRepository.getByNickname(nickname);
-            if (userEntity != null) {
-                return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userEntity);
-            } else {
-                return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-            }
-       // } catch (DataAccessException dAEx) {
-       //     userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
-       // }
-        //return userServiceResponse;
+        UserEntity userEntity = userRepository.getByNickname(nickname);
+        if (userEntity != null) {
+            LOGGER.info("info returned about user {}", nickname);
+            return new UserServiceResponse<>(UserServiceStatus.OK_STATE,
+                    new UserEntityRepresentation(userEntity));
+        } else {
+            LOGGER.info("no user found user {}", nickname);
+            return new UserServiceResponse(UserServiceStatus.NOT_FOUND_STATE);
+        }
     }
 
     @Override
-    public UserServiceResponse authenticateUser(SignInView userEntity) {
-        //UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
-        //try {
-        final UserEntity existingUserEntity = userRepository.getByNickname(userEntity.getNickname());
-        if (existingUserEntity != null) {
-            if (!checkPasswords(existingUserEntity.getPasswordHash(), userEntity.getPassword())) {
-                return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
-            }
-            return new UserServiceResponse(UserServiceStatus.OK_STATE);
-        } else {
+    public UserServiceResponse authenticateUser(SignInView userView) {
+        final UserEntity existingUserEntity = userRepository.getByNickname(userView.getNickname());
+        if (existingUserEntity == null) {
+            LOGGER.info("cant authenticate user {}", userView.getNickname());
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
-//        } catch (DataAccessException dAEx) {
-//            userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
-//        }
-//        return userServiceResponse;
+
+        if (!checkPasswords(existingUserEntity.getPasswordHash(), userView.getPassword())) {
+            LOGGER.info("cant authenticate user {}", userView.getNickname());
+            return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
+        }
+
+        LOGGER.info("authenticated user {}", userView.getNickname());
+        return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
+
     @Override
     public UserServiceResponse userExists(String nickname) {
-        //final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
-        //try {
         if (!userRepository.existsByNickname(nickname)) {
+            LOGGER.info("no such user {}", nickname);
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-            //userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
         }
+        LOGGER.info("user found {}", nickname);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
-       // } catch (DataAccessException daEx) {
-       //     LOGGER.error("Error DataBase", daEx);
-       //     userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
-       // }
-        //return userServiceResponse;
     }
 
     @Override
     public UserServiceResponse createUser(SignUpView signUpView) {
-//        try {
-            // its password, because no ope
+        GameResults gameResults = new GameResults();
+        try {
             UserEntity userEntity = UserEntity.fromView(signUpView);
             String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
+            this.gameRepository.save(gameResults);
+            userEntity.setGameResults(gameResults);
             this.userRepository.save(userEntity);
-            return new UserServiceResponse(UserServiceStatus.CREATED_STATE);
-//       // } catch (DataIntegrityViolationException dIVEx) {
-//        SQLException sqlEx = (SQLException)dIVEx.getCause().getCause();
-//        LOGGER.error("Constraint error: {}", dIVEx.getLocalizedMessage());
-//        if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
-         //   ConstraintViolationException cEx = (ConstraintViolationException)dIVEx.getCause();
-//            if (cEx.getConstraintName().equals("nickname_constraint")) {
-//                userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
-//            } else {
-//                userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_EMAIL_STATE);
-//            }
-//        } catch (DataAccessException dAEx) {
-//            userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
-//        }
-//        return userServiceResponse;
-    }
-
-    public UserServiceResponse updateEmail(String nickname, String email) {
-        UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
-        try {
-            UserEntity existingEntity = userRepository.getByNickname(nickname);
-            if (existingEntity != null) {
-                existingEntity.setEmail(email);
-                userRepository.save(existingEntity);
-            } else {
-                userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
-            }
-        } catch (DataIntegrityViolationException dIVex) {
-            SQLException sqlEx = (SQLException)dIVex.getCause().getCause();
-            if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
-                userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_NAME_STATE);
-            } else {
-                userServiceResponse.setStatusCode(UserServiceStatusCode.CONFLICT_EMAIL_STATE);
-            }
-            LOGGER.error("Constraint error: {}", sqlEx.getLocalizedMessage());
-        } catch (DataAccessException dAEx) {
-
-            userServiceResponse.setStatusCode(UserServiceStatusCode.DB_ERROR_STATE);
-            LOGGER.error("Error DataBase {}", dAEx.getLocalizedMessage());
+            LOGGER.info("user created", userEntity.getNickname());
+        } catch (DataIntegrityViolationException dIVEx) {
+            this.gameRepository.delete(gameResults);
+            throw dIVEx;
         }
-            return userServiceResponse;
+        return new UserServiceResponse(UserServiceStatus.CREATED_STATE);
     }
 
+    @Override
+    public UserServiceResponse updateEmail(String nickname, String email) {
+        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        if (existingEntity != null) {
+            existingEntity.setEmail(email);
+            userRepository.save(existingEntity);
+        } else {
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return new UserServiceResponse(UserServiceStatus.OK_STATE);
+    }
 
     @Override
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {
-        final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatusCode.OK_STATE);
-        try {
-            UserEntity existingEntity = userRepository.getByNickname(nickname);
-            final UserEntity existingEntity = userRepository.getByNickname(nickname);
-            if (existingEntity != null) {
-                existingEntity.setEmail(email);
-                userRepository.save(existingEntity);
-                if (checkPasswords(existingEntity.getPasswordHash(), oldPassword)) {
-                    existingEntity.setPasswordHash(
-                            passwordEncoder().encode(PASSWORD_SAULT + newPassword + PASSWORD_SAULT)
-                    );
-                    userRepository.save(existingEntity);
-                    LOGGER.info("User with nickname: {} changed password");
-                } else {
-                    userServiceResponse.setStatusCode(UserServiceStatusCode.PASSWORD_MATCH_ERROR_STATE);
-                    LOGGER.info("User with nickname: {} input incorrect oldPassword");
-                }
-            } else {
-                userServiceResponse.setStatusCode(UserServiceStatusCode.NAME_MATCH_ERROR_STATE);
-            }
+        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        if (existingEntity == null) {
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+
+        if (!checkPasswords(existingEntity.getPasswordHash(), oldPassword)) {
+            return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
+        }
+
+        existingEntity.setPasswordHash(passwordEncoder().encode(passwordSault + newPassword + passwordSault));
+        userRepository.save(existingEntity);
+        return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
     @Override
     public UserServiceResponse updateNickname(String nickname, String newNickname) {
-        return null;
+        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        if (existingEntity == null) {
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+
+        existingEntity.setNickname(newNickname);
+        userRepository.save(existingEntity);
+        return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
     @Override
     public UserServiceResponse updateAvatar(String nickname, String avatar) {
+        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        if (existingEntity == null) {
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
 
-            //return null;
+        existingEntity.setAvatarPath(avatar);
+        userRepository.save(existingEntity);
+        return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
     @Override
     public UserServiceResponse update(String nickname, UserUpdateEntity updateEntity) {
-        return null;
-    }
+        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        if (existingEntity == null) {
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
 
+        if (updateEntity.getOldPassword() != null) {
+            if (!checkPasswords(existingEntity.getPasswordHash(), updateEntity.getOldPassword())) {
+                return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
+            } else {
+                updateEntity.setNewPassword(passwordEncoder().encode(
+                        passwordSault + updateEntity.getNewPassword() + passwordSault));
+            }
+        }
+
+        existingEntity.copy(updateEntity);
+        userRepository.save(existingEntity);
+        return new UserServiceResponse(UserServiceStatus.OK_STATE);
+    }
 
 
     @Override
@@ -207,7 +193,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserServiceResponse getUsersCount() {
-        return null;
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepository.count());
     }
 
     @Override

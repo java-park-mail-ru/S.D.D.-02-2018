@@ -1,6 +1,8 @@
 package com.colorit.backend.views.entity.representations;
 
 
+import com.colorit.backend.entities.db.UserEntity;
+
 /**
  * An abstract class that represents output view.
  *
@@ -28,6 +30,15 @@ public class UserEntityRepresentation {
         this.countWins = countWins;
         this.rating = rating;
         this.countGames = countGames;
+    }
+
+    public UserEntityRepresentation(UserEntity userEntity) {
+        this.nickname = userEntity.getNickname();
+        this.email = userEntity.getEmail();
+        this.avatar = userEntity.getAvatarPath();
+        this.countWins = userEntity.getCountWins();
+        this.rating = userEntity.getRating();
+        this.countGames = userEntity.getCountGames();
     }
 
     public String getNickname() {
