@@ -2,15 +2,16 @@ package com.colorit.backend.entities.db;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "GameResults")
 public class GameResults {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer countGames = 0;
     private Integer countWins = 0;
-    private Integer rating;
+    private Integer rating = 0;
 
+    @Column(name = "rating", columnDefinition = "INTEGER DEFAULT 0")
     public Integer getRating() {
         return rating;
     }

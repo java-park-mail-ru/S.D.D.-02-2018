@@ -1,6 +1,5 @@
 package com.colorit.backend.services;
 
-
 import com.colorit.backend.entities.db.GameResults;
 import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
@@ -8,7 +7,7 @@ import com.colorit.backend.repositories.GameRepository;
 import com.colorit.backend.repositories.UserRepository;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
-import com.colorit.backend.views.entity.representations.UserEntityRepresentation;
+import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
 import com.colorit.backend.views.input.SignInView;
 import com.colorit.backend.views.input.SignUpView;
 import org.slf4j.Logger;
@@ -20,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserService implements IUserService {
@@ -52,8 +53,7 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.getByNickname(nickname);
         if (userEntity != null) {
             LOGGER.info("info returned about user {}", nickname);
-            return new UserServiceResponse<>(UserServiceStatus.OK_STATE,
-                    new UserEntityRepresentation(userEntity));
+            return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userEntity.toRepresentation());
         } else {
             LOGGER.info("no user found user {}", nickname);
             return new UserServiceResponse(UserServiceStatus.NOT_FOUND_STATE);
@@ -94,9 +94,23 @@ public class UserService implements IUserService {
             UserEntity userEntity = UserEntity.fromView(signUpView);
             String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
+            final Random rnd = new Random();
+            final Integer countGames = rnd.nextInt(20);
+            Integer countWins = 0;
+            if (countGames != 0) {
+                countWins = rnd.nextInt(countGames);
+            }
+            final Integer maxRat = 40;
+            final Integer minRat = 20;
+            final Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
+            gameResults.setCountGames(countGames);
+            gameResults.setCountWins(countWins);
+            gameResults.setRating(rating);
+
             this.gameRepository.save(gameResults);
             userEntity.setGameResults(gameResults);
             this.userRepository.save(userEntity);
+
             LOGGER.info("user created", userEntity.getNickname());
         } catch (DataIntegrityViolationException dIVEx) {
             this.gameRepository.delete(gameResults);
@@ -178,17 +192,10 @@ public class UserService implements IUserService {
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
-
     @Override
     public UserServiceResponse getUsers(Integer limit, Integer offset) {
-//        UserServiceResponse<UserEntityRepresentation> userServiceResponse =
-//                new UserServiceResponse<>(UserServiceStatus.OK_STATE);
-//        try {
-//            List<UserEntity> userEntityList = userRepository.find
-//        } catch (DataAccessException dAEx) {
-//
-//        }
-        return null;
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE,
+                new UserListEntityRepresentation(userRepository.getUsers()));
     }
 
     @Override

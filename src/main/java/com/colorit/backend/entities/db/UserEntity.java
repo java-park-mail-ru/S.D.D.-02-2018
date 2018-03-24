@@ -18,7 +18,6 @@ public class UserEntity {
     private String email;
     private String passwordHash;
     private String avatarPath;
-
     private GameResults gameResults;
 
     public UserEntity() {
@@ -62,23 +61,9 @@ public class UserEntity {
     }
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="game_results_id", nullable=true)
     public GameResults getGameResults() {
         return gameResults;
-    }
-
-    @Transient
-    public Integer getCountGames() {
-        return gameResults.getCountGames();
-    }
-
-    @Transient
-    public Integer getCountWins() {
-        return gameResults.getCountWins();
-    }
-
-    @Transient
-    public Integer getRating() {
-        return gameResults.getRating();
     }
 
     public void setGameResults(GameResults gameResults) {
@@ -87,11 +72,6 @@ public class UserEntity {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Transient
-    public void setRating(Integer rating) {
-        this.gameResults.setRating(rating);
     }
 
     public void setPasswordHash(String passwordHash) {
@@ -108,6 +88,26 @@ public class UserEntity {
 
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    @Transient
+    public void setRating(Integer rating) {
+        this.gameResults.setRating(rating);
+    }
+
+    @Transient
+    public Integer getCountGames() {
+        return gameResults.getCountGames();
+    }
+
+    @Transient
+    public Integer getCountWins() {
+        return gameResults.getCountWins();
+    }
+
+    @Transient
+    public Integer getRating() {
+        return gameResults.getRating();
     }
 
     @Transient
