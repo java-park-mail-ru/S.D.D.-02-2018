@@ -8,6 +8,12 @@ public class UserServiceResponse<T>  extends AbstractServiceResponse<T> {
         super(userServiceStatus);
     }
 
+    public UserServiceResponse(UserServiceStatus userServiceStatus, T data) {
+        super(userServiceStatus);
+        super.setData(data);
+    }
+
+
     @Override
     public UserServiceStatus getStatus() {
         return (UserServiceStatus) super.getStatus();
