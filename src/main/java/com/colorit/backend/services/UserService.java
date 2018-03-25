@@ -14,12 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -195,7 +197,8 @@ public class UserService implements IUserService {
     @Override
     public UserServiceResponse getUsers(Integer limit, Integer offset) {
         return new UserServiceResponse<>(UserServiceStatus.OK_STATE,
-                new UserListEntityRepresentation(userRepository.getUsers()));
+                new UserListEntityRepresentation(userRepository.getUsers(
+                        new UserRepository.OffsetLimitPageable(offset, limit))));
     }
 
     @Override
@@ -205,6 +208,11 @@ public class UserService implements IUserService {
 
     @Override
     public UserServiceResponse getPosition(String nickname) {
-        return null;
+        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        if (existingEntity == null) {
+            LOGGER.info("NO such user {}", nickname);
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
+        }
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepository.getPosition("bbb"));
     }
 }
