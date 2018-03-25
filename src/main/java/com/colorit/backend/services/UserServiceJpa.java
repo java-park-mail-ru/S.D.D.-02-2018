@@ -20,14 +20,14 @@ import javax.validation.constraints.NotNull;
 import java.util.Random;
 
 @Service
-public class UserService implements IUserService {
+public class UserServiceJpa implements IUserService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceJpa.class);
     private static final String passwordSault = "sault";
 
     @Autowired
-    public UserService(@NotNull UserRepository repository, @NotNull GameRepository gameRepository) {
+    public UserServiceJpa(@NotNull UserRepository repository, @NotNull GameRepository gameRepository) {
         this.userRepository = repository;
         this.gameRepository = gameRepository;
     }
