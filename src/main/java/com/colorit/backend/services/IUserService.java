@@ -1,16 +1,15 @@
 package com.colorit.backend.services;
 
+import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.services.responses.UserServiceResponse;
-import com.colorit.backend.views.input.SignInView;
-import com.colorit.backend.views.input.SignUpView;
 
 public interface IUserService {
-    UserServiceResponse createUser(SignUpView userEntity);
+    UserServiceResponse createUser(UserEntity userEntity);
 
     UserServiceResponse getUser(String nickname);
 
-    UserServiceResponse authenticateUser(SignInView userEntity);
+    UserServiceResponse authenticateUser(UserEntity userEntity);
 
     UserServiceResponse updateNickname(String nickname, String newNickname);
 

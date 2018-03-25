@@ -1,4 +1,4 @@
-package com.color_it.backend;
+package com.colorit.backend;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -8,8 +8,6 @@ import com.colorit.backend.repositories.UserRepository;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
-import com.colorit.backend.views.input.SignInView;
-import com.colorit.backend.views.input.SignUpView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,19 +58,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserServiceResponse authenticateUser(SignInView userView) {
-        final UserEntity existingUserEntity = userRepository.getByNickname(userView.getNickname());
+    public UserServiceResponse authenticateUser(UserEntity userEntity) {
+        final UserEntity existingUserEntity = userRepository.getByNickname(userEntity.getNickname());
         if (existingUserEntity == null) {
-            LOGGER.info("cant authenticate user {}", userView.getNickname());
+            LOGGER.info("cant authenticate user {}", userEntity.getNickname());
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
 
-        if (!checkPasswords(existingUserEntity.getPasswordHash(), userView.getPassword())) {
-            LOGGER.info("cant authenticate user {}", userView.getNickname());
+        if (!checkPasswords(existingUserEntity.getPasswordHash(), userEntity.getPasswordHash())) {
+            LOGGER.info("cant authenticate user {}", userEntity.getNickname());
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
         }
 
-        LOGGER.info("authenticated user {}", userView.getNickname());
+        LOGGER.info("authenticated user {}", userEntity.getNickname());
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
@@ -87,24 +85,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserServiceResponse createUser(SignUpView signUpView) {
+    public UserServiceResponse createUser(UserEntity userEntity) {
         GameResults gameResults = new GameResults();
         try {
-            UserEntity userEntity = UserEntity.fromView(signUpView);
             String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
-            final Random rnd = new Random();
-            final Integer countGames = rnd.nextInt(20);
-            Integer countWins = 0;
-            if (countGames != 0) {
-                countWins = rnd.nextInt(countGames);
-            }
-            final Integer maxRat = 40;
-            final Integer minRat = 20;
-            final Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
-            gameResults.setCountGames(countGames);
-            gameResults.setCountWins(countWins);
-            gameResults.setRating(rating);
+//            final Random rnd = new Random();
+//            final Integer countGames = rnd.nextInt(20);
+//            Integer countWins = 0;
+//            if (countGames != 0) {
+//                countWins = rnd.nextInt(countGames);
+//            }
+//            final Integer maxRat = 40;
+//            final Integer minRat = 20;
+//            final Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
+//            gameResults.setCountGames(countGames);
+//            gameResults.setCountWins(countWins);
+//            gameResults.setRating(rating);
 
             this.gameRepository.save(gameResults);
             userEntity.setGameResults(gameResults);

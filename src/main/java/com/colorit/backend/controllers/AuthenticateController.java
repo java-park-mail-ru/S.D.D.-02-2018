@@ -1,6 +1,7 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AuthenticateResponseMaker;
+import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.output.ResponseView;
@@ -37,7 +38,7 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.authenticateUser(signInView);
+        final UserServiceResponse userServiceResponse = userService.authenticateUser(UserEntity.fromView(signInView));
 
         if (!userServiceResponse.isValid()) {
             return getResponseMaker().makeResponse(userServiceResponse, locale,  null);
@@ -65,7 +66,7 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.createUser(signUpView);
+        final UserServiceResponse userServiceResponse = userService.createUser(UserEntity.fromView(signUpView));
         if (!userServiceResponse.isValid()) {
             return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
