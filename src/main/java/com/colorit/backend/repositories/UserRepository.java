@@ -1,17 +1,13 @@
 package com.colorit.backend.repositories;
 
 import com.colorit.backend.entities.db.UserEntity;
-import com.colorit.backend.entities.db.GameResults;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 
