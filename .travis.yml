@@ -5,8 +5,8 @@ install: true
 
 env: DB=pgsql
 before_script:
-  psql -c "CREATE DATABASE t;" -U postgres;
-  #psql -c "CREATE DATABASE t;" -U mavr;
+  - psql -c "CREATE DATABASE t;" -U postgres
+  - psql -c "CREATE USER mavr WITH PASSWORD '951103' SUPERUSER;" -U postgres
 
 cache:
   directories: $HOME/.m2
