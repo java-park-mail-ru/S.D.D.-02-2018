@@ -86,16 +86,20 @@
             <version>1.0.2.Final</version>
         </dependency>
 
-         <!--Hibernate -->
+        <!--Hibernate -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.3.0.CR1</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.3.0.CR1</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.postgresql</groupId>
