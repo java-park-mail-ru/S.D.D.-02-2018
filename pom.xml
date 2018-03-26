@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.2.15.Final</version>
+            <version>5.2.13.Final</version>
         </dependency>
 
 
@@ -146,11 +146,11 @@
             <version>5.0.4.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>5.0.4.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-orm</artifactId>-->
+            <!--<version>5.0.4.RELEASE</version>-->
+        <!--</dependency>-->
 
 
         <dependency>
