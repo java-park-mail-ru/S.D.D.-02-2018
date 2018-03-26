@@ -164,6 +164,11 @@
             <version>1.9.0.RC2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.github.javafaker</groupId>
