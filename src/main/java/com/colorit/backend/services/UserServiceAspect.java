@@ -17,7 +17,7 @@ import java.sql.SQLException;
 @Component
 public class UserServiceAspect {
     private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceAspect.class);
-    @Around(value = "execution (* com.colorit.backend.services.UserService.* (..)))")
+    @Around(value = "execution (* com.colorit.backend.services.UserServiceJpa.* (..)))")
     public UserServiceResponse errorHandler(ProceedingJoinPoint procPoint) {
         try {
             LOGGER.info("Call {}", procPoint.getSignature().getName());

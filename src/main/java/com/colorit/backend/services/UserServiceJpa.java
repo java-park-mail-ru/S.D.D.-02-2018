@@ -11,14 +11,15 @@ import com.colorit.backend.views.entity.representations.UserListEntityRepresenta
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Random;
 
+@Primary
 @Service
 public class UserServiceJpa implements IUserService {
     private final UserRepository userRepository;
@@ -120,7 +121,7 @@ public class UserServiceJpa implements IUserService {
         final UserEntity existingEntity = userRepository.getByNickname(nickname);
         if (existingEntity != null) {
             existingEntity.setEmail(email);
-            userRepository.save(existingEntity);
+            userRepository.saveAndFlush(existingEntity);
         } else {
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
@@ -151,7 +152,7 @@ public class UserServiceJpa implements IUserService {
         }
 
         existingEntity.setNickname(newNickname);
-        userRepository.save(existingEntity);
+        userRepository.saveAndFlush(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
@@ -184,7 +185,7 @@ public class UserServiceJpa implements IUserService {
         }
 
         existingEntity.copy(updateEntity);
-        userRepository.save(existingEntity);
+        userRepository.saveAndFlush(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
