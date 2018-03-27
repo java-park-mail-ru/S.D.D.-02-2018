@@ -40,10 +40,7 @@ public class UserServiceJpa implements IUserService {
 
     private boolean checkPasswords(String internalPassword, String externalPassword) {
         final String saultedPassword = PASSWORD_SAULT + externalPassword + PASSWORD_SAULT;
-        if (!passwordEncoder().matches(saultedPassword, internalPassword)) {
-            return false;
-        }
-        return true;
+        return passwordEncoder().matches(saultedPassword, internalPassword);
     }
 
     @Override
