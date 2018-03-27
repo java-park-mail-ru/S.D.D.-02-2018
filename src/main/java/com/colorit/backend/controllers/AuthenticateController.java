@@ -41,7 +41,7 @@ public class AuthenticateController extends AbstractController {
         final UserServiceResponse userServiceResponse = userService.authenticateUser(UserEntity.fromView(signInView));
 
         if (!userServiceResponse.isValid()) {
-            return getResponseMaker().makeResponse(userServiceResponse, locale,  null);
+            return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
         httpSession.setAttribute(getSessionKey(), signInView.getNickname());
         return getResponseMaker().authorizedResponse(userServiceResponse, httpSession, "sessionId");

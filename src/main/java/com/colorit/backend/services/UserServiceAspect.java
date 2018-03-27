@@ -16,17 +16,18 @@ import java.sql.SQLException;
 @Aspect
 @Component
 public class UserServiceAspect {
-    private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceAspect.class);
+
     @Around(value = "execution (* com.colorit.backend.services.UserServiceJpa.* (..)))")
     public UserServiceResponse errorHandler(ProceedingJoinPoint procPoint) {
         try {
             LOGGER.info("Call {}", procPoint.getSignature().getName());
             return (UserServiceResponse) procPoint.proceed();
         } catch (DataIntegrityViolationException dIVEx) {
-            SQLException sqlEx = (SQLException)dIVEx.getCause().getCause();
+            final SQLException sqlEx = (SQLException) dIVEx.getCause().getCause();
             LOGGER.error("Constraint error: {}", dIVEx.getLocalizedMessage());
             if (sqlEx.getLocalizedMessage().contains("nickname_constraint")) {
-                return  new UserServiceResponse(UserServiceStatus.CONFLICT_NAME_STATE);
+                return new UserServiceResponse(UserServiceStatus.CONFLICT_NAME_STATE);
             } else {
                 return new UserServiceResponse(UserServiceStatus.CONFLICT_EMAIL_STATE);
             }

@@ -25,7 +25,7 @@ public class UserServiceJpa implements IUserService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceJpa.class);
-    private static final String passwordSault = "sault";
+    private static final String PASSWORD_SAULT = "sault";
 
     @Autowired
     public UserServiceJpa(@NotNull UserRepository repository, @NotNull GameRepository gameRepository) {
@@ -39,7 +39,7 @@ public class UserServiceJpa implements IUserService {
     }
 
     private boolean checkPasswords(String internalPassword, String externalPassword) {
-        String saultedPassword = passwordSault + externalPassword + passwordSault;
+        final String saultedPassword = PASSWORD_SAULT + externalPassword + PASSWORD_SAULT;
         if (!passwordEncoder().matches(saultedPassword, internalPassword)) {
             return false;
         }
@@ -48,7 +48,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        UserEntity userEntity = userRepository.getByNickname(nickname);
+        final UserEntity userEntity = userRepository.getByNickname(nickname);
         if (userEntity != null) {
             LOGGER.info("info returned about user {}", nickname);
             return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userEntity.toRepresentation());
@@ -87,22 +87,10 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse createUser(UserEntity userEntity) {
-        GameResults gameResults = new GameResults();
+        final GameResults gameResults = new GameResults();
         try {
-            String userPassword = userEntity.getPasswordHash();
-            userEntity.setPasswordHash(passwordEncoder().encode(passwordSault + userPassword + passwordSault));
-//            final Random rnd = new Random();
-//            final Integer countGames = rnd.nextInt(20);
-//            Integer countWins = 0;
-//            if (countGames != 0) {
-//                countWins = rnd.nextInt(countGames);
-//            }
-//            final Integer maxRat = 40;
-//            final Integer minRat = 20;
-//            final Integer rating = -minRat + (rnd.nextInt(maxRat - (-minRat)));
-//            gameResults.setCountGames(countGames);
-//            gameResults.setCountWins(countWins);
-//            gameResults.setRating(rating);
+            final String userPassword = userEntity.getPasswordHash();
+            userEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + userPassword + PASSWORD_SAULT));
 
             this.gameRepository.save(gameResults);
             userEntity.setGameResults(gameResults);
@@ -139,7 +127,7 @@ public class UserServiceJpa implements IUserService {
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
         }
 
-        existingEntity.setPasswordHash(passwordEncoder().encode(passwordSault + newPassword + passwordSault));
+        existingEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + newPassword + PASSWORD_SAULT));
         userRepository.save(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
@@ -180,7 +168,7 @@ public class UserServiceJpa implements IUserService {
                 return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
             } else {
                 updateEntity.setNewPassword(passwordEncoder().encode(
-                        passwordSault + updateEntity.getNewPassword() + passwordSault));
+                        PASSWORD_SAULT + updateEntity.getNewPassword() + PASSWORD_SAULT));
             }
         }
 

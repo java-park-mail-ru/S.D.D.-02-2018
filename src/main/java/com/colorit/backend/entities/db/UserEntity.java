@@ -61,7 +61,7 @@ public class UserEntity {
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="game_results_id", nullable=true)
+    @JoinColumn(name = "game_results_id")
     public GameResults getGameResults() {
         return gameResults;
     }

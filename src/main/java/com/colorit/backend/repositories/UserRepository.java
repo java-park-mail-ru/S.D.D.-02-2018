@@ -16,17 +16,19 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Boolean existsByNickname(String nickname);
 
-    @Query("SELECT u  FROM UserEntity u join GameResults g on (u.gameResults = g) ORDER by g.rating DESC") //, LIMIT 1}, OFFSET :#{offset}")
+    @Query("SELECT u  FROM UserEntity u join GameResults g on (u.gameResults = g) ORDER by g.rating DESC")
     List<UserEntity> getUsers(Pageable page);
 
-    public class OffsetLimitPageable extends PageRequest {
-        private int offset;
-        public OffsetLimitPageable(int offset, int limit){
-            super(offset,limit);
-            this.offset=offset;
+    class OffsetLimitPageable extends PageRequest {
+        private final int offset;
+
+        public OffsetLimitPageable(int offset, int limit) {
+            super(offset, limit);
+            this.offset = offset;
         }
+
         @Override
-        public long getOffset(){
+        public long getOffset() {
             return this.offset;
         }
     }

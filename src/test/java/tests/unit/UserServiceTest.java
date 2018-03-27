@@ -147,7 +147,7 @@ public class UserServiceTest {
         final String otherUseEmail = faker.internet().emailAddress();
         signUpUserOk(otherUserName, otherUserPassword, otherUseEmail);
 
-        Object ob = userService.getUser(userName).getData();
+        final Object ob = userService.getUser(userName).getData();
         final UserServiceResponse response = userService.updateEmail(otherUserName, userEmail);
         assertSame(response.getStatus(), UserServiceStatus.CONFLICT_EMAIL_STATE);
     }
@@ -166,7 +166,6 @@ public class UserServiceTest {
     }
 
 
-    @SuppressWarnings("InstanceMethodNamingConvention")
     @Test
     public void changeUserPasswordWithNotExistingUser() {
         final UserServiceResponse response = userService.updatePassword(faker.name().username(),
@@ -185,7 +184,7 @@ public class UserServiceTest {
     public void getUserOk() {
         final UserServiceResponse response = userService.getUser(userName);
         assertSame(response.getStatus(), UserServiceStatus.OK_STATE);
-        UserEntityRepresentation ur = (UserEntityRepresentation) response.getData();
+        final UserEntityRepresentation ur = (UserEntityRepresentation) response.getData();
         assertEquals(ur.getNickname(), userName);
     }
 
