@@ -37,9 +37,9 @@ public class AuthenticateTest {
     private static Faker faker;
     private static TestRequestBuilder builderSignup;
     private static TestRequestBuilder builderSignin;
-    private static final String pathUrlSignUp = "/api/user/signup";
-    private static final String pathUrlSignIn = "/api/user/signin";
-    private static final String pathUrlSignOut = "/api/user/signout";
+    private static final String PATH_URL_SIGNUP = "/api/user/signup";
+    private static final String PATH_URL_SIGNIN = "/api/user/signin";
+    private static final String PATH_URL_SIGNOUT = "/api/user/signout";
     private static String userName;
     private static String userEmail;
     private static String userPassword;
@@ -81,7 +81,7 @@ public class AuthenticateTest {
         final String password = faker.internet().password();
 
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(faker.name().username(),
@@ -97,7 +97,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("nickname", "Nickname already taken!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(userName, userEmail,
@@ -113,7 +113,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("email", "Email already taken!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(faker.name().username(),
@@ -128,7 +128,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("nickname", "Nickname field is empty!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(null, userEmail, userPassword, userPassword)))
@@ -142,7 +142,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("email", "Email field is empty!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(userName, null, userPassword, userPassword)))
@@ -157,7 +157,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("password", "Password field is empty!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(userName, userEmail, null, userPassword)))
@@ -171,7 +171,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("passwordCheck", "Second password field is empty!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(userName, userEmail, userPassword, null)))
@@ -185,7 +185,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("passwordCheck", "Passwords doesn't match!");
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignup.getJsonRequest(userName, userEmail, userPassword,
@@ -198,7 +198,7 @@ public class AuthenticateTest {
     @Test
     public void signUpIncorrectDocumentType() throws Exception {
         this.mock.perform(
-                post(pathUrlSignUp)
+                post(PATH_URL_SIGNUP)
                         .contentType("text/html"))
                 .andExpect(status().isUnsupportedMediaType());
     }
@@ -206,7 +206,7 @@ public class AuthenticateTest {
     @Test
     public void signInOk() throws Exception {
         this.mock.perform(
-                post(pathUrlSignIn)
+                post(PATH_URL_SIGNIN)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignin.getJsonRequest(userName, userPassword)))
@@ -220,7 +220,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("general", "Invalid authorize data, try again!");
         this.mock.perform(
-                post(pathUrlSignIn)
+                post(PATH_URL_SIGNIN)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignin.getJsonRequest(faker.name().username(), userPassword)))
@@ -235,7 +235,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("general", "Invalid authorize data, try again!");
         this.mock.perform(
-                post(pathUrlSignIn)
+                post(PATH_URL_SIGNIN)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignin.getJsonRequest(userName, faker.internet().password())))
@@ -249,7 +249,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("nickname", "Nickname field is empty!");
         this.mock.perform(
-                post(pathUrlSignIn)
+                post(PATH_URL_SIGNIN)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignin.getJsonRequest("", userPassword)))
@@ -263,7 +263,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("password", "Password field is empty!");
         this.mock.perform(
-                post(pathUrlSignIn)
+                post(PATH_URL_SIGNIN)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignin.getJsonRequest(userName, "")))
@@ -278,7 +278,7 @@ public class AuthenticateTest {
         err.put("password", "Password field is empty!");
         err.put("nickname", "Nickname field is empty!");
         this.mock.perform(
-                post(pathUrlSignIn)
+                post(PATH_URL_SIGNIN)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .content(builderSignin.getJsonRequest(null, null)))
@@ -291,7 +291,7 @@ public class AuthenticateTest {
     @Test
     public void signOutOk() throws Exception {
         this.mock.perform(
-                post(pathUrlSignOut)
+                post(PATH_URL_SIGNOUT)
                         .contentType("application/json")
                         .locale(Locale.US)
                         .sessionAttr("nickname", userName))
@@ -304,7 +304,7 @@ public class AuthenticateTest {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("general", "You are not authorized, please do it)");
         this.mock.perform(
-                post(pathUrlSignOut)
+                post(PATH_URL_SIGNOUT)
                         .contentType("application/json")
                         .locale(Locale.US))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
