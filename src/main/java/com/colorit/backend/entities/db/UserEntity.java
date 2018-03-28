@@ -18,6 +18,7 @@ public class UserEntity {
     private String email;
     private String passwordHash;
     private String avatarPath;
+
     private GameResults gameResults;
 
     public UserEntity() {

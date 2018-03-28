@@ -13,7 +13,6 @@ public class UserServiceResponse<T>  extends AbstractServiceResponse<T> {
         super.setData(data);
     }
 
-
     @Override
     public UserServiceStatus getStatus() {
         return (UserServiceStatus) super.getStatus();

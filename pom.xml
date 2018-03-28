@@ -49,7 +49,6 @@
             <optional>true</optional>
         </dependency>
 
-
         <!-- File storage -->
         <dependency>
             <groupId>com.cloudinary</groupId>
