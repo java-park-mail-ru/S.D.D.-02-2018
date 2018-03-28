@@ -7,8 +7,6 @@ import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
 import com.colorit.backend.views.entity.representations.UserEntityRepresentation;
-import com.colorit.backend.views.input.SignInView;
-import com.colorit.backend.views.input.SignUpView;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,11 +29,11 @@ public class UserServiceOnList implements IUserService {
     }
 
     @Override
-    public UserServiceResponse authenticateUser(SignInView user) {
+    public UserServiceResponse authenticateUser(UserEntity user) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.OK_STATE);
         try {
             final UserEntity existingEntity = userRepository.getByNickame(user.getNickname());
-            if (!existingEntity.getPasswordHash().equals(user.getPassword())) {
+            if (!existingEntity.getPasswordHash().equals(user.getPasswordHash())) {
                 userServiceResponse.setStatus(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
             }
         } catch (UserRepositoryList.NoResultException nRx) {
@@ -45,10 +43,9 @@ public class UserServiceOnList implements IUserService {
     }
 
     @Override
-    public UserServiceResponse createUser(SignUpView user) {
+    public UserServiceResponse createUser(UserEntity userEntity) {
         final UserServiceResponse userServiceResponse = new UserServiceResponse(UserServiceStatus.CREATED_STATE);
         try {
-            final UserEntity userEntity = UserEntity.fromView(user);
             userRepository.save(userEntity);
         } catch (UserRepositoryList.ConstraintEmailException cEEx) {
             userServiceResponse.setStatus(UserServiceStatus.CONFLICT_EMAIL_STATE);
