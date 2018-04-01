@@ -10,9 +10,7 @@ import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,23 +20,14 @@ import javax.validation.constraints.NotNull;
 public class UserServiceJpa implements IUserService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    private final PasswordEncoder passwordEncoder;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceJpa.class);
-    private static final String PASSWORD_SAULT = "sault";
 
-    @Autowired
-    public UserServiceJpa(@NotNull UserRepository repository, @NotNull GameRepository gameRepository) {
+    public UserServiceJpa(@NotNull UserRepository repository, @NotNull GameRepository gameRepository,
+                          @NotNull PasswordEncoder passwordEncoder) {
         this.userRepository = repository;
         this.gameRepository = gameRepository;
-    }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    private boolean checkPasswords(String internalPassword, String externalPassword) {
-        final String saultedPassword = PASSWORD_SAULT + externalPassword + PASSWORD_SAULT;
-        return passwordEncoder().matches(saultedPassword, internalPassword);
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -61,7 +50,7 @@ public class UserServiceJpa implements IUserService {
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
 
-        if (!checkPasswords(existingUserEntity.getPasswordHash(), userEntity.getPasswordHash())) {
+        if (!passwordEncoder.matches(userEntity.getPasswordHash(), existingUserEntity.getPasswordHash())) {
             LOGGER.info("cant authenticate user {}", userEntity.getNickname());
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
         }
@@ -85,7 +74,7 @@ public class UserServiceJpa implements IUserService {
         final GameResults gameResults = new GameResults();
         try {
             final String userPassword = userEntity.getPasswordHash();
-            userEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + userPassword + PASSWORD_SAULT));
+            userEntity.setPasswordHash(passwordEncoder.encode(userPassword));
 
             this.gameRepository.save(gameResults);
             userEntity.setGameResults(gameResults);
@@ -118,11 +107,11 @@ public class UserServiceJpa implements IUserService {
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
 
-        if (!checkPasswords(existingEntity.getPasswordHash(), oldPassword)) {
+        if (!passwordEncoder.matches(oldPassword, existingEntity.getPasswordHash())) {
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
         }
 
-        existingEntity.setPasswordHash(passwordEncoder().encode(PASSWORD_SAULT + newPassword + PASSWORD_SAULT));
+        existingEntity.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
@@ -148,7 +137,7 @@ public class UserServiceJpa implements IUserService {
 
         existingEntity.setAvatarPath(avatar);
         userRepository.save(existingEntity);
-        return new UserServiceResponse(UserServiceStatus.OK_STATE);
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, avatar);
     }
 
     @Override
@@ -159,11 +148,10 @@ public class UserServiceJpa implements IUserService {
         }
 
         if (updateEntity.getOldPassword() != null) {
-            if (!checkPasswords(existingEntity.getPasswordHash(), updateEntity.getOldPassword())) {
+            if (!passwordEncoder.matches(updateEntity.getOldPassword(), existingEntity.getPasswordHash())) {
                 return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
             } else {
-                updateEntity.setNewPassword(passwordEncoder().encode(
-                        PASSWORD_SAULT + updateEntity.getNewPassword() + PASSWORD_SAULT));
+                updateEntity.setNewPassword(passwordEncoder.encode(updateEntity.getNewPassword()));
             }
         }
 
