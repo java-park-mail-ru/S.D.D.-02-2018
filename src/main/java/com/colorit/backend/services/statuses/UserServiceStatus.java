@@ -2,7 +2,7 @@ package com.colorit.backend.services.statuses;
 
 import org.springframework.http.HttpStatus;
 
-public enum UserServiceStatus implements IStatus {
+public enum UserServiceStatus {
     OK_STATE(0, null, "ok", "ok", HttpStatus.OK),
     CREATED_STATE(1, null, "created", "created", HttpStatus.CREATED),
     CONFLICT_EMAIL_STATE(2, "email", "email_conflict", "email_conflict", HttpStatus.CONFLICT),
@@ -42,7 +42,6 @@ public enum UserServiceStatus implements IStatus {
         return httpStatus;
     }
 
-    @Override
     public boolean isError() {
         return !(id == 0 || id == 1);
     }

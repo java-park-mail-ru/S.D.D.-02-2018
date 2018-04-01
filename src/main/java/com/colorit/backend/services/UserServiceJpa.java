@@ -11,7 +11,6 @@ import com.colorit.backend.views.entity.representations.UserListEntityRepresenta
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 
-@Primary
 @Service
 public class UserServiceJpa implements IUserService {
     private final UserRepository userRepository;

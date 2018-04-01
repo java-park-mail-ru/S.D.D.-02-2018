@@ -1,40 +1,38 @@
 package com.colorit.backend.services.responses;
 
-import com.colorit.backend.services.statuses.IStatus;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 
-public class UserServiceResponse<T>  extends AbstractServiceResponse<T> {
+public class UserServiceResponse<T> {
+
+    private UserServiceStatus status;
+    private T data;
+
     public UserServiceResponse(UserServiceStatus userServiceStatus) {
-        super(userServiceStatus);
+        this.status = userServiceStatus;
     }
 
     public UserServiceResponse(UserServiceStatus userServiceStatus, T data) {
-        super(userServiceStatus);
-        super.setData(data);
+        this.status = userServiceStatus;
+        this.data = data;
     }
 
-    @Override
     public UserServiceStatus getStatus() {
-        return (UserServiceStatus) super.getStatus();
+        return status;
     }
 
-    @Override
     public boolean isValid() {
-        return !super.getStatus().isError();
+        return !status.isError();
     }
 
-    @Override
     public void setData(T data) {
-        super.setData(data);
+        this.data = data;
     }
 
-    @Override
-    public void setStatus(IStatus status) {
-        super.setStatus(status);
+    public void setStatus(UserServiceStatus status) {
+        this.status = status;
     }
 
-    @Override
     public T getData() {
-        return super.getData();
+        return this.data;
     }
 }
