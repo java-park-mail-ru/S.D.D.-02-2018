@@ -4,7 +4,6 @@ import com.colorit.backend.common.UserResponseMaker;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.output.ResponseView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.util.Locale;
 public class UserInfoController extends AbstractController {
     private final IUserService userService;
 
-    @Autowired
     public UserInfoController(@NotNull IUserService userService,
                               @NotNull UserResponseMaker userResponseMaker) {
         super(userResponseMaker);

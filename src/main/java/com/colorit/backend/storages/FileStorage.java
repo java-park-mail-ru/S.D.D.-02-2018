@@ -9,7 +9,6 @@ import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,6 @@ public class FileStorage {
     private final IStorage storage;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileStorage.class);
 
-    @Autowired
     FileStorage(@NotNull IStorage storage) {
         this.storage = storage;
         LOGGER.info("Created storage {}", storage.getClass());

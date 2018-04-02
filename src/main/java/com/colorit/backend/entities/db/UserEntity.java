@@ -6,7 +6,6 @@ import com.colorit.backend.views.entity.representations.UserEntityRepresentation
 
 import javax.persistence.*;
 
-@SuppressWarnings("unused")
 @Entity(name = "UserEntity")
 @Table(name = "user_entity", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),

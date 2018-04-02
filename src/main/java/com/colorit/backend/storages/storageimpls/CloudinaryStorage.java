@@ -4,7 +4,6 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.colorit.backend.storages.IStorage;
 import org.cloudinary.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ public class CloudinaryStorage implements IStorage {
     private final String apiSecret;
     private final String cloudName;
 
-    @Autowired
     public CloudinaryStorage(@Value("${cloud_name}") String cloudName,
                       @Value("${api_key}") String apiKey,
                       @Value("${api_secret}") String apiSeret) {

@@ -2,7 +2,6 @@ package com.colorit.backend.views;
 
 import org.springframework.http.HttpStatus;
 
-@SuppressWarnings("ALL")
 public enum ViewStatusCode {
     OK_STATE(0, "ok", null, HttpStatus.OK),
     EMPTY_EMAIL(1, "email", "email_empty", HttpStatus.BAD_REQUEST),
@@ -35,6 +34,7 @@ public enum ViewStatusCode {
         return message;
     }
 
+    @SuppressWarnings("unused")
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }

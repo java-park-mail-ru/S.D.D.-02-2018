@@ -12,7 +12,6 @@ import com.colorit.backend.views.input.UpdateNicknameView;
 import com.colorit.backend.views.input.UpdatePasswordView;
 import com.colorit.backend.views.input.UpdateView;
 import com.colorit.backend.views.output.ResponseView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,6 @@ public class UserUpdateController extends AbstractController {
     private final FileStorage fileStorage;
     private final IUserService userService;
 
-    @Autowired
     public UserUpdateController(@NotNull IUserService userService,
                                 @NotNull UserResponseMaker userResponseMaker,
                                 @NotNull FileStorage fileStorage) {
