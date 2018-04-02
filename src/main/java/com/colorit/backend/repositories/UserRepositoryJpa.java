@@ -1,5 +1,6 @@
 package com.colorit.backend.repositories;
 
+import com.colorit.backend.entities.db.GameResults;
 import com.colorit.backend.entities.db.UserEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,8 @@ public class UserRepositoryJpa {
                 .setParameter("nickname", nickname).getSingleResult()) > 0;
     }
 
-    public void update(UserEntity entity) {
+    public void update(UserEntity updateEntity) {
+        entityManager.merge(updateEntity);
     }
 
     public List<UserEntity> getUsers(Integer limit, Integer offset) {
@@ -55,12 +57,12 @@ public class UserRepositoryJpa {
                 .getSingleResult();
     }
 
-    public void createUser(UserEntity userEntity) {
-
-    }
-
     public void save(UserEntity userEntity) {
-        //entityManager.persist(userEntity);
+        GameResults gameResults = new GameResults();
+        entityManager.persist(userEntity);
+        entityManager.persist(gameResults);
+        userEntity.setGameResults(gameResults);
+        entityManager.merge(userEntity);
     }
 
 

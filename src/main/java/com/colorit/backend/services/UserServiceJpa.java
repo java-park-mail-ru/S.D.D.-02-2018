@@ -48,7 +48,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse authenticateUser(UserEntity userEntity) {
-        final UserEntity existingUserEntity = userRepository.getByNickname(userEntity.getNickname());
+        final UserEntity existingUserEntity = userRepositoryJpa.getByNickname(userEntity.getNickname());
         if (existingUserEntity == null) {
             LOGGER.info("cant authenticate user {}", userEntity.getNickname());
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
@@ -76,19 +76,20 @@ public class UserServiceJpa implements IUserService {
     @Override
     public UserServiceResponse createUser(UserEntity userEntity) {
         final GameResults gameResults = new GameResults();
-        try {
+//        try {
             final String userPassword = userEntity.getPasswordHash();
             userEntity.setPasswordHash(passwordEncoder.encode(userPassword));
 
-            this.gameRepository.save(gameResults);
-            userEntity.setGameResults(gameResults);
-            this.userRepository.save(userEntity);
+//            this.gameRepository.save(gameResults);
+//            userEntity.setGameResults(gameResults);
+//            this.userRepository.save(userEntity);
+            userRepositoryJpa.save(userEntity);
 
             LOGGER.info("user created", userEntity.getNickname());
-        } catch (DataIntegrityViolationException dIVEx) {
-            this.gameRepository.delete(gameResults);
-            throw dIVEx;
-        }
+//        } catch (DataIntegrityViolationException dIVEx) {
+//            this.gameRepository.delete(gameResults);
+//            throw dIVEx;
+//        }
         return new UserServiceResponse(UserServiceStatus.CREATED_STATE);
     }
 
@@ -97,7 +98,7 @@ public class UserServiceJpa implements IUserService {
         final UserEntity existingEntity = userRepository.getByNickname(nickname);
         if (existingEntity != null) {
             existingEntity.setEmail(email);
-            userRepository.saveAndFlush(existingEntity);
+            userRepositoryJpa.update(existingEntity);
         } else {
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
@@ -116,7 +117,7 @@ public class UserServiceJpa implements IUserService {
         }
 
         existingEntity.setPasswordHash(passwordEncoder.encode(newPassword));
-        userRepository.save(existingEntity);
+        userRepositoryJpa.update(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
@@ -128,7 +129,7 @@ public class UserServiceJpa implements IUserService {
         }
 
         existingEntity.setNickname(newNickname);
-        userRepository.saveAndFlush(existingEntity);
+        userRepositoryJpa.update(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
@@ -140,7 +141,7 @@ public class UserServiceJpa implements IUserService {
         }
 
         existingEntity.setAvatarPath(avatar);
-        userRepository.save(existingEntity);
+        userRepositoryJpa.update(existingEntity);
         return new UserServiceResponse<>(UserServiceStatus.OK_STATE, avatar);
     }
 
@@ -160,7 +161,7 @@ public class UserServiceJpa implements IUserService {
         }
 
         existingEntity.copy(updateEntity);
-        userRepository.saveAndFlush(existingEntity);
+        userRepositoryJpa.update(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
