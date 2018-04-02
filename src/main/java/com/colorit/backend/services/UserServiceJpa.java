@@ -1,17 +1,13 @@
 package com.colorit.backend.services;
 
-import com.colorit.backend.entities.db.GameResults;
 import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
-import com.colorit.backend.repositories.GameRepository;
-import com.colorit.backend.repositories.UserRepository;
 import com.colorit.backend.repositories.UserRepositoryJpa;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +15,12 @@ import javax.validation.constraints.NotNull;
 
 @Service
 public class UserServiceJpa implements IUserService {
-    private final UserRepository userRepository;
-    private final GameRepository gameRepository;
     private final UserRepositoryJpa userRepositoryJpa;
     private final PasswordEncoder passwordEncoder;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceJpa.class);
 
 
-    public UserServiceJpa(@NotNull UserRepository repository, @NotNull GameRepository gameRepository,
-                          @NotNull PasswordEncoder passwordEncoder, @NotNull UserRepositoryJpa userRepositoryJpa) {
-        this.userRepository = repository;
-        this.gameRepository = gameRepository;
+    public UserServiceJpa(@NotNull PasswordEncoder passwordEncoder, @NotNull UserRepositoryJpa userRepositoryJpa) {
         this.passwordEncoder = passwordEncoder;
         this.userRepositoryJpa = userRepositoryJpa;
     }
@@ -75,7 +66,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse updateEmail(String nickname, String email) {
-        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        final UserEntity existingEntity = userRepositoryJpa.getByNickname(nickname);
         existingEntity.setEmail(email);
         userRepositoryJpa.update(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
@@ -83,7 +74,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {
-        final UserEntity existingEntity = userRepository.getByNickname(nickname);
+        final UserEntity existingEntity = userRepositoryJpa.getByNickname(nickname);
 
         if (!passwordEncoder.matches(oldPassword, existingEntity.getPasswordHash())) {
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
