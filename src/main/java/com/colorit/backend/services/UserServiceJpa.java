@@ -37,23 +37,13 @@ public class UserServiceJpa implements IUserService {
     @Override
     public UserServiceResponse getUser(String nickname) {
         final UserEntity userEntity = userRepositoryJpa.getByNickname(nickname);
-        if (userEntity != null) {
-            LOGGER.info("info returned about user {}", nickname);
-            return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userEntity.toRepresentation());
-        } else {
-            LOGGER.info("no user found user {}", nickname);
-            return new UserServiceResponse(UserServiceStatus.NOT_FOUND_STATE);
-        }
+        LOGGER.info("info returned about user {}", nickname);
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userEntity.toRepresentation());
     }
 
     @Override
     public UserServiceResponse authenticateUser(UserEntity userEntity) {
         final UserEntity existingUserEntity = userRepositoryJpa.getByNickname(userEntity.getNickname());
-        if (existingUserEntity == null) {
-            LOGGER.info("cant authenticate user {}", userEntity.getNickname());
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
-
         if (!passwordEncoder.matches(userEntity.getPasswordHash(), existingUserEntity.getPasswordHash())) {
             LOGGER.info("cant authenticate user {}", userEntity.getNickname());
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
@@ -75,42 +65,25 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse createUser(UserEntity userEntity) {
-        final GameResults gameResults = new GameResults();
-//        try {
-            final String userPassword = userEntity.getPasswordHash();
-            userEntity.setPasswordHash(passwordEncoder.encode(userPassword));
+        final String userPassword = userEntity.getPasswordHash();
+        userEntity.setPasswordHash(passwordEncoder.encode(userPassword));
+        userRepositoryJpa.save(userEntity);
 
-//            this.gameRepository.save(gameResults);
-//            userEntity.setGameResults(gameResults);
-//            this.userRepository.save(userEntity);
-            userRepositoryJpa.save(userEntity);
-
-            LOGGER.info("user created", userEntity.getNickname());
-//        } catch (DataIntegrityViolationException dIVEx) {
-//            this.gameRepository.delete(gameResults);
-//            throw dIVEx;
-//        }
+        LOGGER.info("user created", userEntity.getNickname());
         return new UserServiceResponse(UserServiceStatus.CREATED_STATE);
     }
 
     @Override
     public UserServiceResponse updateEmail(String nickname, String email) {
         final UserEntity existingEntity = userRepository.getByNickname(nickname);
-        if (existingEntity != null) {
-            existingEntity.setEmail(email);
-            userRepositoryJpa.update(existingEntity);
-        } else {
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
+        existingEntity.setEmail(email);
+        userRepositoryJpa.update(existingEntity);
         return new UserServiceResponse(UserServiceStatus.OK_STATE);
     }
 
     @Override
     public UserServiceResponse updatePassword(String nickname, String oldPassword, String newPassword) {
         final UserEntity existingEntity = userRepository.getByNickname(nickname);
-        if (existingEntity == null) {
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
 
         if (!passwordEncoder.matches(oldPassword, existingEntity.getPasswordHash())) {
             return new UserServiceResponse(UserServiceStatus.PASSWORD_MATCH_ERROR_STATE);
@@ -123,10 +96,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse updateNickname(String nickname, String newNickname) {
-        final UserEntity existingEntity = userRepository.getByNickname(nickname);
-        if (existingEntity == null) {
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
+        final UserEntity existingEntity = userRepositoryJpa.getByNickname(nickname);
 
         existingEntity.setNickname(newNickname);
         userRepositoryJpa.update(existingEntity);
@@ -135,10 +105,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse updateAvatar(String nickname, String avatar) {
-        final UserEntity existingEntity = userRepository.getByNickname(nickname);
-        if (existingEntity == null) {
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
+        final UserEntity existingEntity = userRepositoryJpa.getByNickname(nickname);
 
         existingEntity.setAvatarPath(avatar);
         userRepositoryJpa.update(existingEntity);
@@ -147,10 +114,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse update(String nickname, UserUpdateEntity updateEntity) {
-        final UserEntity existingEntity = userRepository.getByNickname(nickname);
-        if (existingEntity == null) {
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
+        final UserEntity existingEntity = userRepositoryJpa.getByNickname(nickname);
 
         if (updateEntity.getOldPassword() != null) {
             if (!passwordEncoder.matches(updateEntity.getOldPassword(), existingEntity.getPasswordHash())) {
@@ -178,11 +142,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse getPosition(String nickname) {
-        final UserEntity existingEntity = userRepository.getByNickname(nickname);
-        if (existingEntity == null) {
-            LOGGER.info("NO such user {}", nickname);
-            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
-        }
+        final UserEntity existingEntity = userRepositoryJpa.getByNickname(nickname);
         return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepositoryJpa.getPosition(nickname));
     }
 }

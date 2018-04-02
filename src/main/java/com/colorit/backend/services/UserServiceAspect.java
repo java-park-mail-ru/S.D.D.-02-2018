@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -31,6 +32,9 @@ public class UserServiceAspect {
             } else {
                 return new UserServiceResponse(UserServiceStatus.CONFLICT_EMAIL_STATE);
             }
+        } catch (EmptyResultDataAccessException eRDAEx) {
+            LOGGER.error("cant find user {}", eRDAEx.getLocalizedMessage());
+            return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         } catch (DataAccessException dAEx) {
             LOGGER.error("DB Error {}", dAEx.getLocalizedMessage());
             return new UserServiceResponse(UserServiceStatus.DB_ERROR_STATE);

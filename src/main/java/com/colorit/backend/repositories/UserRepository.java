@@ -37,6 +37,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             + "WHERE u.gameResults.rating > (SELECT u1.gameResults.rating "
             + "FROM UserEntity u1 join GameResults g on (u1.gameResults = g) WHERE u1.nickname = :#{#nickname})")
     Long getPosition(@Param("nickname") String nickname);
-
-
 }

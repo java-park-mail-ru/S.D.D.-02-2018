@@ -123,6 +123,20 @@ public class UpdateInfoTest {
     }
 
     @Test
+    public void updateNotFoundUser() throws Exception {
+        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
+        err.put("general", "Forbidden, please authorize!");
+        this.mock.perform(
+                post(PATH_URL_API + "update_nickname")
+                        .contentType("application/json")
+                        .content(builderUpdateNick.getJsonRequest(faker.name().username()))
+                        .sessionAttr("nickname", "aaa")
+                        .locale(Locale.US))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+    }
+
+    @Test
     public void updateNickUnauthorized() throws Exception {
         final LinkedHashMap<String, String> err = new LinkedHashMap<>();
         err.put("general", "You are not authorized, please do it)");

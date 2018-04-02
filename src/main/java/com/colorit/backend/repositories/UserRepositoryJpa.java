@@ -23,6 +23,7 @@ public class UserRepositoryJpa {
     }
 
     public UserEntity getByNickname(String nickname) {
+
         return entityManager.createQuery(
                 "select u from UserEntity u join GameResults g on (u.gameResults = g) where u.nickname=:nickname",
                 UserEntity.class).setParameter("nickname", nickname).getSingleResult();
@@ -36,6 +37,7 @@ public class UserRepositoryJpa {
 
     public void update(UserEntity updateEntity) {
         entityManager.merge(updateEntity);
+        entityManager.flush();
     }
 
     public List<UserEntity> getUsers(Integer limit, Integer offset) {
@@ -63,7 +65,6 @@ public class UserRepositoryJpa {
         entityManager.persist(gameResults);
         userEntity.setGameResults(gameResults);
         entityManager.merge(userEntity);
+        entityManager.flush();
     }
-
-
 }
