@@ -18,7 +18,7 @@ public class UserRepositoryJpa {
     }
 
     public Long count() {
-        return entityManager.createQuery("select count(u) from UserEntity", Long.class).getSingleResult();
+        return entityManager.createQuery("select count(u) from UserEntity u", Long.class).getSingleResult();
     }
 
     public UserEntity getByNickname(String nickname) {
