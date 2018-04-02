@@ -5,6 +5,7 @@ import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.repositories.GameRepository;
 import com.colorit.backend.repositories.UserRepository;
+import com.colorit.backend.repositories.UserRepositoryJpa;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.entity.representations.UserListEntityRepresentation;
@@ -20,19 +21,22 @@ import javax.validation.constraints.NotNull;
 public class UserServiceJpa implements IUserService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    private final UserRepositoryJpa userRepositoryJpa;
     private final PasswordEncoder passwordEncoder;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceJpa.class);
 
+
     public UserServiceJpa(@NotNull UserRepository repository, @NotNull GameRepository gameRepository,
-                          @NotNull PasswordEncoder passwordEncoder) {
+                          @NotNull PasswordEncoder passwordEncoder, @NotNull UserRepositoryJpa userRepositoryJpa) {
         this.userRepository = repository;
         this.gameRepository = gameRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userRepositoryJpa = userRepositoryJpa;
     }
 
     @Override
     public UserServiceResponse getUser(String nickname) {
-        final UserEntity userEntity = userRepository.getByNickname(nickname);
+        final UserEntity userEntity = userRepositoryJpa.getByNickname(nickname);
         if (userEntity != null) {
             LOGGER.info("info returned about user {}", nickname);
             return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userEntity.toRepresentation());
@@ -61,7 +65,7 @@ public class UserServiceJpa implements IUserService {
 
     @Override
     public UserServiceResponse userExists(String nickname) {
-        if (!userRepository.existsByNickname(nickname)) {
+        if (!userRepositoryJpa.existsByNickname(nickname)) {
             LOGGER.info("no such user {}", nickname);
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
@@ -163,13 +167,12 @@ public class UserServiceJpa implements IUserService {
     @Override
     public UserServiceResponse getUsers(Integer limit, Integer offset) {
         return new UserServiceResponse<>(UserServiceStatus.OK_STATE,
-                new UserListEntityRepresentation(userRepository.getUsers(
-                        new UserRepository.OffsetLimitPageable(offset, limit))));
+                new UserListEntityRepresentation(userRepositoryJpa.getUsers(limit, offset)));
     }
 
     @Override
     public UserServiceResponse getUsersCount() {
-        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepository.count());
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepositoryJpa.count());
     }
 
     @Override
@@ -179,6 +182,6 @@ public class UserServiceJpa implements IUserService {
             LOGGER.info("NO such user {}", nickname);
             return new UserServiceResponse(UserServiceStatus.NAME_MATCH_ERROR_STATE);
         }
-        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepository.getPosition("bbb"));
+        return new UserServiceResponse<>(UserServiceStatus.OK_STATE, userRepositoryJpa.getPosition(nickname));
     }
 }
