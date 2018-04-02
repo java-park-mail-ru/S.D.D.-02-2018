@@ -2,15 +2,15 @@ package tests.api;
 
 import com.colorit.backend.BackendApplication;
 import com.github.javafaker.Faker;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import tests.api.common.MapMatcher;
 import tests.api.common.TestRequestBuilder;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = BackendApplication.class)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Transactional
@@ -42,7 +42,7 @@ public class UpdateInfoTest {
     private static String userEmail;
     private static String userPassword;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         faker = new Faker();
         builderUpdateNick = new TestRequestBuilder();
@@ -68,7 +68,7 @@ public class UpdateInfoTest {
 
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         userName = faker.name().username();
         userEmail = faker.internet().emailAddress();

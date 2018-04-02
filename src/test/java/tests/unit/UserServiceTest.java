@@ -7,26 +7,26 @@ import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.services.statuses.UserServiceStatus;
 import com.colorit.backend.views.entity.representations.UserEntityRepresentation;
 import com.github.javafaker.Faker;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 
 @SpringBootTest(classes = BackendApplication.class)
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Transactional
 public class UserServiceTest {
@@ -37,7 +37,7 @@ public class UserServiceTest {
     private static String userName;
     private static String userPassword;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpFaker() {
         faker = new Faker(new Locale("en-US"));
     }
@@ -48,7 +48,7 @@ public class UserServiceTest {
         assertSame(response.getStatus(), UserServiceStatus.CREATED_STATE);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         userEmail = faker.internet().emailAddress();
         userName = faker.name().username();
