@@ -24,8 +24,8 @@ public class CloudinaryStorage implements IStorage {
     private final String cloudName;
 
     public CloudinaryStorage(@Value("${cloud_name}") String cloudName,
-                      @Value("${api_key}") String apiKey,
-                      @Value("${api_secret}") String apiSecret) {
+                             @Value("${api_key}") String apiKey,
+                             @Value("${api_secret}") String apiSecret) {
         this.cloudName = cloudName;
         this.apiSecret = apiSecret;
         this.apiKey = apiKey;
@@ -42,7 +42,7 @@ public class CloudinaryStorage implements IStorage {
 
     @Override
     public byte[] readFile(String path) throws IOException {
-        try(InputStream in = new URL(path).openStream()){
+        try (InputStream in = new URL(path).openStream()) {
             return in.readAllBytes();
         }
     }

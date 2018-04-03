@@ -13,14 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.springframework.test.web.servlet.MockMvc;
-import tests.api.common.MapMatcher;
 import tests.api.common.TestRequestBuilder;
 
 import javax.transaction.Transactional;
 
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(classes = BackendApplication.class)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Transactional
-public class UserInfoTest {
+class UserInfoTest {
 
     @Autowired
     private MockMvc mock;
@@ -43,13 +41,12 @@ public class UserInfoTest {
 
 
     @BeforeAll
-    public static void init() {
+    static void init() {
         faker = new Faker();
     }
 
 
-    public void createUser(String uName, String uEmail, String uPassword) throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
+    private void createUser(String uName, String uEmail, String uPassword) throws Exception {
         this.mock.perform(
                 post("/api/user/signup")
                         .contentType("application/json").locale(Locale.US)
@@ -57,44 +54,42 @@ public class UserInfoTest {
                                 uPassword, uPassword)))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors").isEmpty());
 
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         userName = faker.name().username();
         userEmail = faker.internet().emailAddress();
-        String userPassword = faker.internet().password();
+        final String userPassword = faker.internet().password();
         createUser(userName, userEmail, userPassword);
     }
 
     @Test
-    public void getInfoOk() throws Exception {
+    void getInfoOk() throws Exception {
         this.mock.perform(
                 get(PATH_API_URL + "info")
                         .sessionAttr("nickname", userName))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.current_user.nickname", is(userName)))
-                .andExpect(jsonPath("$.data.current_user.email", is(userEmail)));
+                .andExpect(jsonPath("$.data.current_user.nickname").value(userName))
+                .andExpect(jsonPath("$.data.current_user.email").value(userEmail));
     }
 
     @Test
-    public void getInfoForbidden() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "You are not authorized, please do it)");
+    void getInfoForbidden() throws Exception {
         this.mock.perform(
                 get(PATH_API_URL + "info")
                         .locale(Locale.US))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.data", new MapMatcher(new LinkedHashMap<>())))
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.errors.general").value("You are not authorized, please do it)"));
     }
 
     @Test
-    public void getInfoAboutOtherOk() throws Exception {
+    void getInfoAboutOtherOk() throws Exception {
         final String otherUserName = faker.name().username();
         final String otherUserPassword = faker.internet().password();
         final String otherUserEmail = faker.internet().emailAddress();
@@ -106,24 +101,22 @@ public class UserInfoTest {
                         .sessionAttr("nickname", otherUserName))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.user.nickname", is(userName)))
-                .andExpect(jsonPath("$.data.user.email", is(userEmail)));
+                .andExpect(jsonPath("$.data.user.nickname").value(userName))
+                .andExpect(jsonPath("$.data.user.email").value(userEmail));
     }
 
     @Test
-    public void getInfoAboutOtherUnauthorized() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "You are not authorized, please do it)");
+    void getInfoAboutOtherUnauthorized() throws Exception {
         this.mock.perform(
                 get(PATH_API_URL + "info/" + userName)
                         .locale(Locale.US))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("You are not authorized, please do it)"));
     }
 
     @Test
-    public void getUserCount() throws Exception {
+    void getUserCount() throws Exception {
         this.mock.perform(
                 get(PATH_API_URL + "get_users_count")
                         .locale(Locale.US))

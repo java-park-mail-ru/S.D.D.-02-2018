@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import tests.api.common.MapMatcher;
 import tests.api.common.TestRequestBuilder;
 
 import javax.transaction.Transactional;
@@ -29,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BackendApplication.class)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Transactional
-public class UpdateInfoTest {
+class UpdateInfoTest {
     @Autowired
     private MockMvc mock;
     private static Faker faker;
@@ -43,7 +42,7 @@ public class UpdateInfoTest {
     private static String userPassword;
 
     @BeforeAll
-    public static void init() {
+    static void init() {
         faker = new Faker();
         builderUpdateNick = new TestRequestBuilder();
         builderUpdateNick.init("nickname");
@@ -55,8 +54,7 @@ public class UpdateInfoTest {
         builderUpdateAll.init("nickname", "email", "oldPassword", "password", "passwordCheck");
     }
 
-    public void createUser(String uName, String uEmail, String uPassword) throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
+    private void createUser(String uName, String uEmail, String uPassword) throws Exception {
         this.mock.perform(
                 post("/api/user/signup")
                         .contentType("application/json").locale(Locale.US)
@@ -64,12 +62,11 @@ public class UpdateInfoTest {
                                 uPassword, uPassword)))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
-
+                .andExpect(jsonPath("$.errors").isEmpty());
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         userName = faker.name().username();
         userEmail = faker.internet().emailAddress();
         userPassword = faker.internet().password();
@@ -77,7 +74,7 @@ public class UpdateInfoTest {
     }
 
     @Test
-    public void updateNickOk() throws Exception {
+    void updateNickOk() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_nickname")
                         .contentType("application/json")
@@ -85,19 +82,17 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.errors", new MapMatcher(new LinkedHashMap<>())));
+                .andExpect(jsonPath("$.errors").isEmpty());
     }
 
     @Test
-    public void updateNickConflict() throws Exception {
+    void updateNickConflict() throws Exception {
         final String otherUserName = faker.name().username();
         final String otherUserPassword = faker.internet().password();
         final String otherUserEmail = faker.internet().emailAddress();
 
         createUser(otherUserName, otherUserEmail, otherUserPassword);
 
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("nickname", "Nickname already taken!");
         this.mock.perform(
                 post(PATH_URL_API + "update_nickname")
                         .contentType("application/json")
@@ -105,13 +100,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", otherUserName)
                         .locale(Locale.US))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.nickname").value("Nickname already taken!"));
     }
 
     @Test
-    public void updateNickIncorrect() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("nickname", "Nickname field is empty!");
+    void updateNickIncorrect() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_nickname")
                         .contentType("application/json")
@@ -119,13 +112,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.nickname").value("Nickname field is empty!"));
     }
 
     @Test
-    public void updateNotFoundUser() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "Forbidden, please authorize!");
+    void updateNotFoundUser() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_nickname")
                         .contentType("application/json")
@@ -133,24 +124,22 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", "aaa")
                         .locale(Locale.US))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("Forbidden, please authorize!"));
     }
 
     @Test
-    public void updateNickUnauthorized() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "You are not authorized, please do it)");
+    void updateNickUnauthorized() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_nickname")
                         .contentType("application/json")
                         .content(builderUpdateNick.getJsonRequest(faker.name().username()))
                         .locale(Locale.US))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("You are not authorized, please do it)"));
     }
 
     @Test
-    public void updateEmailOk() throws Exception {
+    void updateEmailOk() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_email")
                         .contentType("application/json")
@@ -158,19 +147,17 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.errors", new MapMatcher(new LinkedHashMap<>())));
+                .andExpect(jsonPath("$.errors").isEmpty());
     }
 
     @Test
-    public void updateEmailConflict() throws Exception {
+    void updateEmailConflict() throws Exception {
         final String otherUserName = faker.name().username();
         final String otherUserPassword = faker.internet().password();
         final String otherUserEmail = faker.internet().emailAddress();
 
         createUser(otherUserName, otherUserEmail, otherUserPassword);
 
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("email", "Email already taken!");
         this.mock.perform(
                 post(PATH_URL_API + "update_email")
                         .contentType("application/json")
@@ -178,13 +165,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", otherUserName)
                         .locale(Locale.US))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.email").value("Email already taken!"));
     }
 
     @Test
-    public void updateEmailIncorrect() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("email", "Email is invalid!");
+    void updateEmailIncorrect() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_email")
                         .contentType("application/json")
@@ -192,24 +177,22 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.email").value("Email is invalid!"));
     }
 
     @Test
-    public void updateEmailUnauthorized() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "You are not authorized, please do it)");
+    void updateEmailUnauthorized() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_email")
                         .contentType("application/json")
                         .content(builderUpdateEmail.getJsonRequest(faker.internet().emailAddress()))
                         .locale(Locale.US))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("You are not authorized, please do it)"));
     }
 
     @Test
-    public void updatePasswordOk() throws Exception {
+    void updatePasswordOk() throws Exception {
         final String newPassword = faker.internet().password();
         this.mock.perform(
                 post(PATH_URL_API + "update_password")
@@ -218,13 +201,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.errors", new MapMatcher(new LinkedHashMap<>())));
+                .andExpect(jsonPath("$.errors").isEmpty());
     }
 
     @Test
-    public void updatePasswordNoMatch() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("passwordCheck", "Passwords doesn't match!");
+    void updatePasswordNoMatch() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update_password")
                         .contentType("application/json")
@@ -233,14 +214,12 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.passwordCheck").value("Passwords doesn't match!"));
     }
 
     @Test
-    public void updatePasswordIncorrectOld() throws Exception {
+    void updatePasswordIncorrectOld() throws Exception {
         final String newPassword = faker.internet().password();
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "Incorrect old password, please try again!");
         this.mock.perform(
                 post(PATH_URL_API + "update_password")
                         .contentType("application/json")
@@ -249,14 +228,12 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("Incorrect old password, please try again!"));
     }
 
     @Test
-    public void updatePasswordUnauthorized() throws Exception {
+    void updatePasswordUnauthorized() throws Exception {
         final String newPassword = faker.internet().password();
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "You are not authorized, please do it)");
         this.mock.perform(
                 post(PATH_URL_API + "update_password")
                         .contentType("application/json")
@@ -264,13 +241,11 @@ public class UpdateInfoTest {
                                 newPassword))
                         .locale(Locale.US))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("You are not authorized, please do it)"));
     }
 
     @Test
-    public void updateAllEmptyForm() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "Form is empty!");
+    void updateAllEmptyForm() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update")
                         .contentType("application/json")
@@ -278,11 +253,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("Form is empty!"));
     }
 
     @Test
-    public void updateAllFieldsOk() throws Exception {
+    void updateAllFieldsOk() throws Exception {
         final String newPassword = faker.internet().password();
 
         this.mock.perform(
@@ -293,11 +268,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.errors", new MapMatcher(new LinkedHashMap<>())));
+                .andExpect(jsonPath("$.errors").isEmpty());
     }
 
     @Test
-    public void updateAllFieldsConflict() throws Exception {
+    void updateAllFieldsConflict() throws Exception {
         final String otherUserName = faker.name().username();
         final String otherUserPassword = faker.internet().password();
         final String otherUserEmail = faker.internet().emailAddress();
@@ -305,8 +280,6 @@ public class UpdateInfoTest {
         createUser(otherUserName, otherUserEmail, otherUserPassword);
 
         final String newPassword = faker.internet().password();
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("nickname", "Nickname already taken!");
         this.mock.perform(
                 post(PATH_URL_API + "update")
                         .contentType("application/json")
@@ -315,15 +288,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", otherUserName)
                         .locale(Locale.US))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.nickname").value("Nickname already taken!"));
     }
 
     @Test
-    public void updateAllIncorrectEmialAndPassword() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("password", "Password field is empty!");
-        err.put("passwordCheck", "Second password field is empty!");
-        err.put("email", "Email is invalid!");
+    void updateAllIncorrectEmialAndPassword() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update")
                         .contentType("application/json")
@@ -332,14 +301,15 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.password").value("Password field is empty!"))
+                .andExpect(jsonPath("$.errors.passwordCheck").value("Second password field is empty!"))
+                .andExpect(jsonPath("$.errors.email").value("Email is invalid!"));
+
     }
 
 
     @Test
-    public void updateAllPasswordNotMach() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("passwordCheck", "Passwords doesn't match!");
+    void updateAllPasswordNotMach() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update")
                         .contentType("application/json")
@@ -349,11 +319,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.passwordCheck").value("Passwords doesn't match!"));
     }
 
     @Test
-    public void updatePasswordAndEmail() throws Exception {
+    void updatePasswordAndEmail() throws Exception {
         final String newPassword = faker.internet().password();
         this.mock.perform(
                 post(PATH_URL_API + "update")
@@ -363,13 +333,11 @@ public class UpdateInfoTest {
                         .sessionAttr("nickname", userName)
                         .locale(Locale.US))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.errors", new MapMatcher(new LinkedHashMap<>())));
+                .andExpect(jsonPath("$.errors").isEmpty());
     }
 
     @Test
-    public void updateAllUnauthrized() throws Exception {
-        final LinkedHashMap<String, String> err = new LinkedHashMap<>();
-        err.put("general", "You are not authorized, please do it)");
+    void updateAllUnauthrized() throws Exception {
         this.mock.perform(
                 post(PATH_URL_API + "update")
                         .contentType("application/json")
@@ -377,6 +345,6 @@ public class UpdateInfoTest {
                                 faker.internet().emailAddress(), "", "", ""))
                         .locale(Locale.US))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.errors", new MapMatcher(err)));
+                .andExpect(jsonPath("$.errors.general").value("You are not authorized, please do it)"));
     }
 }
