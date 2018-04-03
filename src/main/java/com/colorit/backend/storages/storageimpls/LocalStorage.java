@@ -37,13 +37,18 @@ public class LocalStorage implements IStorage {
         newNameBuilder.append(extension);
 
         final File dirs = new File(STATIC_CONTENT_PATH + newNameBuilder.substring(0, 5));
-        if (!dirs.mkdirs()) {
-            throw new Exception("cant create dirs");
+        if (!dirs.exists()) {
+            if (!dirs.mkdirs()) {
+                throw new Exception("cant create dirs");
+            }
         }
 
+        // todo hash of all and name is number
         final String newName = newNameBuilder.toString();
-        if (!file.renameTo(new File(STATIC_CONTENT_PATH + newName))) {
-            throw new Exception("cant rename file");
+        if (!file.exists()) {
+            if (!file.renameTo(new File(STATIC_CONTENT_PATH + newName))) {
+                throw new Exception("cant rename file");
+            }
         }
 
         return newName;

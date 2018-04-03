@@ -3,10 +3,6 @@ package com.colorit.backend.storages;
 import com.colorit.backend.storages.responses.StorageResponse;
 import com.colorit.backend.storages.statuses.StorageStatus;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.tika.detect.Detector;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
-import org.apache.tika.parser.AutoDetectParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -64,25 +60,6 @@ public class FileStorage {
 
 
     /**
-     * Checks file content by consisting data (for fututre).
-     *
-     * @param file - temp file which .
-     * @return String - type of file
-     * @throws IOException - exception (may occour with file processing).
-     */
-    private String getFileContent(File file) throws IOException {
-        try (InputStream is = new FileInputStream(file);
-             BufferedInputStream bis = new BufferedInputStream(is)) {
-            final AutoDetectParser parser = new AutoDetectParser();
-            final Detector detector = parser.getDetector();
-            final Metadata md = new Metadata();
-            final MediaType mediaType = detector.detect(bis, md);
-            return mediaType.getType();
-        }
-    }
-
-
-    /**
      * Saves user image. Before save checks file and crops it.
      *
      * @param multipartFile - user image.
@@ -105,27 +82,6 @@ public class FileStorage {
             response.setData(name);
         } catch (Exception ex) {
             response.setStatus(StorageStatus.SERVICE_ERROR_STATE);
-        }
-        return response;
-    }
-
-
-    /**
-     * Save all type of fil.
-     *
-     * @param multipartFile - user file
-     * @return StoreageResponse
-     */
-    public StorageResponse saveFile(MultipartFile multipartFile) {
-        final StorageResponse<String> response = new StorageResponse<>();
-        try {
-            final File file = Files.createTempFile("temp", multipartFile.getOriginalFilename()).toFile();
-            multipartFile.transferTo(file);
-            final String name = storage.writeFile(file);
-            response.setStatus(StorageStatus.OK_STATE);
-            response.setData(name);
-        } catch (Exception e) {
-            response.setStatus(StorageStatus.ERROR_STATE);
         }
         return response;
     }
