@@ -2,7 +2,6 @@ package com.colorit.backend.views;
 
 import org.springframework.http.HttpStatus;
 
-@SuppressWarnings("ALL")
 public enum ViewStatusCode {
     OK_STATE(0, "ok", null, HttpStatus.OK),
     EMPTY_EMAIL(1, "email", "email_empty", HttpStatus.BAD_REQUEST),
@@ -11,7 +10,7 @@ public enum ViewStatusCode {
     EMPTY_OLD_PASSWORD(4, "oldPassword", "old_password_empty", HttpStatus.BAD_REQUEST),
     EMPTY_NICKNAME(5, "nickname", "nickname_empty", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL_STATE(6, "email", "email_invalid", HttpStatus.BAD_REQUEST),
-    PASSWORD_NOT_MATCH_STATE(7, "newPasswordCheck", "passwordCheck_not_match", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_MATCH_STATE(7, "passwordCheck", "passwordCheck_not_match", HttpStatus.BAD_REQUEST),
     PHOTO_PATH_ERROR_STATE(8, "photo", "photo_empty", HttpStatus.BAD_REQUEST),
     EMPTY_UPDATE_FORM_STATE(9, "general", "empty_form", HttpStatus.BAD_REQUEST);
 
@@ -35,6 +34,7 @@ public enum ViewStatusCode {
         return message;
     }
 
+    @SuppressWarnings("unused")
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }

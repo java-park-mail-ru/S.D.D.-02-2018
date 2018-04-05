@@ -7,7 +7,6 @@ package com.colorit.backend.views.entity.representations;
  * @author hustonMavr
  * @version 1.0
  */
-@SuppressWarnings("ALL")
 public class UserEntityRepresentation {
     private String nickname;
     private String email;
@@ -46,22 +45,27 @@ public class UserEntityRepresentation {
         this.email = email;
     }
 
+    @SuppressWarnings("unused")
     public Integer getRating() {
         return rating;
     }
 
+    @SuppressWarnings("unused")
     public void setRating(Integer rating) {
         this.rating = rating;
     }
 
+    @SuppressWarnings("unused")
     public Integer getCountGames() {
         return countGames;
     }
 
+    @SuppressWarnings("unused")
     public Integer getCountWins() {
         return countWins;
     }
 
+    @SuppressWarnings("unused")
     public String getAvatar() {
         return avatar;
     }

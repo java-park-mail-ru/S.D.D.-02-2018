@@ -4,7 +4,13 @@ import com.colorit.backend.entities.input.UserUpdateEntity;
 import com.colorit.backend.views.input.AbstractInputView;
 import com.colorit.backend.views.entity.representations.UserEntityRepresentation;
 
-@SuppressWarnings("unused")
+import javax.persistence.*;
+
+@Entity(name = "UserEntity")
+@Table(name = "user_entity", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"nickname"}, name = "nickname_constraint"),
+        @UniqueConstraint(columnNames = {"email"}, name = "email_constraint")
+})
 public class UserEntity {
     private Integer id;
     private String nickname;
@@ -28,8 +34,36 @@ public class UserEntity {
         this.passwordHash = password;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
+    }
+
+    @Column(name = "nickname")
+    public String getNickname() {
+        return this.nickname;
+    }
+
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    @Column(name = "avatar_path")
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    @Column(name = "password_hash")
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_results_id")
+    public GameResults getGameResults() {
+        return gameResults;
     }
 
     public void setGameResults(GameResults gameResults) {
@@ -38,42 +72,6 @@ public class UserEntity {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getNickname() {
-        return this.nickname;
-    }
-
-    public String getAvatarPath() {
-        return avatarPath;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public GameResults getGameResults() {
-        return gameResults;
-    }
-
-    public Integer getCountGames() {
-        return gameResults.getCountGames();
-    }
-
-    public Integer getCountWins() {
-        return gameResults.getCountWins();
-    }
-
-    public Integer getRating() {
-        return gameResults.getRating();
-    }
-
-    public void setRating(Integer rating) {
-        this.gameResults.setRating(rating);
     }
 
     public void setPasswordHash(String passwordHash) {
@@ -92,26 +90,50 @@ public class UserEntity {
         this.avatarPath = avatarPath;
     }
 
+    @Transient
+    public void setRating(Integer rating) {
+        this.gameResults.setRating(rating);
+    }
+
+    @Transient
+    public Integer getCountGames() {
+        return gameResults.getCountGames();
+    }
+
+    @Transient
+    public Integer getCountWins() {
+        return gameResults.getCountWins();
+    }
+
+    @Transient
+    public Integer getRating() {
+        return gameResults.getRating();
+    }
+
+    @Transient
     public void setCountGames(Integer countGames) {
         gameResults.setCountGames(countGames);
     }
 
-
+    @Transient
     public void setCountWins(Integer countWins) {
         this.gameResults.setCountWins(countWins);
     }
 
+    @Transient
     public void copy(UserUpdateEntity other) {
         this.nickname = other.getNewNickname() != null ? other.getNewNickname() : this.nickname;
         this.passwordHash = other.getNewPassword() != null ? other.getNewPassword() : this.passwordHash;
         this.email = other.getNewEmail() != null ? other.getNewEmail() : this.email;
     }
 
+    @Transient
     public UserEntityRepresentation toRepresentation() {
         return new UserEntityRepresentation(nickname, email, avatarPath, gameResults.getRating(),
                 gameResults.getCountWins(), gameResults.getCountGames());
     }
 
+    @Transient
     public static UserEntity fromView(AbstractInputView view) {
         return new UserEntity(
                 view.getNickname(),

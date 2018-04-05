@@ -1,13 +1,13 @@
 package com.colorit.backend.controllers;
 
 import com.colorit.backend.common.AuthenticateResponseMaker;
+import com.colorit.backend.entities.db.UserEntity;
 import com.colorit.backend.services.IUserService;
 import com.colorit.backend.services.responses.UserServiceResponse;
 import com.colorit.backend.views.output.ResponseView;
 import com.colorit.backend.views.input.SignInView;
 import com.colorit.backend.views.input.SignUpView;
 import com.colorit.backend.views.ViewStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,6 @@ import java.util.Locale;
 public class AuthenticateController extends AbstractController {
     private final IUserService userService;
 
-    @Autowired
     public AuthenticateController(@NotNull IUserService userService,
                                   @NotNull AuthenticateResponseMaker authenticateResponseMaker) {
         super(authenticateResponseMaker);
@@ -37,10 +36,10 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.authenticateUser(signInView);
+        final UserServiceResponse userServiceResponse = userService.authenticateUser(UserEntity.fromView(signInView));
 
         if (!userServiceResponse.isValid()) {
-            return getResponseMaker().makeResponse(userServiceResponse, locale,  null);
+            return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
         httpSession.setAttribute(getSessionKey(), signInView.getNickname());
         return getResponseMaker().authorizedResponse(userServiceResponse, httpSession, "sessionId");
@@ -65,7 +64,7 @@ public class AuthenticateController extends AbstractController {
             return getResponseMaker().makeResponse(check, locale);
         }
 
-        final UserServiceResponse userServiceResponse = userService.createUser(signUpView);
+        final UserServiceResponse userServiceResponse = userService.createUser(UserEntity.fromView(signUpView));
         if (!userServiceResponse.isValid()) {
             return getResponseMaker().makeResponse(userServiceResponse, locale, null);
         }
